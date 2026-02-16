@@ -74,8 +74,13 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
 ### Skills (도메인 지식)
 - `.claude/skills/Coding/` - 코딩 원칙 및 패턴
   - `SKILL.md` - 공통 원칙
-  - `frontend.md` - React 프론트엔드 규칙
   - `backend.md` - NestJS 백엔드 규칙
+- `.claude/skills/React/SKILL.md` - React 컴포넌트, 훅, 상태 관리
+- `.claude/skills/NextJS/SKILL.md` - Next.js App Router, SSR, Server Actions
+- `.claude/skills/TailwindCSS/SKILL.md` - Tailwind CSS 유틸리티 패턴
+- `.claude/skills/TanStackQuery/SKILL.md` - TanStack Query 서버 상태 관리
+- `.claude/skills/Zustand/SKILL.md` - Zustand 클라이언트 상태 관리
+- `.claude/skills/ReactHookForm/SKILL.md` - React Hook Form + Zod 폼 검증
 - `.claude/skills/TDD/` - TDD 테스트 원칙 및 패턴
   - `SKILL.md` - 공통 TDD 원칙
   - `frontend.md` - React 테스트 규칙

@@ -30,8 +30,19 @@
 ├── skills/
 │   ├── Coding/
 │   │   ├── SKILL.md             ← 공통 코딩 원칙
-│   │   ├── frontend.md          ← React 코딩 규칙
 │   │   └── backend.md           ← NestJS 코딩 규칙
+│   ├── React/
+│   │   └── SKILL.md             ← React 컴포넌트, 훅, 상태 관리
+│   ├── NextJS/
+│   │   └── SKILL.md             ← Next.js App Router, SSR
+│   ├── TailwindCSS/
+│   │   └── SKILL.md             ← Tailwind CSS 유틸리티 패턴
+│   ├── TanStackQuery/
+│   │   └── SKILL.md             ← TanStack Query 서버 상태
+│   ├── Zustand/
+│   │   └── SKILL.md             ← Zustand 클라이언트 상태
+│   ├── ReactHookForm/
+│   │   └── SKILL.md             ← React Hook Form + Zod
 │   ├── TDD/
 │   │   ├── SKILL.md             ← TDD 핵심 원칙
 │   │   ├── frontend.md          ← React 테스트 규칙
