@@ -22,12 +22,20 @@
 │   │   ├── backend.md           ← NestJS 백엔드 규칙
 │   │   └── frontend.md          ← React 프론트엔드 규칙
 │   ├── code-reviewer.md         ← 코드 품질 리뷰 (opus)
+│   ├── tdd/
+│   │   ├── common.md            ← TDD 공통 규칙
+│   │   ├── backend.md           ← NestJS 테스트 규칙
+│   │   └── frontend.md          ← React 테스트 규칙
 │   └── git-manager.md           ← Git 작업 (sonnet)
 ├── skills/
 │   ├── Coding/
 │   │   ├── SKILL.md             ← 공통 코딩 원칙
 │   │   ├── frontend.md          ← React 코딩 규칙
 │   │   └── backend.md           ← NestJS 코딩 규칙
+│   ├── TDD/
+│   │   ├── SKILL.md             ← TDD 핵심 원칙
+│   │   ├── frontend.md          ← React 테스트 규칙
+│   │   └── backend.md           ← NestJS 테스트 규칙
 │   └── Git/
 │       └── SKILL.md             ← 커밋/PR/브랜치 규칙
 └── hooks/
@@ -49,11 +57,12 @@ cd my-claude-code-toolkit
 
 ## 작동 방식
 
-### 워크플로우 (Planning → Implementation → Review)
+### 워크플로우 (Planning → Test → Implementation → Review)
 
 1. **Planning**: 사용자 요구사항 분석 → `explore` 에이전트로 코드 탐색 → 작업 계획 제시
-2. **Implementation**: `code-writer` 에이전트에 구현 위임 (FE/BE 별도 규칙)
-3. **Review**: `code-reviewer`로 코드 리뷰 → `git-manager`로 커밋/PR 생성
+2. **Test (Red)**: `tdd` 에이전트로 실패하는 테스트 작성 → Red 상태 확인
+3. **Implementation (Green + Refactor)**: `code-writer` 에이전트에 구현 위임 → 테스트 통과 확인
+4. **Review**: `code-reviewer`로 코드 + 테스트 리뷰 → `git-manager`로 커밋/PR 생성
 
 ### 서브에이전트 위임
 
@@ -65,6 +74,7 @@ Main Agent는 직접 코드를 작성하거나 탐색하지 않고, 전문 서�
 | explore | haiku | 빠른 코드베이스 탐색 |
 | code-writer | opus | FE/BE 코드 구현 |
 | code-reviewer | opus | 코드 품질 리뷰 |
+| tdd | opus | TDD 테스트 작성/실행 |
 | git-manager | sonnet | 커밋, 브랜치, PR |
 
 ### Quality Gate Hook

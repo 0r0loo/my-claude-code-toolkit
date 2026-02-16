@@ -10,6 +10,7 @@ cat << 'EOF'
 [Quality Gate Reminder]
 - 작업 전: 적절한 Agent/Skill이 있는지 확인하라
 - 코드 구현: code-writer 에이전트에 위임하라 (직접 작성 금지)
+- 코드 구현 전: tdd 에이전트로 실패하는 테스트를 먼저 작성하라
 - 코드 수정 후: code-reviewer 에이전트로 리뷰하라
 - Git 작업: git-manager 에이전트에 위임하라
 - Context 절약: 탐색은 explore 에이전트에 위임하라
