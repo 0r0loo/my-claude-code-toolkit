@@ -43,6 +43,10 @@
 │   │   └── SKILL.md             ← Zustand 클라이언트 상태
 │   ├── ReactHookForm/
 │   │   └── SKILL.md             ← React Hook Form + Zod
+│   ├── TypeScript/
+│   │   └── SKILL.md             ← TypeScript 고급 패턴
+│   ├── TypeORM/
+│   │   └── SKILL.md             ← TypeORM Entity, Repository
 │   ├── TDD/
 │   │   ├── SKILL.md             ← TDD 핵심 원칙
 │   │   ├── frontend.md          ← React 테스트 규칙

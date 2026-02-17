@@ -81,6 +81,8 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
 - `.claude/skills/TanStackQuery/SKILL.md` - TanStack Query 서버 상태 관리
 - `.claude/skills/Zustand/SKILL.md` - Zustand 클라이언트 상태 관리
 - `.claude/skills/ReactHookForm/SKILL.md` - React Hook Form + Zod 폼 검증
+- `.claude/skills/TypeScript/SKILL.md` - TypeScript 고급 패턴 (제네릭, 타입 가드, 유틸리티 타입)
+- `.claude/skills/TypeORM/SKILL.md` - TypeORM Entity, Repository, QueryBuilder
 - `.claude/skills/TDD/` - TDD 테스트 원칙 및 패턴
   - `SKILL.md` - 공통 TDD 원칙
   - `frontend.md` - React 테스트 규칙
