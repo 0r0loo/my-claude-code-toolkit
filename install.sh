@@ -165,8 +165,6 @@ copy_common() {
   copy_file "agents/explore.md"
   copy_file "agents/code-reviewer.md"
   copy_file "agents/git-manager.md"
-  copy_file "agents/code-writer/common.md"
-  copy_file "agents/tdd/common.md"
 
   # 공통 스킬
   copy_file "skills/Coding/SKILL.md"
@@ -184,8 +182,8 @@ copy_fe() {
   echo "[FE]"
 
   # FE 에이전트
-  copy_file "agents/code-writer/frontend.md"
-  copy_file "agents/tdd/frontend.md"
+  copy_file "agents/code-writer-fe.md"
+  copy_file "agents/test-writer-fe.md"
 
   # FE 스킬 (디렉토리 전체)
   copy_dir "skills/React"
@@ -205,8 +203,8 @@ copy_be() {
   echo "[BE]"
 
   # BE 에이전트
-  copy_file "agents/code-writer/backend.md"
-  copy_file "agents/tdd/backend.md"
+  copy_file "agents/code-writer-be.md"
+  copy_file "agents/test-writer-be.md"
 
   # BE 스킬 (디렉토리 전체)
   copy_dir "skills/TypeORM"

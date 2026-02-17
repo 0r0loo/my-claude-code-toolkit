@@ -11,10 +11,10 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
 
 ### 위임 규칙
 - **탐색/검색 작업** → `explore` 에이전트 (haiku) 위임
-- **코드 구현** → `code-writer` 에이전트 (opus) 위임
+- **코드 구현** → `code-writer-fe` 또는 `code-writer-be` 에이전트 (opus) 위임
 - **코드 리뷰** → `code-reviewer` 에이전트 (opus) 위임
 - **Git 작업** → `git-manager` 에이전트 (sonnet) 위임
-- **테스트 작성/실행** → `tdd` 에이전트 (opus) 위임
+- **테스트 작성/실행** → `test-writer-fe` 또는 `test-writer-be` 에이전트 (opus) 위임
 
 ### Main Agent 허용 작업
 - 사용자와의 대화, 요구사항 분석
@@ -40,13 +40,13 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
 3. 작업 계획을 사용자에게 제시하고 승인받는다
 
 ### Phase 2: Test (Red)
-1. `tdd` 에이전트에 실패하는 테스트 작성을 위임한다
+1. `test-writer` 에이전트에 실패하는 테스트 작성을 위임한다
 2. 테스트가 실패하는 것을 확인한다 (Red 상태)
 
 ### Phase 3: Implementation (Green + Refactor)
 1. `code-writer` 에이전트에 구현을 위임한다
 2. 테스트를 통과시키는 최소한의 코드만 구현한다
-3. `tdd` 에이전트로 테스트 통과를 확인한다 (Green 상태)
+3. `test-writer` 에이전트로 테스트 통과를 확인한다 (Green 상태)
 4. 필요 시 리팩토링 후 테스트가 여전히 통과하는지 확인한다
 
 ### Phase 4: Review
@@ -60,15 +60,11 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
 
 ### Agents (서브에이전트 프롬프트)
 - `.claude/agents/explore.md` - 코드베이스 탐색 전문가
-- `.claude/agents/code-writer/` - 코드 구현 전문가
-  - `common.md` - 공통 규칙
-  - `backend.md` - NestJS 백엔드 규칙
-  - `frontend.md` - React 프론트엔드 규칙
+- `.claude/agents/code-writer-fe.md` - React 프론트엔드 구현 전문가
+- `.claude/agents/code-writer-be.md` - NestJS 백엔드 구현 전문가
 - `.claude/agents/code-reviewer.md` - 코드 리뷰 전문가
-- `.claude/agents/tdd/` - TDD 테스트 전문가
-  - `common.md` - 공통 규칙
-  - `backend.md` - NestJS 백엔드 테스트 규칙
-  - `frontend.md` - React 프론트엔드 테스트 규칙
+- `.claude/agents/test-writer-fe.md` - React 프론트엔드 테스트 전문가
+- `.claude/agents/test-writer-be.md` - NestJS 백엔드 테스트 전문가
 - `.claude/agents/git-manager.md` - Git 작업 전문가
 
 ### Skills (도메인 지식)

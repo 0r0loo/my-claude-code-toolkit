@@ -17,15 +17,11 @@
 ├── settings.json                ← hooks 설정
 ├── agents/
 │   ├── explore.md               ← 코드베이스 탐색 (haiku)
-│   ├── code-writer/
-│   │   ├── common.md            ← 공통 구현 규칙
-│   │   ├── backend.md           ← NestJS 백엔드 규칙
-│   │   └── frontend.md          ← React 프론트엔드 규칙
+│   ├── code-writer-fe.md        ← React 프론트엔드 구현 (opus)
+│   ├── code-writer-be.md        ← NestJS 백엔드 구현 (opus)
 │   ├── code-reviewer.md         ← 코드 품질 리뷰 (opus)
-│   ├── tdd/
-│   │   ├── common.md            ← TDD 공통 규칙
-│   │   ├── backend.md           ← NestJS 테스트 규칙
-│   │   └── frontend.md          ← React 테스트 규칙
+│   ├── test-writer-fe.md        ← React 프론트엔드 테스트 (opus)
+│   ├── test-writer-be.md        ← NestJS 백엔드 테스트 (opus)
 │   └── git-manager.md           ← Git 작업 (sonnet)
 ├── skills/
 │   ├── Coding/
@@ -84,7 +80,7 @@ npx @choblue/claude-code-toolkit --global --fe
 
 ```bash
 # 레포 클론
-git clone https://github.com/choblue/my-claude-code-toolkit.git
+git clone https://github.com/0r0loo/my-claude-code-toolkit.git
 cd my-claude-code-toolkit
 
 # 전체 설치 (프로젝트 로컬)
@@ -118,7 +114,7 @@ cd my-claude-code-toolkit
 ### 워크플로우 (Planning → Test → Implementation → Review)
 
 1. **Planning**: 사용자 요구사항 분석 → `explore` 에이전트로 코드 탐색 → 작업 계획 제시
-2. **Test (Red)**: `tdd` 에이전트로 실패하는 테스트 작성 → Red 상태 확인
+2. **Test (Red)**: `test-writer` 에이전트로 실패하는 테스트 작성 → Red 상태 확인
 3. **Implementation (Green + Refactor)**: `code-writer` 에이전트에 구현 위임 → 테스트 통과 확인
 4. **Review**: `code-reviewer`로 코드 + 테스트 리뷰 → `git-manager`로 커밋/PR 생성
 
@@ -132,7 +128,7 @@ Main Agent는 직접 코드를 작성하거나 탐색하지 않고, 전문 서�
 | explore | haiku | 빠른 코드베이스 탐색 |
 | code-writer | opus | FE/BE 코드 구현 |
 | code-reviewer | opus | 코드 품질 리뷰 |
-| tdd | opus | TDD 테스트 작성/실행 |
+| test-writer | opus | TDD 테스트 작성/실행 |
 | git-manager | sonnet | 커밋, 브랜치, PR |
 
 ### Quality Gate Hook
