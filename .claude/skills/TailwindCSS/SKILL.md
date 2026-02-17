@@ -245,6 +245,58 @@ export function Button({ variant = 'primary', size = 'md', className, children }
 }
 ```
 
+### CVA (Class Variance Authority)
+- variant가 있는 컴포넌트는 `cva`로 스타일을 정의한다
+- `cn()` + `cva` 조합으로 variant 관리와 클래스 오버라이드를 동시에 처리한다
+
+```typescript
+// components/Button.tsx
+import { cva, type VariantProps } from 'class-variance-authority';
+import { cn } from '@/lib/utils';
+
+const buttonVariants = cva(
+  // 기본 스타일
+  'inline-flex items-center justify-center rounded-lg font-medium transition-colors disabled:pointer-events-none disabled:opacity-50',
+  {
+    variants: {
+      variant: {
+        primary: 'bg-blue-600 text-white hover:bg-blue-700',
+        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
+        danger: 'bg-red-600 text-white hover:bg-red-700',
+        ghost: 'hover:bg-gray-100',
+        link: 'text-blue-600 underline-offset-4 hover:underline',
+      },
+      size: {
+        sm: 'h-8 px-3 text-sm',
+        md: 'h-10 px-4 text-sm',
+        lg: 'h-12 px-6 text-base',
+        icon: 'h-10 w-10',
+      },
+    },
+    defaultVariants: {
+      variant: 'primary',
+      size: 'md',
+    },
+  }
+);
+
+interface ButtonProps
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
+    VariantProps<typeof buttonVariants> {}
+
+export function Button({ variant, size, className, ...props }: ButtonProps) {
+  return (
+    <button className={cn(buttonVariants({ variant, size }), className)} {...props} />
+  );
+}
+```
+
+### CVA 사용 원칙
+- variant가 2개 이상이면 `cva`를 사용한다 (1개면 `cn()`으로 충분)
+- `VariantProps<typeof xxxVariants>`로 Props 타입을 자동 추론한다
+- `defaultVariants`로 기본값을 선언한다
+- 컴포넌트 외부에서 `className`으로 오버라이드할 수 있게 `cn()`을 함께 사용한다
+
 ---
 
 ## 7. 컴포넌트 추출
