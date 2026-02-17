@@ -59,16 +59,59 @@
 
 ## 설치
 
-```bash
-# 레포 클론
-git clone https://github.com/your-username/my-claude-code-toolkit.git
+### npx로 설치 (권장)
 
-# 설치 (글로벌 적용)
-cd my-claude-code-toolkit
-./install.sh
+clone 없이 바로 설치할 수 있다.
+
+```bash
+# 전체 설치 (프로젝트 로컬)
+npx @choblue/claude-code-toolkit
+
+# FE만 설치 (공통 + React, Next.js, TailwindCSS 등)
+npx @choblue/claude-code-toolkit --fe
+
+# BE만 설치 (공통 + NestJS, TypeORM 등)
+npx @choblue/claude-code-toolkit --be
+
+# 글로벌 설치
+npx @choblue/claude-code-toolkit --global
+
+# 글로벌 + FE만
+npx @choblue/claude-code-toolkit --global --fe
 ```
 
-기존 `~/.claude/` 파일이 있으면 자동으로 백업 후 덮어쓴다.
+### 소스에서 설치
+
+```bash
+# 레포 클론
+git clone https://github.com/choblue/my-claude-code-toolkit.git
+cd my-claude-code-toolkit
+
+# 전체 설치 (프로젝트 로컬)
+./install.sh
+
+# FE만 설치
+./install.sh --fe
+
+# BE만 설치
+./install.sh --be
+
+# 글로벌 설치
+./install.sh --global
+
+# 글로벌 + FE만
+./install.sh --global --fe
+```
+
+| 옵션 | 설명 |
+|------|------|
+| (없음) | 전체 설치 (FE + BE), 프로젝트 로컬 |
+| `--fe` | 공통 + FE 스킬만 설치 |
+| `--be` | 공통 + BE 스킬만 설치 |
+| `--fe --be` | 전체 설치 (기본값과 동일) |
+| `--global` | `~/.claude/`에 글로벌 설치 |
+
+기존 `.claude/` 파일이 있으면 자동으로 백업 후 덮어쓴다.
 
 ## 작동 방식
 
@@ -104,10 +147,11 @@ Main Agent는 직접 코드를 작성하거나 탐색하지 않고, 전문 서�
 ## 업데이트
 
 ```bash
-# 레포에서 최신 변경사항 pull
+# npx는 항상 최신 버전을 실행한다
+npx @choblue/claude-code-toolkit
+
+# 소스에서 설치한 경우
 cd my-claude-code-toolkit
 git pull
-
-# 재설치
 ./install.sh
 ```

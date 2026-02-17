@@ -1,0 +1,27 @@
+{
+  "name": "@choblue/claude-code-toolkit",
+  "version": "1.0.0",
+  "description": "Claude Code 서브에이전트 위임 툴킷 - npx로 바로 설치",
+  "bin": {
+    "claude-code-toolkit": "bin/cli.js"
+  },
+  "files": [
+    ".claude/",
+    "bin/",
+    "install.sh",
+    "README.md"
+  ],
+  "keywords": [
+    "claude",
+    "claude-code",
+    "ai",
+    "toolkit",
+    "agents"
+  ],
+  "author": "choblue",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/choblue/my-claude-code-toolkit.git"
+  }
+}
