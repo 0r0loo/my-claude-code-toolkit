@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "~/.claude/hooks/quality-gate.sh"
+            "command": ".claude/hooks/quality-gate.sh"
           }
         ]
       }
