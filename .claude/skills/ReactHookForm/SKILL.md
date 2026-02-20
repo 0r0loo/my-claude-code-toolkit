@@ -1,3 +1,8 @@
+---
+name: react-hook-form
+description: React Hook Form + Zod 폼 검증 가이드. 폼 구현, Zod 스키마 정의, Controller 패턴, 동적 필드, 중첩 구조 등 폼 관련 작업 시 참조한다.
+---
+
 # React Hook Form Skill - 폼 관리 규칙
 
 React Hook Form + Zod를 사용한 폼 관리 규칙을 정의한다.

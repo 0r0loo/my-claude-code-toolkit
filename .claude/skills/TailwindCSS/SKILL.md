@@ -1,3 +1,8 @@
+---
+name: tailwindcss
+description: Tailwind CSS 유틸리티 패턴 가이드. 스타일링, 반응형 디자인, 다크 모드, CVA 패턴, cn() 유틸리티 등 Tailwind 기반 스타일 작업 시 참조한다.
+---
+
 # TailwindCSS Skill - Tailwind CSS 규칙
 
 Tailwind CSS를 사용하는 프로젝트에 적용되는 스타일링 규칙이다.

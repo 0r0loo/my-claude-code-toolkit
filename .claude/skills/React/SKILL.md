@@ -1,3 +1,8 @@
+---
+name: react
+description: React 컴포넌트 설계 및 상태 관리 가이드. React 컴포넌트, Props, 커스텀 훅, 렌더링 최적화 등 React 코드 작성 시 참조한다.
+---
+
 # React Skill - React 핵심 규칙
 
 React 컴포넌트 설계 및 개발에 적용되는 핵심 규칙이다.

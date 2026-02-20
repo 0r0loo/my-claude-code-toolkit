@@ -1,3 +1,8 @@
+---
+name: nextjs
+description: Next.js App Router 기반 개발 가이드. Next.js 프로젝트에서 Server/Client Component, 데이터 페칭, Route Handler, Middleware, Server Actions 구현 시 참조한다.
+---
+
 # Next.js Skill - App Router 규칙
 
 Next.js App Router 기반 프로젝트에 적용되는 규칙이다.

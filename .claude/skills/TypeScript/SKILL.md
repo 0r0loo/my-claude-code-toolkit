@@ -1,3 +1,8 @@
+---
+name: typescript
+description: TypeScript 고급 패턴 가이드. 타입 추론, 유틸리티 타입, 제네릭, 타입 가드, 고급 타입 패턴 등 TypeScript 코드 작성 시 참조한다.
+---
+
 # TypeScript Skill - 고급 패턴 규칙
 
 FE/BE 공통으로 적용되는 TypeScript 심화 규칙을 정의한다.
@@ -128,198 +133,7 @@ type UsersResult = Awaited<ReturnType<typeof getUsers>>; // User[]
 
 ---
 
-## 3. 제네릭
-
-### 함수 제네릭
-
-```typescript
-// Bad - any 사용
-function first(arr: any[]): any {
-  return arr[0];
-}
-
-// Good - 제네릭으로 타입 안전성 확보
-function first<T>(arr: T[]): T | undefined {
-  return arr[0];
-}
-
-const num = first([1, 2, 3]); // number | undefined
-const str = first(['a', 'b']); // string | undefined
-```
-
-### 제약 조건 (extends)
-
-```typescript
-// Bad - 모든 타입 허용
-function getProperty<T>(obj: T, key: string): unknown {
-  return (obj as Record<string, unknown>)[key];
-}
-
-// Good - 제약 조건으로 타입 안전성 확보
-function getProperty<T, K extends keyof T>(obj: T, key: K): T[K] {
-  return obj[key];
-}
-
-const user = { name: 'Alice', age: 30 };
-const name = getProperty(user, 'name'); // string
-// getProperty(user, 'invalid'); // 컴파일 에러
-```
-
-### 제네릭 기본값
-
-```typescript
-interface PaginatedResponse<T, M = Record<string, never>> {
-  data: T[];
-  total: number;
-  page: number;
-  limit: number;
-  meta: M;
-}
-
-// 메타 정보 없이 사용
-type UserListResponse = PaginatedResponse<User>;
-
-// 메타 정보와 함께 사용
-type SearchResponse = PaginatedResponse<User, { query: string; took: number }>;
-```
-
-### 실전 예시 - API 응답 래퍼
-
-```typescript
-// API 응답 공통 래퍼
-interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  error: string | null;
-  timestamp: number;
-}
-
-// 페이지네이션 래퍼
-interface PaginatedData<T> {
-  items: T[];
-  total: number;
-  page: number;
-  pageSize: number;
-  hasNext: boolean;
-}
-
-// 조합하여 사용
-type UserListApiResponse = ApiResponse<PaginatedData<User>>;
-
-// 제네릭 API 호출 함수
-async function apiGet<T>(url: string): Promise<ApiResponse<T>> {
-  const response = await fetch(url);
-  return response.json() as Promise<ApiResponse<T>>;
-}
-
-const result = await apiGet<User[]>('/api/users');
-// result.data는 User[]로 타입 추론
-```
-
----
-
-## 4. 타입 가드
-
-### is 키워드 (사용자 정의 타입 가드)
-
-```typescript
-interface Admin {
-  role: 'admin';
-  permissions: string[];
-}
-
-interface Guest {
-  role: 'guest';
-}
-
-type AppUser = Admin | Guest;
-
-// Bad - 타입 단언
-function getPermissions(user: AppUser): string[] {
-  return (user as Admin).permissions ?? [];
-}
-
-// Good - 타입 가드
-function isAdmin(user: AppUser): user is Admin {
-  return user.role === 'admin';
-}
-
-function getPermissions(user: AppUser): string[] {
-  if (isAdmin(user)) {
-    return user.permissions; // Admin으로 좁혀짐
-  }
-  return [];
-}
-```
-
-### in 연산자
-
-```typescript
-interface Dog {
-  bark: () => void;
-}
-
-interface Cat {
-  meow: () => void;
-}
-
-type Pet = Dog | Cat;
-
-function makeSound(pet: Pet): void {
-  if ('bark' in pet) {
-    pet.bark(); // Dog으로 좁혀짐
-  } else {
-    pet.meow(); // Cat으로 좁혀짐
-  }
-}
-```
-
-### Discriminated Union (태그드 유니언)
-
-```typescript
-// 공통 판별 필드(type)를 가진 유니언
-type Shape =
-  | { type: 'circle'; radius: number }
-  | { type: 'rectangle'; width: number; height: number }
-  | { type: 'triangle'; base: number; height: number };
-
-function calculateArea(shape: Shape): number {
-  switch (shape.type) {
-    case 'circle':
-      return Math.PI * shape.radius ** 2;
-    case 'rectangle':
-      return shape.width * shape.height;
-    case 'triangle':
-      return (shape.base * shape.height) / 2;
-  }
-}
-```
-
-### Exhaustive Check (never를 이용한 완전성 검사)
-
-```typescript
-// 모든 케이스를 처리했는지 컴파일 타임에 검증한다
-function assertNever(value: never): never {
-  throw new Error(`Unexpected value: ${value}`);
-}
-
-function getShapeLabel(shape: Shape): string {
-  switch (shape.type) {
-    case 'circle':
-      return '원';
-    case 'rectangle':
-      return '직사각형';
-    case 'triangle':
-      return '삼각형';
-    default:
-      return assertNever(shape); // 새로운 Shape 추가 시 컴파일 에러 발생
-  }
-}
-```
-
----
-
-## 5. 타입 설계 원칙
+## 3. 타입 설계 원칙
 
 ### 유니언 > enum
 
@@ -391,39 +205,9 @@ type DeepReadonly<T> = {
 };
 ```
 
-### Branded Type (같은 원시 타입이지만 구분해야 할 때)
-
-```typescript
-// Bad - UserId와 PostId가 모두 string이라 실수로 혼용 가능
-function getPost(postId: string): Post { /* ... */ }
-getPost(userId); // 컴파일 에러 없음 (런타임 버그)
-
-// Good - Branded Type으로 구분
-type Brand<T, B extends string> = T & { readonly __brand: B };
-
-type UserId = Brand<string, 'UserId'>;
-type PostId = Brand<string, 'PostId'>;
-
-function createUserId(id: string): UserId {
-  return id as UserId;
-}
-
-function createPostId(id: string): PostId {
-  return id as PostId;
-}
-
-function getPost(postId: PostId): Post { /* ... */ }
-
-const userId = createUserId('user-1');
-const postId = createPostId('post-1');
-
-getPost(postId); // OK
-// getPost(userId); // 컴파일 에러 - UserId는 PostId에 할당 불가
-```
-
 ---
 
-## 6. 비동기 타입
+## 4. 비동기 타입
 
 ### Promise<T>와 async/await 반환 타입
 
@@ -503,7 +287,15 @@ async function fetchDashboard(userId: string): Promise<{
 
 ---
 
-## 7. 금지 사항
+## 참조 문서
+
+- **[Generics](./references/generics.md)** - 제네릭 함수, 제약 조건, 고급 제네릭 패턴
+- **[Type Guards](./references/type-guards.md)** - 타입 가드, 판별 유니온, 완전성 검사
+- **[Advanced Patterns](./references/advanced-patterns.md)** - 조건부 타입, 매핑 타입, 템플릿 리터럴 타입
+
+---
+
+## 5. 금지 사항
 
 - `any` 사용 금지 - `unknown`을 사용한 후 타입 가드로 좁힌다
 - `as` 타입 단언 남용 금지 - 타입 가드 또는 올바른 타입 설계로 해결한다 (Branded Type 등 불가피한 경우 제외)

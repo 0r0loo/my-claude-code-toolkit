@@ -1,3 +1,8 @@
+---
+name: tanstack-query
+description: TanStack Query 서버 상태 관리 가이드. useQuery, useMutation, queryKey 팩토리, Optimistic Update, Prefetching 등 서버 상태 관리 시 참조한다.
+---
+
 # TanStack Query Skill - 서버 상태 관리 규칙
 
 TanStack Query (React Query)를 사용한 서버 상태 관리 규칙을 정의한다.
