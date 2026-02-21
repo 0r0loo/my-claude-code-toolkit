@@ -26,11 +26,23 @@ React 규칙은 `../React/SKILL.md`, 공통 원칙은 `../Coding/SKILL.md`를 �
 
 ### 클래스 조합
 - 관련 있는 클래스를 논리적 그룹으로 정렬한다
-- 권장 순서: 레이아웃 -> 크기 -> 간격 -> 타이포그래피 -> 색상 -> 효과
+- 권장 순서: 레이아웃 → 크기 → 간격 → 타이포그래피 → 색상 → 효과
+- **클래스가 길어지면 관심사별로 줄바꿈하여 가독성을 높인다**
 
 ```typescript
-// Good - 논리적 순서로 정렬
+// Bad - 한 줄로 길게 나열 (화면 벗어남, 어떤 CSS가 있는지 파악 어려움)
 <button className="flex items-center justify-center w-full h-10 px-4 text-sm font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-700">
+
+// Good - 관심사별 줄바꿈
+<button
+  className={cn(
+    'flex items-center justify-center', // 레이아웃
+    'w-full h-10 px-4',                 // 크기/간격
+    'text-sm font-medium text-white',   // 타이포그래피
+    'bg-blue-600 rounded-lg',           // 배경/모양
+    'hover:bg-blue-700',                // 상태
+  )}
+>
   버튼
 </button>
 ```
@@ -227,7 +239,8 @@ export function Button({ variant = 'primary', size = 'md', className, children }
     <button
       className={cn(
         // 기본 스타일
-        'inline-flex items-center justify-center rounded-lg font-medium transition-colors',
+        'inline-flex items-center justify-center',
+        'rounded-lg font-medium transition-colors',
         // variant
         {
           'bg-blue-600 text-white hover:bg-blue-700': variant === 'primary',
@@ -261,7 +274,12 @@ import { cn } from '@/lib/utils';
 
 const buttonVariants = cva(
   // 기본 스타일
-  'inline-flex items-center justify-center rounded-lg font-medium transition-colors disabled:pointer-events-none disabled:opacity-50',
+  [
+    'inline-flex items-center justify-center', // 레이아웃
+    'rounded-lg font-medium',                  // 모양/타이포
+    'transition-colors',                       // 효과
+    'disabled:pointer-events-none disabled:opacity-50', // 상태
+  ],
   {
     variants: {
       variant: {
