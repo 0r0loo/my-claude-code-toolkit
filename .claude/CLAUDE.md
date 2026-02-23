@@ -87,6 +87,8 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
 
 ### Hooks
 - `.claude/hooks/quality-gate.sh` - 품질 체크 프로토콜
+- `.claude/hooks/skill-detector.sh` - 프롬프트 기반 스킬 자동 추천
+- `.claude/hooks/skill-keywords.conf` - 스킬별 키워드 매핑 설정
 
 ---
 

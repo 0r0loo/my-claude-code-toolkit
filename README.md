@@ -50,7 +50,9 @@
 │   └── Git/
 │       └── SKILL.md             ← 커밋/PR/브랜치 규칙
 └── hooks/
-    └── quality-gate.sh          ← 품질 체크 프로토콜
+    ├── quality-gate.sh          ← 품질 체크 프로토콜
+    ├── skill-detector.sh        ← 프롬프트 기반 스킬 자동 추천
+    └── skill-keywords.conf      ← 스킬별 키워드 매핑 설정
 ```
 
 ## 설치
@@ -131,9 +133,16 @@ Main Agent는 직접 코드를 작성하거나 탐색하지 않고, 전문 서�
 | test-writer | opus | TDD 테스트 작성/실행 |
 | git-manager | sonnet | 커밋, 브랜치, PR |
 
-### Quality Gate Hook
+### Hooks
 
-매 프롬프트마다 `quality-gate.sh`가 실행되어 적절한 에이전트/스킬 활용을 상기시킨다.
+매 프롬프트마다 UserPromptSubmit hook이 실행된다.
+
+| Hook | 역할 |
+|------|------|
+| quality-gate.sh | 적절한 에이전트/스킬 활용을 상기시킨다 |
+| skill-detector.sh | 프롬프트 키워드를 분석하여 관련 스킬을 자동 추천한다 |
+
+`skill-keywords.conf`에서 스킬별 키워드를 관리하며, 스킬 추가 시 conf 파일만 수정하면 된다.
 
 ## 프로젝트별 커스터마이징
 
