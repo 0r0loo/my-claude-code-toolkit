@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.4
+
+- **FEAT**: PROJECT_MAP.md 자동 생성 시스템 추가
+  - `generate-project-map.sh`: 프로젝트 구조를 캐싱하여 explore 에이전트 탐색 비용 절감
+  - `project-map-detector.sh`: 구조 변경 감지 hook (파일 추가/삭제, 설정 파일 변경 시 갱신 안내)
+  - explore 에이전트에 PROJECT_MAP.md 사전 체크 규칙 추가
+  - install.sh에 scripts/ 디렉토리 복사 추가
+
 ## 1.1.3
 
 - **FEAT**: 프롬프트 기반 스킬 자동 추천 hook 추가 (`skill-detector.sh`, `skill-keywords.conf`)

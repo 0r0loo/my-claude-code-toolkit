@@ -6,3 +6,7 @@
 node_modules/
 *.tgz
 /skills/
+
+# generate-project-map.sh 생성물
+.claude/PROJECT_MAP.md
+.claude/.project-map-cache

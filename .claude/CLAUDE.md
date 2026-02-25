@@ -9,6 +9,12 @@ Claude는 작업 시작 전 반드시 이 규칙을 따라야 한다.
 
 Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에 위임하라.
 
+### PROJECT_MAP.md 활용
+- `.claude/PROJECT_MAP.md`가 있으면 explore 전에 반드시 먼저 Read하라
+- 단순 구조 확인은 explore 생략 가능
+- 세부 코드 탐색이 필요할 때만 explore 위임
+- 갱신: `.claude/scripts/generate-project-map.sh` 실행
+
 ### 위임 규칙
 - **탐색/검색 작업** → `explore` 에이전트 (haiku) 위임
 - **코드 구현** → `code-writer-fe` 또는 `code-writer-be` 에이전트 (opus) 위임
@@ -85,10 +91,14 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
   - `backend.md` - NestJS 테스트 규칙
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
 
+### Scripts
+- `.claude/scripts/generate-project-map.sh` - PROJECT_MAP.md 자동 생성
+
 ### Hooks
 - `.claude/hooks/quality-gate.sh` - 품질 체크 프로토콜
 - `.claude/hooks/skill-detector.sh` - 프롬프트 기반 스킬 자동 추천
 - `.claude/hooks/skill-keywords.conf` - 스킬별 키워드 매핑 설정
+- `.claude/hooks/project-map-detector.sh` - 프로젝트 구조 변경 감지
 
 ---
 

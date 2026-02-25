@@ -242,6 +242,10 @@ copy_common() {
   # hooks
   copy_dir "hooks"
   chmod +x "$TARGET_DIR/hooks/"*.sh
+
+  # scripts
+  copy_dir "scripts"
+  chmod +x "$TARGET_DIR/scripts/"*.sh
 }
 
 # FE (프론트엔드)
@@ -330,6 +334,7 @@ echo "  $TARGET_DIR/settings.json"
 echo "  $TARGET_DIR/agents/"
 echo "  $TARGET_DIR/skills/"
 echo "  $TARGET_DIR/hooks/"
+echo "  $TARGET_DIR/scripts/"
 echo ""
 if [ "$INSTALL_MODE" = "global" ]; then
   echo "이제 어떤 프로젝트에서든 Claude Code를 실행하면 자동으로 적용됩니다."
@@ -337,3 +342,6 @@ else
   echo "현재 프로젝트($(pwd))에서 Claude Code를 실행하면 자동으로 적용됩니다."
   echo "다른 프로젝트에도 적용하려면 --global 옵션을 사용하세요."
 fi
+echo ""
+echo "PROJECT_MAP.md를 생성하면 explore 에이전트가 더 빠르게 동작합니다:"
+echo "  $TARGET_DIR/scripts/generate-project-map.sh"

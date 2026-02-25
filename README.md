@@ -49,10 +49,13 @@
 │   │   └── backend.md           ← NestJS 테스트 규칙
 │   └── Git/
 │       └── SKILL.md             ← 커밋/PR/브랜치 규칙
-└── hooks/
-    ├── quality-gate.sh          ← 품질 체크 프로토콜
-    ├── skill-detector.sh        ← 프롬프트 기반 스킬 자동 추천
-    └── skill-keywords.conf      ← 스킬별 키워드 매핑 설정
+├── hooks/
+│   ├── quality-gate.sh          ← 품질 체크 프로토콜
+│   ├── skill-detector.sh        ← 프롬프트 기반 스킬 자동 추천
+│   ├── skill-keywords.conf      ← 스킬별 키워드 매핑 설정
+│   └── project-map-detector.sh  ← 프로젝트 구조 변경 감지
+└── scripts/
+    └── generate-project-map.sh  ← PROJECT_MAP.md 자동 생성
 ```
 
 ## 설치
@@ -141,8 +144,27 @@ Main Agent는 직접 코드를 작성하거나 탐색하지 않고, 전문 서�
 |------|------|
 | quality-gate.sh | 적절한 에이전트/스킬 활용을 상기시킨다 |
 | skill-detector.sh | 프롬프트 키워드를 분석하여 관련 스킬을 자동 추천한다 |
+| project-map-detector.sh | 프로젝트 구조 변경을 감지하여 PROJECT_MAP.md 갱신을 안내한다 |
 
 `skill-keywords.conf`에서 스킬별 키워드를 관리하며, 스킬 추가 시 conf 파일만 수정하면 된다.
+
+### PROJECT_MAP.md
+
+explore 에이전트가 매번 코드베이스를 재탐색하는 비용을 줄이기 위해, 프로젝트 구조를 캐싱한다.
+
+```bash
+# PROJECT_MAP.md 생성
+.claude/scripts/generate-project-map.sh
+```
+
+생성되는 내용:
+- 프로젝트 정보 (이름, 브랜치, 최근 커밋)
+- 기술 스택 (package.json에서 자동 감지)
+- 디렉토리 구조 (3레벨 깊이)
+- 주요 파일 (설정 파일, 엔트리포인트)
+- 빌드 명령 (dev/build/test/start)
+
+`project-map-detector.sh` hook이 구조 변경(파일 추가/삭제, 설정 파일 변경)을 감지하면 갱신을 안내한다.
 
 ## 프로젝트별 커스터마이징
 

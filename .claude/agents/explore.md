@@ -18,6 +18,13 @@ Main Agent의 Context를 오염시키지 않고, 필요한 정보만 정리하�
 
 ---
 
+## 사전 체크
+
+1. `.claude/PROJECT_MAP.md` 존재 시 먼저 Read
+2. PROJECT_MAP.md에 없는 상세 정보만 Glob/Grep 사용
+
+---
+
 ## 탐색 방법
 
 ### 파일 찾기
