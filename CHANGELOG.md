@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.1.5
+
+- **FEAT**: DDD 전술적 패턴 스킬 추가 (`skills/DDD/SKILL.md`)
+  - Entity, Value Object, Aggregate, Repository, Domain Service, Domain Event 패턴
+  - 레이어 구조 (Domain / Application / Infrastructure / Presentation)
+  - Bad/Good 코드 예시로 실무 적용 가이드 제공
+  - skill-keywords.conf에 DDD 키워드 매핑 추가
+  - install.sh BE 설치에 DDD 스킬 포함
+
 ## 1.1.4
 
 - **FEAT**: PROJECT_MAP.md 자동 생성 시스템 추가

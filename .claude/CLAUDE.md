@@ -89,6 +89,7 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
   - `SKILL.md` - 공통 TDD 원칙
   - `frontend.md` - React 테스트 규칙
   - `backend.md` - NestJS 테스트 규칙
+- `.claude/skills/DDD/SKILL.md` - DDD 전술적 패턴 (Entity, VO, Aggregate, Repository, Domain Event)
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
 
 ### Scripts

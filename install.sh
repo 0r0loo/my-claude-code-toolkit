@@ -279,6 +279,7 @@ copy_be() {
 
   # BE 스킬 (디렉토리 전체)
   copy_dir "skills/TypeORM"
+  copy_dir "skills/DDD"
 
   # BE 개별 스킬 파일
   copy_file "skills/Coding/backend.md"

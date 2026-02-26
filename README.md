@@ -43,6 +43,8 @@
 │   │   └── SKILL.md             ← TypeScript 고급 패턴
 │   ├── TypeORM/
 │   │   └── SKILL.md             ← TypeORM Entity, Repository
+│   ├── DDD/
+│   │   └── SKILL.md             ← DDD 전술적 패턴
 │   ├── TDD/
 │   │   ├── SKILL.md             ← TDD 핵심 원칙
 │   │   ├── frontend.md          ← React 테스트 규칙

@@ -26,6 +26,32 @@ FE/BE별 상세 규칙은 각각의 파일을 참고한다.
 - **높은 응집도**: 관련 있는 로직을 같은 모듈에 모은다
   - 하나의 모듈 안에서 데이터와 동작이 밀접하게 관련된다
 
+### Early Return (Guard Clause)
+- 예외/실패 조건을 함수 상단에서 먼저 처리하고 빠져나온다
+- 중첩 if를 줄여 가독성을 높인다
+
+```typescript
+// Bad - 깊은 중첩
+function processOrder(order: Order): void {
+  if (order) {
+    if (order.isValid()) {
+      if (order.items.length > 0) {
+        // 실제 로직
+      }
+    }
+  }
+}
+
+// Good - 얼리 리턴
+function processOrder(order: Order): void {
+  if (!order) return;
+  if (!order.isValid()) return;
+  if (order.items.length === 0) return;
+
+  // 실제 로직
+}
+```
+
 ### DRY (Don't Repeat Yourself)
 - 동일한 로직이 3번 이상 반복되면 추출한다
 - 단, 2번까지는 중복을 허용한다 (섣부른 추상화 방지)
