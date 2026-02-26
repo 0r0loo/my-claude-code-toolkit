@@ -5,9 +5,17 @@ Claude는 작업 시작 전 반드시 이 규칙을 따라야 한다.
 
 ---
 
-## 1. Context 절약 원칙
+## 1. 작업 복잡도 티어
 
-Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에 위임하라.
+작업 시작 전 반드시 티어를 판단하고, 티어에 맞는 워크플로우를 따른다.
+
+| 티어 | 기준 | 예시 |
+|------|------|------|
+| **S (trivial)** | 단순 수정, 영향도 낮음 | 오타 수정, config 변경, README 업데이트, 일괄 rename |
+| **M (moderate)** | 명확한 기능, 단일 레이어 | 단일 컴포넌트 추가, API 엔드포인트 1개, 유틸 함수 추가 |
+| **L (complex)** | 설계 필요, 레이어 횡단 | 새 도메인 모듈, 핵심 엔티티 변경, FE+BE 동시 변경 |
+
+> **판단 기준**: 파일 수보다 **변경 영향도**를 우선한다. 20파일 일괄 rename은 S, 핵심 도메인 엔티티 1개 변경은 L이다.
 
 ### PROJECT_MAP.md 활용
 - `.claude/PROJECT_MAP.md`가 있으면 explore 전에 반드시 먼저 Read하라
@@ -15,50 +23,37 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
 - 세부 코드 탐색이 필요할 때만 explore 위임
 - 갱신: `.claude/scripts/generate-project-map.sh` 실행
 
-### 위임 규칙
-- **탐색/검색 작업** → `explore` 에이전트 (haiku) 위임
-- **코드 구현** → `code-writer-fe` 또는 `code-writer-be` 에이전트 (opus) 위임
-- **코드 리뷰** → `code-reviewer` 에이전트 (opus) 위임
-- **Git 작업** → `git-manager` 에이전트 (sonnet) 위임
-- **테스트 작성/실행** → `test-writer-fe` 또는 `test-writer-be` 에이전트 (opus) 위임
-
-### Main Agent 허용 작업
-- 사용자와의 대화, 요구사항 분석
-- 작업 계획 수립 (Planning)
-- 서브에이전트 호출 및 결과 요약
-- 최종 확인 및 사용자 보고
-
-### Main Agent 금지 작업
-- 직접 파일 탐색 (Glob/Grep 3회 이상)
-- 직접 코드 작성 (단순 수정 제외)
-- 직접 Git 작업 (commit, push, PR 생성)
-- 대량 파일 읽기 (Read 5회 이상)
+### 에이전트 위임 대상
+- **탐색/검색 작업** → `explore` 에이전트 (haiku)
+- **코드 구현** → `code-writer-fe` 또는 `code-writer-be` 에이전트 (opus)
+- **코드 리뷰** → `code-reviewer` 에이전트 (opus)
+- **Git 작업** → `git-manager` 에이전트 (sonnet)
+- **테스트 작성/실행** → `test-writer-fe` 또는 `test-writer-be` 에이전트 (opus)
 
 ---
 
-## 2. 작업 워크플로우
+## 2. 티어별 워크플로우
 
-모든 작업은 다음 4단계를 따른다:
+### S 티어 (trivial)
+Main Agent가 직접 처리한다. 서브에이전트 위임 불필요.
+1. 파일 읽기 → 직접 수정 → 완료
+2. 필요 시 `git-manager`로 커밋
 
-### Phase 1: Planning
-1. 사용자 요구사항을 정리한다
-2. `explore` 에이전트로 관련 코드/파일 탐색
-3. 작업 계획을 사용자에게 제시하고 승인받는다
+### M 티어 (moderate)
+TDD/Review를 생략하고 핵심 단계만 수행한다.
+1. **Planning**: 요구사항 정리, 필요 시 `explore`로 탐색
+2. **Implementation**: `code-writer` 에이전트에 구현 위임
+3. **Commit**: `git-manager`로 커밋/PR 생성
 
-### Phase 2: Test (Red)
-1. `test-writer` 에이전트에 실패하는 테스트 작성을 위임한다
-2. 테스트가 실패하는 것을 확인한다 (Red 상태)
+### L 티어 (complex)
+풀 프로세스를 따른다.
+1. **Planning**: 요구사항 정리 → `explore`로 탐색 → 사용자 승인
+2. **Test (Red)**: `test-writer`에 실패하는 테스트 작성 위임
+3. **Implementation (Green)**: `code-writer`에 구현 위임 → 테스트 통과 확인
+4. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
 
-### Phase 3: Implementation (Green + Refactor)
-1. `code-writer` 에이전트에 구현을 위임한다
-2. 테스트를 통과시키는 최소한의 코드만 구현한다
-3. `test-writer` 에이전트로 테스트 통과를 확인한다 (Green 상태)
-4. 필요 시 리팩토링 후 테스트가 여전히 통과하는지 확인한다
-
-### Phase 4: Review
-1. `code-reviewer` 에이전트로 코드 + 테스트 리뷰를 수행한다
-2. Critical 이슈가 있으면 `code-writer`에 수정을 위임한다
-3. 리뷰 통과 후 `git-manager`로 커밋/PR을 생성한다
+### 풀스택 작업 (FE + BE 동시 변경)
+티어는 영향도 기준으로 판단하되, 위임 순서는 BE 선행 → FE 후행을 따른다.
 
 ---
 
@@ -96,10 +91,8 @@ Main Agent의 Context Window는 제한적이다. 반드시 서브에이전트에
 - `.claude/scripts/generate-project-map.sh` - PROJECT_MAP.md 자동 생성
 
 ### Hooks
-- `.claude/hooks/quality-gate.sh` - 품질 체크 프로토콜
-- `.claude/hooks/skill-detector.sh` - 프롬프트 기반 스킬 자동 추천
+- `.claude/hooks/prompt-hook.sh` - 통합 hook (품질 체크 + 스킬 추천 + 구조 변경 감지)
 - `.claude/hooks/skill-keywords.conf` - 스킬별 키워드 매핑 설정
-- `.claude/hooks/project-map-detector.sh` - 프로젝트 구조 변경 감지
 
 ---
 
