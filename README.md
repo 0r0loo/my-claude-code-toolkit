@@ -42,9 +42,11 @@
 │   ├── TypeScript/
 │   │   └── SKILL.md             ← TypeScript 고급 패턴
 │   ├── TypeORM/
-│   │   └── SKILL.md             ← TypeORM Entity, Repository
+│   │   ├── SKILL.md             ← TypeORM Entity, Repository
+│   │   └── references/          ← 고급 쿼리, 마이그레이션, 트랜잭션
 │   ├── DDD/
-│   │   └── SKILL.md             ← DDD 전술적 패턴
+│   │   ├── SKILL.md             ← DDD 전술적 패턴
+│   │   └── references/          ← Entity/VO, Aggregate, Domain Event 심화
 │   ├── TDD/
 │   │   ├── SKILL.md             ← TDD 핵심 원칙
 │   │   ├── frontend.md          ← React 테스트 규칙

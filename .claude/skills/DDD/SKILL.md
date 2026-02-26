@@ -153,41 +153,6 @@ class Email {
     return this._value === other._value;
   }
 }
-
-class Money {
-  private constructor(
-    private readonly _amount: number,
-    private readonly _currency: string,
-  ) {}
-
-  static create(amount: number, currency: string): Money {
-    if (amount < 0) {
-      throw new Error('Amount cannot be negative');
-    }
-    if (!['KRW', 'USD', 'EUR'].includes(currency)) {
-      throw new Error(`Unsupported currency: ${currency}`);
-    }
-    return new Money(amount, currency);
-  }
-
-  get amount(): number { return this._amount; }
-  get currency(): string { return this._currency; }
-
-  add(other: Money): Money {
-    if (this._currency !== other._currency) {
-      throw new Error('Cannot add different currencies');
-    }
-    return Money.create(this._amount + other._amount, this._currency);
-  }
-
-  multiply(factor: number): Money {
-    return Money.create(this._amount * factor, this._currency);
-  }
-
-  equals(other: Money): boolean {
-    return this._amount === other._amount && this._currency === other._currency;
-  }
-}
 ```
 
 ### 핵심 원칙
@@ -282,32 +247,6 @@ class Order {
     );
   }
 }
-
-// OrderItem은 Aggregate 내부 Entity - 외부에서 직접 생성/조작 불가
-class OrderItem {
-  constructor(
-    private readonly _productId: string, // ID로만 참조
-    private readonly _price: Money,
-    private _quantity: number,
-  ) {
-    if (quantity <= 0) {
-      throw new Error('Quantity must be positive');
-    }
-  }
-
-  get productId(): string { return this._productId; }
-  get price(): Money { return this._price; }
-  get quantity(): number { return this._quantity; }
-
-  get subtotal(): Money {
-    return this._price.multiply(this._quantity);
-  }
-
-  increaseQuantity(amount: number): void {
-    if (amount <= 0) throw new Error('Amount must be positive');
-    this._quantity += amount;
-  }
-}
 ```
 
 ### 핵심 원칙
@@ -355,52 +294,6 @@ interface OrderRepository {
   save(order: Order): Promise<void>;
   delete(id: string): Promise<void>;
 }
-
-// infrastructure/persistence/typeorm-order.repository.ts (인프라 레이어 - 구현)
-@Injectable()
-class TypeOrmOrderRepository implements OrderRepository {
-  constructor(
-    @InjectRepository(OrderEntity)
-    private readonly ormRepo: Repository<OrderEntity>,
-  ) {}
-
-  async findById(id: string): Promise<Order | null> {
-    const entity = await this.ormRepo.findOne({
-      where: { id },
-      relations: ['items'],
-    });
-    if (!entity) return null;
-    return OrderMapper.toDomain(entity);
-  }
-
-  async save(order: Order): Promise<void> {
-    const entity = OrderMapper.toEntity(order);
-    await this.ormRepo.save(entity);
-  }
-
-  async findByCustomerId(customerId: string): Promise<Order[]> {
-    const entities = await this.ormRepo.find({
-      where: { customerId },
-      relations: ['items'],
-    });
-    return entities.map(OrderMapper.toDomain);
-  }
-
-  async delete(id: string): Promise<void> {
-    await this.ormRepo.delete(id);
-  }
-}
-
-// Module에서 DI 바인딩
-@Module({
-  providers: [
-    {
-      provide: 'OrderRepository', // 또는 Symbol/abstract class 토큰
-      useClass: TypeOrmOrderRepository,
-    },
-  ],
-})
-class OrderModule {}
 ```
 
 ### 핵심 원칙
@@ -421,20 +314,12 @@ class OrderModule {}
 ```typescript
 // Bad - 특정 Entity에 속하는 로직을 Domain Service에 두기
 class OrderDomainService {
-  // 이 로직은 Order Entity에 속해야 한다
   cancelOrder(order: Order): void {
+    // 이 로직은 Order Entity에 속해야 한다
     if (order.status !== OrderStatus.PENDING) {
       throw new Error('Cannot cancel');
     }
     order.status = OrderStatus.CANCELLED;
-  }
-
-  // 이 로직도 Order Entity에 속해야 한다
-  calculateTotal(order: Order): number {
-    return order.items.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0,
-    );
   }
 }
 ```
@@ -442,38 +327,21 @@ class OrderDomainService {
 ```typescript
 // Good - 여러 Aggregate 간 계산/조율 로직을 Domain Service에 두기
 class PricingService {
-  // 여러 Aggregate(Order, Customer, Promotion)의 정보가 필요한 할인 계산
   calculateDiscount(
     order: Order,
     customerTier: CustomerTier,
     promotions: Promotion[],
   ): Money {
     let discount = Money.create(0, 'KRW');
-
-    // 고객 등급별 할인
     if (customerTier === CustomerTier.VIP) {
       discount = discount.add(order.totalAmount.multiply(0.1));
     }
-
-    // 프로모션 할인
     for (const promo of promotions) {
       if (promo.isApplicableTo(order)) {
         discount = discount.add(promo.calculateDiscount(order.totalAmount));
       }
     }
-
     return discount;
-  }
-}
-
-class TransferService {
-  // 두 Aggregate(Account) 간 이체 - 어느 한쪽에 속하지 않는 로직
-  transfer(from: Account, to: Account, amount: Money): void {
-    if (!from.canWithdraw(amount)) {
-      throw new Error('Insufficient balance');
-    }
-    from.withdraw(amount);
-    to.deposit(amount);
   }
 }
 ```
@@ -483,7 +351,7 @@ class TransferService {
 - Domain Service는 여러 Aggregate 간의 조율이 필요할 때만 사용한다
 - 상태를 가지지 않는다 (모든 데이터는 매개변수로 받는다)
 - Domain Service와 Application Service를 혼동하지 않는다
-  - Domain Service: 순수 도메인 로직 (할인 계산, 이체 규칙)
+  - Domain Service: 순수 도메인 로직 (할인 계산 등)
   - Application Service: 유스케이스 흐름 조율 (트랜잭션, 이벤트 발행)
 
 ---
@@ -500,15 +368,14 @@ class TransferService {
 class OrderService {
   constructor(
     private readonly orderRepo: OrderRepository,
-    private readonly emailService: EmailService,       // 외부 서비스 직접 의존
-    private readonly inventoryService: InventoryService, // 외부 서비스 직접 의존
-    private readonly pointService: PointService,        // 외부 서비스 직접 의존
+    private readonly emailService: EmailService,  // 외부 서비스 직접 의존
+    private readonly inventoryService: InventoryService,  // 외부 서비스 직접 의존
+    private readonly pointService: PointService,  // 외부 서비스 직접 의존
   ) {}
 
   async placeOrder(command: PlaceOrderCommand): Promise<void> {
     const order = Order.create(command);
     await this.orderRepo.save(order);
-
     // 직접 호출 - 결합도 높음, 하나가 실패하면 전체 실패
     await this.emailService.sendOrderConfirmation(order);
     await this.inventoryService.decreaseStock(order.items);
@@ -534,40 +401,6 @@ class OrderPlacedEvent {
   }
 }
 
-// Aggregate에서 이벤트 수집
-abstract class AggregateRoot {
-  private _domainEvents: DomainEvent[] = [];
-
-  get domainEvents(): ReadonlyArray<DomainEvent> {
-    return [...this._domainEvents];
-  }
-
-  protected addDomainEvent(event: DomainEvent): void {
-    this._domainEvents.push(event);
-  }
-
-  clearDomainEvents(): void {
-    this._domainEvents = [];
-  }
-}
-
-class Order extends AggregateRoot {
-  // ... 기존 필드 생략
-
-  static place(id: string, customerId: string, items: OrderItem[]): Order {
-    const order = new Order(id, customerId, items);
-    order.addDomainEvent(
-      new OrderPlacedEvent(
-        order.id,
-        order.customerId,
-        order.items.map(i => ({ productId: i.productId, quantity: i.quantity })),
-        order.totalAmount.amount,
-      ),
-    );
-    return order;
-  }
-}
-
 // Application Service에서 이벤트 발행
 class PlaceOrderUseCase {
   constructor(
@@ -578,29 +411,9 @@ class PlaceOrderUseCase {
   async execute(command: PlaceOrderCommand): Promise<void> {
     const order = Order.place(command.id, command.customerId, command.items);
     await this.orderRepo.save(order);
-
     // Aggregate에서 수집한 이벤트를 발행
     await this.eventPublisher.publishAll(order.domainEvents);
     order.clearDomainEvents();
-  }
-}
-
-// 이벤트 핸들러 - 각자 독립적으로 처리
-class SendOrderConfirmationHandler {
-  constructor(private readonly emailService: EmailService) {}
-
-  async handle(event: OrderPlacedEvent): Promise<void> {
-    await this.emailService.sendOrderConfirmation(event.orderId);
-  }
-}
-
-class DecreaseStockHandler {
-  constructor(private readonly inventoryService: InventoryService) {}
-
-  async handle(event: OrderPlacedEvent): Promise<void> {
-    for (const item of event.items) {
-      await this.inventoryService.decrease(item.productId, item.quantity);
-    }
   }
 }
 ```
@@ -744,3 +557,11 @@ class OrderMapper {
 - Aggregate 경계를 넘는 트랜잭션 금지 - 도메인 이벤트로 처리한다
 - Application Service에 도메인 로직 작성 금지 - 도메인 레이어에 위치시킨다
 - 도메인 레이어에서 외부 서비스 직접 호출 금지
+
+---
+
+## 참조 문서
+
+- **[Entity & Value Object 심화](./references/entity-vo.md)** - Entity 확장 패턴, Value Object 도메인 연산, Money 패턴 심화
+- **[Aggregate & Repository 심화](./references/aggregate-repository.md)** - Aggregate 내부 Entity 관리, 불변식 보호, Repository 구현 패턴
+- **[Domain Service & Domain Event 심화](./references/domain-events.md)** - 이벤트 발행/구독 패턴, AggregateRoot 기반 이벤트 수집, 핸들러 구현

@@ -8,6 +8,11 @@
   - Bad/Good 코드 예시로 실무 적용 가이드 제공
   - skill-keywords.conf에 DDD 키워드 매핑 추가
   - install.sh BE 설치에 DDD 스킬 포함
+- **REFACTOR**: DDD 스킬 Reference 파일 분리
+  - SKILL.md 핵심만 유지 (747줄 → 약 570줄)
+  - `references/entity-vo.md` - Entity + Value Object 심화 패턴
+  - `references/aggregate-repository.md` - Aggregate + Repository 심화 패턴
+  - `references/domain-events.md` - Domain Service + Domain Event 심화 패턴
 
 ## 1.1.4
 
