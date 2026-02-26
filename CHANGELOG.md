@@ -8,6 +8,8 @@
   - Bad/Good 코드 예시로 실무 적용 가이드 제공
   - skill-keywords.conf에 DDD 키워드 매핑 추가
   - install.sh BE 설치에 DDD 스킬 포함
+- **FEAT**: Coding 스킬에 선언적 & 함수형 스타일 가이드 추가
+  - 선언적 > 명령적, 순수 함수, 불변성, 부수효과 격리 패턴
 - **REFACTOR**: DDD 스킬 Reference 파일 분리
   - SKILL.md 핵심만 유지 (747줄 → 약 570줄)
   - `references/entity-vo.md` - Entity + Value Object 심화 패턴

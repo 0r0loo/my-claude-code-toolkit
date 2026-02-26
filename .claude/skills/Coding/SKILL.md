@@ -56,6 +56,78 @@ function processOrder(order: Order): void {
 - 동일한 로직이 3번 이상 반복되면 추출한다
 - 단, 2번까지는 중복을 허용한다 (섣부른 추상화 방지)
 
+### 선언적 & 함수형 스타일
+
+**선언적 > 명령적** - "어떻게(how)" 대신 "무엇(what)"을 표현한다.
+
+```typescript
+// Bad - 명령적: 루프로 직접 조작
+const activeNames: string[] = [];
+for (const user of users) {
+  if (user.isActive) {
+    activeNames.push(user.name);
+  }
+}
+
+// Good - 선언적: 의도를 바로 드러냄
+// 필터/변환 조건은 변수로 추출하여 합성하라
+const isActive = (u: User) => u.isActive;
+const toName = (u: User) => u.name;
+const activeNames = users.filter(isActive).map(toName);
+```
+
+**순수 함수 우선** - 같은 입력이면 항상 같은 출력, 부수효과 없음.
+
+```typescript
+// Bad - 외부 상태를 변경
+let totalPrice = 0;
+function addItemPrice(price: number): void {
+  totalPrice += price; // 외부 변수 변경
+}
+
+// Good - 새 값을 반환하는 순수 함수
+function calculateTotal(prices: number[]): number {
+  return prices.reduce((sum, price) => sum + price, 0);
+}
+```
+
+**불변성** - 기존 데이터를 변경하지 않고 새 데이터를 생성한다.
+
+```typescript
+// Bad - 원본 변경
+user.role = 'admin';
+items.push(newItem);
+
+// Good - 새 객체/배열 생성
+const promotedUser = { ...user, role: 'admin' };
+const updatedItems = [...items, newItem];
+```
+
+**부수효과 격리** - 순수 로직과 부수효과(I/O)를 분리한다.
+
+```typescript
+// Bad - 비즈니스 로직에 부수효과가 섞임
+async function processOrder(order: Order): Promise<void> {
+  const total = order.items.reduce((s, i) => s + i.price, 0);
+  const discount = total > 100 ? total * 0.1 : 0;
+  await db.save({ ...order, total: total - discount }); // 부수효과
+  await sendEmail(order.userId, total - discount);       // 부수효과
+}
+
+// Good - 순수 계산과 부수효과를 분리
+function calcOrderTotal(items: OrderItem[]): number {
+  const total = items.reduce((s, i) => s + i.price, 0);
+  const discount = total > 100 ? total * 0.1 : 0;
+  return total - discount;
+}
+
+async function processOrder(order: Order): Promise<void> {
+  const finalTotal = calcOrderTotal(order.items); // 순수
+  await db.save({ ...order, total: finalTotal }); // I/O 경계
+  await sendEmail(order.userId, finalTotal);       // I/O 경계
+}
+```
+
 ---
 
 ## 2. 네이밍 컨벤션
