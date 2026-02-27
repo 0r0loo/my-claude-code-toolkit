@@ -1,5 +1,26 @@
 # Changelog
 
+## 1.2.0
+
+- **REFACTOR**: 작업 복잡도 티어 시스템 도입 (S/M/L)
+  - 파일 수 대신 변경 영향도 기반 판단
+  - S: Main Agent 직접 처리, M: code-writer 위임, L: 풀 프로세스
+  - 풀스택 작업(FE+BE) 위임 순서 가이드 추가
+- **REFACTOR**: Hook 통합 (3개 → 1개)
+  - `quality-gate.sh` + `skill-detector.sh` + `project-map-detector.sh` → `prompt-hook.sh`
+  - 매 프롬프트 프로세스 3회 → 1회로 감소
+- **REFACTOR**: test-writer를 implementer로 통합
+  - `test-writer-fe/be` 삭제 → `implementer-fe/be` 신규
+  - 구현 + 테스트를 한 에이전트가 동시 수행 (L 티어)
+  - 에이전트 프롬프트 크기 74% 감소 (16KB → 4KB)
+- **FEAT**: Planning 스킬 추가 (`skills/Planning/SKILL.md`)
+  - 티어 판단 체크리스트, 작업 분해 템플릿, 계획 출력 형식
+
+## 1.1.6
+
+- **FEAT**: Coding 스킬에 선언적 & 함수형 스타일 가이드 추가
+- **REFACTOR**: DDD 스킬 Reference 파일 분리
+
 ## 1.1.5
 
 - **FEAT**: DDD 전술적 패턴 스킬 추가 (`skills/DDD/SKILL.md`)
@@ -9,7 +30,6 @@
   - skill-keywords.conf에 DDD 키워드 매핑 추가
   - install.sh BE 설치에 DDD 스킬 포함
 - **FEAT**: Coding 스킬에 선언적 & 함수형 스타일 가이드 추가
-  - 선언적 > 명령적, 순수 함수, 불변성, 부수효과 격리 패턴
 - **REFACTOR**: DDD 스킬 Reference 파일 분리
   - SKILL.md 핵심만 유지 (747줄 → 약 570줄)
   - `references/entity-vo.md` - Entity + Value Object 심화 패턴
