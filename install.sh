@@ -237,6 +237,7 @@ copy_common() {
   copy_file "skills/Coding/SKILL.md"
   copy_dir "skills/TypeScript"
   copy_dir "skills/Git"
+  copy_dir "skills/Planning"
   copy_file "skills/TDD/SKILL.md"
 
   # hooks
@@ -254,7 +255,7 @@ copy_fe() {
 
   # FE 에이전트
   copy_file "agents/code-writer-fe.md"
-  copy_file "agents/test-writer-fe.md"
+  copy_file "agents/implementer-fe.md"
 
   # FE 스킬 (디렉토리 전체)
   copy_dir "skills/React"
@@ -275,7 +276,7 @@ copy_be() {
 
   # BE 에이전트
   copy_file "agents/code-writer-be.md"
-  copy_file "agents/test-writer-be.md"
+  copy_file "agents/implementer-be.md"
 
   # BE 스킬 (디렉토리 전체)
   copy_dir "skills/TypeORM"
