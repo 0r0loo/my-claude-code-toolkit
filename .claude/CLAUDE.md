@@ -85,6 +85,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
   - `frontend.md` - React 테스트 규칙
   - `backend.md` - NestJS 테스트 규칙
 - `.claude/skills/DDD/SKILL.md` - DDD 전술적 패턴 (Entity, VO, Aggregate, Repository, Domain Event)
+- `.claude/skills/Planning/SKILL.md` - 작업 계획 (티어 판단, 작업 분해, 의존성 확인)
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
 
 ### Scripts
