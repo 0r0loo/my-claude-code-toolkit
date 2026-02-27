@@ -25,10 +25,10 @@ Claude는 작업 시작 전 반드시 이 규칙을 따라야 한다.
 
 ### 에이전트 위임 대상
 - **탐색/검색 작업** → `explore` 에이전트 (haiku)
-- **코드 구현** → `code-writer-fe` 또는 `code-writer-be` 에이전트 (opus)
+- **구현 (M 티어)** → `code-writer-fe` 또는 `code-writer-be` 에이전트 (opus)
+- **구현+테스트 (L 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (opus)
 - **코드 리뷰** → `code-reviewer` 에이전트 (opus)
 - **Git 작업** → `git-manager` 에이전트 (sonnet)
-- **테스트 작성/실행** → `test-writer-fe` 또는 `test-writer-be` 에이전트 (opus)
 
 ---
 
@@ -48,9 +48,8 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 ### L 티어 (complex)
 풀 프로세스를 따른다.
 1. **Planning**: 요구사항 정리 → `explore`로 탐색 → 사용자 승인
-2. **Test (Red)**: `test-writer`에 실패하는 테스트 작성 위임
-3. **Implementation (Green)**: `code-writer`에 구현 위임 → 테스트 통과 확인
-4. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
+2. **Implementation + Test**: `implementer`에 구현+테스트 동시 위임 → 테스트 통과 확인
+3. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
 
 ### 풀스택 작업 (FE + BE 동시 변경)
 티어는 영향도 기준으로 판단하되, 위임 순서는 BE 선행 → FE 후행을 따른다.
@@ -61,11 +60,11 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 
 ### Agents (서브에이전트 프롬프트)
 - `.claude/agents/explore.md` - 코드베이스 탐색 전문가
-- `.claude/agents/code-writer-fe.md` - React 프론트엔드 구현 전문가
-- `.claude/agents/code-writer-be.md` - NestJS 백엔드 구현 전문가
+- `.claude/agents/code-writer-fe.md` - React 프론트엔드 구현 (M 티어)
+- `.claude/agents/code-writer-be.md` - NestJS 백엔드 구현 (M 티어)
+- `.claude/agents/implementer-fe.md` - React 구현+테스트 (L 티어)
+- `.claude/agents/implementer-be.md` - NestJS 구현+테스트 (L 티어)
 - `.claude/agents/code-reviewer.md` - 코드 리뷰 전문가
-- `.claude/agents/test-writer-fe.md` - React 프론트엔드 테스트 전문가
-- `.claude/agents/test-writer-be.md` - NestJS 백엔드 테스트 전문가
 - `.claude/agents/git-manager.md` - Git 작업 전문가
 
 ### Skills (도메인 지식)
