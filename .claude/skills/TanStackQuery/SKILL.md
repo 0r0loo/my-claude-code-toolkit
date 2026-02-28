@@ -237,7 +237,56 @@ const queryClient = new QueryClient({
 
 ---
 
-## 9. 금지 사항
+## 9. 캐시 전략 가이드
+
+데이터 특성에 따라 `staleTime`을 다르게 설정한다.
+
+| 데이터 유형 | staleTime | 예시 |
+|------------|-----------|------|
+| 거의 안 바뀜 | `Infinity` | 코드 테이블, 카테고리 목록, 약관 |
+| 가끔 바뀜 | `10~30분` | 사용자 프로필, 설정 |
+| 자주 바뀜 | `1~5분` | 게시글 목록, 댓글 |
+| 실시간 필요 | `0` | 채팅, 알림, 재고 수량 |
+
+### 도메인별 staleTime 설정
+
+```typescript
+// queryKey 팩토리에서 기본 옵션을 함께 관리
+export const categoryKeys = {
+  all: ['categories'] as const,
+  list: () => [...categoryKeys.all, 'list'] as const,
+};
+
+// 거의 안 바뀌는 데이터
+useQuery({
+  queryKey: categoryKeys.list(),
+  queryFn: fetchCategories,
+  staleTime: Infinity,
+});
+
+// 자주 바뀌는 데이터
+useQuery({
+  queryKey: postKeys.list(filters),
+  queryFn: () => fetchPosts(filters),
+  staleTime: 1000 * 60,  // 1분
+});
+```
+
+### 실시간 데이터: refetchInterval 사용
+
+```typescript
+// 폴링 방식 (WebSocket이 없을 때)
+useQuery({
+  queryKey: ['notifications'],
+  queryFn: fetchNotifications,
+  staleTime: 0,
+  refetchInterval: 1000 * 30,  // 30초마다 재요청
+});
+```
+
+---
+
+## 10. 금지 사항
 
 - `useEffect`로 데이터 페칭 금지 - TanStack Query를 사용한다
 - queryKey 하드코딩 금지 - queryKey 팩토리 패턴을 사용한다

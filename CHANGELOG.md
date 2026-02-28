@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.3
+
+- **FEAT**: React 스킬에 에러 처리 섹션 추가
+  - 에러 경계(Boundary) 기반 일괄 처리 원칙
+  - Error Boundary, early return 패턴, 전역 에러 처리 가이드
+  - `useState` + `useEffect` 에러 관리 금지, try-catch 남발 금지
+- **FEAT**: TanStack Query 스킬에 캐시 전략 가이드 추가
+  - 데이터 유형별 staleTime 테이블 (Infinity ~ 0)
+  - 도메인별 설정 예시, 실시간 데이터 폴링 패턴
+
 ## 1.2.2
 
 - **FEAT**: L 티어 파일 기반 설계 워크플로우 추가

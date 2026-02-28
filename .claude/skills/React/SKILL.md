@@ -253,7 +253,67 @@ function UserContent({ isLoading, error, data }: UserContentProps) {
 
 ---
 
-## 8. 금지 사항
+## 8. 에러 처리
+
+### 원칙: 에러 처리를 각 함수/컴포넌트에 흩뿌리지 않는다
+- 각 함수마다 try-catch를 덕지덕지 붙이지 않는다
+- `useState`로 에러 상태를 직접 관리하지 않는다 (TanStack Query가 제공)
+- 에러 처리는 **경계(Boundary)**에서 한 번에 처리한다
+
+### API 에러: 서버 상태 라이브러리에 위임
+
+```typescript
+// Bad - useState + useEffect로 에러 직접 관리
+function UserList() {
+  const [error, setError] = useState<Error | null>(null);
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true);
+    fetchUsers()
+      .then(setData)
+      .catch(setError)
+      .finally(() => setLoading(false));
+  }, []);
+}
+
+// Good - 서버 상태 라이브러리가 에러를 관리
+function UserList() {
+  const { data: users, isLoading, error } = useUserList();
+  if (error) return <ErrorDisplay error={error} />;
+}
+```
+
+### 렌더링 에러: Error Boundary
+
+```typescript
+<ErrorBoundary fallback={<ErrorFallback />}>
+  <UserContent />
+</ErrorBoundary>
+```
+
+### 전역 API 에러: interceptor 또는 라이브러리 설정에서 일괄 처리
+- axios interceptor, QueryClient defaultOptions 등 프로젝트 설정에 따른다
+- 개별 컴포넌트가 아닌 앱 수준에서 에러 알림(toast 등)을 처리한다
+
+### 에러 UI 분기: early return 패턴
+
+```typescript
+function UserPage({ userId }: UserPageProps) {
+  const { data: user, isLoading, error } = useUser(userId);
+
+  if (isLoading) return <Skeleton />;
+  if (error) return <ErrorDisplay error={error} />;
+  if (!user) return <EmptyState />;
+
+  return <UserContent user={user} />;
+}
+```
+
+---
+
+## 9. 금지 사항
 
 - `any` 타입 사용 금지
 - 인라인 스타일(`style={{}}`) 사용 금지 - 프로젝트 스타일링 방식을 따른다
@@ -264,3 +324,5 @@ function UserContent({ isLoading, error, data }: UserContentProps) {
 - 배열 인덱스를 `key`로 사용 금지 (정적 리스트 제외)
 - `useEffect` 내에서 상태 동기화 로직 작성 금지 (파생값으로 처리)
 - Props drilling이 3단계 이상일 때 Context 또는 상태 관리 라이브러리 미사용 금지
+- 서버 상태(API 데이터)를 `useState` + `useEffect`로 관리 금지 (서버 상태 라이브러리 사용)
+- 각 함수/컴포넌트마다 try-catch 남발 금지 (에러 경계에서 일괄 처리)
