@@ -1,5 +1,18 @@
 # Changelog
 
+## 1.2.2
+
+- **FEAT**: L 티어 파일 기반 설계 워크플로우 추가
+  - `research.md` → `plan.md` → 주석 사이클 → 구현 단계
+  - Planning 스킬에 research.md, plan.md 템플릿 추가
+  - 사용자 승인 전까지 구현 금지 규칙 명시
+
+## 1.2.1
+
+- **FIX**: install.sh에서 삭제된 test-writer 참조 수정
+  - `test-writer-fe/be` → `implementer-fe/be`로 변경
+  - Planning 스킬 복사 누락 수정
+
 ## 1.2.0
 
 - **REFACTOR**: 작업 복잡도 티어 시스템 도입 (S/M/L)
