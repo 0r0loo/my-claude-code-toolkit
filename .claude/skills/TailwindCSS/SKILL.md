@@ -361,7 +361,43 @@ export function Button({ variant, size, className, ...props }: ButtonProps) {
 
 ---
 
-## 8. 금지 사항
+## 8. 트랜지션 & 모션
+
+### transition 속성 명시
+- `transition-all` 사용을 금지한다 - 변경되는 속성만 명시한다
+- 불필요한 속성까지 트랜지션되면 성능이 저하된다
+
+```typescript
+// Bad - 모든 속성에 트랜지션
+<button className="transition-all">
+
+// Good - 필요한 속성만
+<button className="transition-colors">
+<div className="transition-[transform,opacity]">
+```
+
+### prefers-reduced-motion 존중
+- 애니메이션/트랜지션이 있는 요소에는 `motion-reduce:` 변형을 고려한다
+
+```typescript
+// 모션 감소 선호 시 애니메이션 비활성화
+<div className="animate-bounce motion-reduce:animate-none">
+<div className="transition-transform motion-reduce:transition-none">
+```
+
+### 다크 모드 color-scheme
+- 다크 모드 지원 시 `color-scheme: dark`를 설정하여 네이티브 UI(스크롤바, 입력 필드 등)도 다크 테마에 맞춘다
+
+```css
+/* app.css */
+.dark {
+  color-scheme: dark;
+}
+```
+
+---
+
+## 9. 금지 사항
 
 - 인라인 `style={{}}` 사용 금지 - Tailwind 유틸리티 클래스를 사용한다
 - 임의값(arbitrary values) 남용 금지 - `w-[137px]` 같은 임의값은 최소화한다
@@ -373,6 +409,7 @@ export function Button({ variant, size, className, ...props }: ButtonProps) {
 - Tailwind 기본 테마 토큰 삭제 금지 - `@theme`에서 필요한 토큰만 추가한다
 - 사용하지 않는 커스텀 색상/간격 정의 금지 - 실제 사용하는 값만 정의한다
 - `tailwind.config.ts` 사용 금지 - v4에서는 CSS `@theme`으로 설정한다
+- `transition-all` 사용 금지 - 변경되는 속성만 명시한다 (`transition-colors`, `transition-opacity` 등)
 - 클래스 문자열 동적 생성 금지 - Tailwind의 JIT가 감지하지 못한다
 
 ```typescript

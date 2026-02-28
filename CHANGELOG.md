@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.2.4
+
+- **FEAT**: React 스킬에 접근성(a11y) & UX 패턴 섹션 추가
+  - 시맨틱 HTML (`<button>` 필수), aria-label, alt+width+height, focus-visible
+  - 폼 접근성 (label, type, inputMode, autoComplete)
+  - 파괴적 액션 확인, URL 파라미터 동기화, 리스트 가상화 (50개+)
+- **FEAT**: TailwindCSS 스킬에 트랜지션 & 모션 섹션 추가
+  - `transition-all` 금지 → 속성 명시, `motion-reduce:` 변형
+  - 다크 모드 `color-scheme: dark` 가이드
+
 ## 1.2.3
 
 - **FEAT**: React 스킬에 에러 처리 섹션 추가
