@@ -46,10 +46,12 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 3. **Commit**: `git-manager`로 커밋/PR 생성
 
 ### L 티어 (complex)
-풀 프로세스를 따른다.
-1. **Planning**: 요구사항 정리 → `explore`로 탐색 → 사용자 승인
-2. **Implementation + Test**: `implementer`에 구현+테스트 동시 위임 → 테스트 통과 확인
-3. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
+파일 기반 설계 후 구현한다.
+1. **Research**: `explore`로 탐색 → `research.md` 작성 (관련 코드 분석, 제약 조건)
+2. **Plan**: `plan.md` 작성 (접근 방식, 변경 파일, 트레이드 오프, 작업 순서)
+3. **주석 사이클**: 사용자가 plan.md에 메모 → 반영 → **승인 전까지 구현 금지**
+4. **Implementation + Test**: `implementer`에 plan.md 전달하여 구현+테스트 동시 위임
+5. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
 
 ### 풀스택 작업 (FE + BE 동시 변경)
 티어는 영향도 기준으로 판단하되, 위임 순서는 BE 선행 → FE 후행을 따른다.

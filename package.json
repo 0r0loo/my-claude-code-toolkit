@@ -1,6 +1,6 @@
 {
   "name": "@choblue/claude-code-toolkit",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "description": "Claude Code 서브에이전트 위임 툴킷 - npx로 바로 설치",
   "bin": {
     "claude-code-toolkit": "bin/cli.js"
