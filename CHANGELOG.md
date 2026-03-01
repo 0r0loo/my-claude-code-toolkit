@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.2.5
+
+- **FEAT**: 점진적 구현 원칙 추가
+  - "한 번에 하나, 완전하게" — smallest deliverable unit 분해
+  - 에이전트 1회 호출 당 파일 3개 이하 원칙
+  - Planning 스킬에 단위별 작업 순서 예시 추가
+
 ## 1.2.4
 
 - **FEAT**: React 스킬에 접근성(a11y) & UX 패턴 섹션 추가
