@@ -25,34 +25,39 @@
 │   └── git-manager.md           ← Git 작업 (sonnet)
 ├── skills/
 │   ├── Coding/
-│   │   ├── SKILL.md             ← 공통 코딩 원칙
-│   │   └── backend.md           ← NestJS 코딩 규칙
+│   │   └── SKILL.md             ← 공통 코딩 원칙
+│   ├── NestJS/
+│   │   └── SKILL.md             ← NestJS 백엔드 규칙
 │   ├── Planning/
 │   │   └── SKILL.md             ← 작업 계획 (티어 판단, 작업 분해)
 │   ├── React/
-│   │   └── SKILL.md             ← React 컴포넌트, 훅, 상태 관리
+│   │   ├── SKILL.md             ← React 핵심 규칙
+│   │   └── references/          ← 상태/훅, 렌더링 패턴, 접근성/UX
 │   ├── NextJS/
-│   │   └── SKILL.md             ← Next.js App Router, SSR
+│   │   ├── SKILL.md             ← Next.js App Router 핵심 규칙
+│   │   └── references/          ← 데이터 페칭, 미들웨어, 최적화
 │   ├── TailwindCSS/
-│   │   └── SKILL.md             ← Tailwind CSS 유틸리티 패턴
+│   │   ├── SKILL.md             ← Tailwind CSS 핵심 규칙
+│   │   └── references/          ← 반응형/다크모드, 패턴, 트랜지션
 │   ├── TanStackQuery/
 │   │   └── SKILL.md             ← TanStack Query 서버 상태
 │   ├── Zustand/
 │   │   └── SKILL.md             ← Zustand 클라이언트 상태
 │   ├── ReactHookForm/
-│   │   └── SKILL.md             ← React Hook Form + Zod
+│   │   ├── SKILL.md             ← React Hook Form 핵심 규칙
+│   │   └── references/          ← Controller, 동적 필드, 중첩 스키마
 │   ├── TypeScript/
-│   │   └── SKILL.md             ← TypeScript 고급 패턴
+│   │   ├── SKILL.md             ← TypeScript 고급 패턴
+│   │   └── references/          ← 제네릭, 타입 가드, 고급 패턴
 │   ├── TypeORM/
 │   │   ├── SKILL.md             ← TypeORM Entity, Repository
 │   │   └── references/          ← 고급 쿼리, 마이그레이션, 트랜잭션
 │   ├── DDD/
 │   │   ├── SKILL.md             ← DDD 전술적 패턴
-│   │   └── references/          ← Entity/VO, Aggregate, Domain Event 심화
+│   │   └── references/          ← Entity/VO, Aggregate, Domain Event
 │   ├── TDD/
 │   │   ├── SKILL.md             ← TDD 핵심 원칙
-│   │   ├── frontend.md          ← React 테스트 규칙
-│   │   └── backend.md           ← NestJS 테스트 규칙
+│   │   └── references/          ← React 테스트, NestJS 테스트
 │   ├── Git/
 │   │   └── SKILL.md             ← 커밋/PR/브랜치 규칙
 │   ├── FailureRecovery/

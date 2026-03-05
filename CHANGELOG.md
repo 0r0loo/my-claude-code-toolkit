@@ -1,5 +1,20 @@
 # Changelog
 
+## 1.2.7
+
+- **FEAT**: Task Header 의사결정 가시화
+  - 모든 티어에서 이모지 기반 Task Header 출력 (📋⚡📚🔄📁📌)
+  - L 티어 Plan 진행 상태: ○ 대기 → ▶ ⏳ 진행 중 → ✔ 완료
+  - hook에 Task Header 출력 리마인더 추가
+- **REFACTOR**: 스킬 파일 references 분리
+  - React, NextJS, TailwindCSS, ReactHookForm, TDD 스킬의 심화 내용을 references/로 분리
+  - SKILL.md는 핵심 규칙만 유지 (200줄 이하)
+- **REFACTOR**: NestJS 독립 스킬 분리
+  - Coding/backend.md → NestJS/SKILL.md로 승격
+  - Coding/frontend.md 삭제 (deprecated)
+- **FIX**: Props 타입 선언을 interface에서 type으로 변경
+  - React, TailwindCSS, ReactHookForm 스킬의 예제 코드 통일
+
 ## 1.2.6
 
 - **FEAT**: 실패 복구 프로토콜 스킬 추가 (`FailureRecovery/SKILL.md`)
