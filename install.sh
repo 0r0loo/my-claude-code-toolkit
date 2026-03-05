@@ -238,7 +238,12 @@ copy_common() {
   copy_dir "skills/TypeScript"
   copy_dir "skills/Git"
   copy_dir "skills/Planning"
-  copy_file "skills/TDD/SKILL.md"
+  copy_dir "skills/TDD"
+  copy_dir "skills/FailureRecovery"
+  copy_dir "skills/Curation"
+
+  # 커스텀 커맨드
+  copy_dir "prompts"
 
   # hooks
   copy_dir "hooks"
@@ -265,9 +270,6 @@ copy_fe() {
   copy_dir "skills/Zustand"
   copy_dir "skills/ReactHookForm"
 
-  # FE 개별 스킬 파일
-  copy_file "skills/TDD/frontend.md"
-  copy_file "skills/Coding/frontend.md"
 }
 
 # BE (백엔드)
@@ -279,12 +281,9 @@ copy_be() {
   copy_file "agents/implementer-be.md"
 
   # BE 스킬 (디렉토리 전체)
+  copy_dir "skills/NestJS"
   copy_dir "skills/TypeORM"
   copy_dir "skills/DDD"
-
-  # BE 개별 스킬 파일
-  copy_file "skills/Coding/backend.md"
-  copy_file "skills/TDD/backend.md"
 }
 
 # === 실행 ===
