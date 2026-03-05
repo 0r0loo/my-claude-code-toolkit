@@ -12,10 +12,10 @@ INPUT=$(cat)
 
 # ─── 1. Quality Gate ───
 cat << 'EOF'
-[Quality Gate] 티어를 판단하고 워크플로우를 따르라.
-- S (1-2파일, 단순수정): Main Agent 직접 처리
-- M (3-5파일, 명확한 기능): code-writer → git-manager
-- L (6+파일, 설계 필요): 풀 프로세스 (TDD → 구현 → 리뷰)
+[Quality Gate] 티어를 판단하고 Task Header를 출력한 후 워크플로우를 따르라.
+- S: 📋 ⚡ 📁
+- M: 📋 ⚡ 📚 🔄 📁
+- L: 📋 ⚡ 📚 🔄 📁 📌Plan
 EOF
 
 # ─── 2. Skill Detector ───
