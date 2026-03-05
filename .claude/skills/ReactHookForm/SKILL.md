@@ -168,9 +168,9 @@ function UserForm() {
 ### 재사용 가능한 에러 컴포넌트
 
 ```typescript
-interface FieldErrorProps {
+type FieldErrorProps = {
   error?: FieldError;
-}
+};
 
 function FieldError({ error }: FieldErrorProps) {
   if (!error) return null;

@@ -227,12 +227,12 @@ export function cn(...inputs: ClassValue[]) {
 ```typescript
 import { cn } from '@/lib/utils';
 
-interface ButtonProps {
+type ButtonProps = {
   variant?: 'primary' | 'secondary' | 'danger';
   size?: 'sm' | 'md' | 'lg';
   className?: string;
   children: React.ReactNode;
-}
+};
 
 export function Button({ variant = 'primary', size = 'md', className, children }: ButtonProps) {
   return (
@@ -303,9 +303,8 @@ const buttonVariants = cva(
   }
 );
 
-interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {}
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> &
+  VariantProps<typeof buttonVariants>;
 
 export function Button({ variant, size, className, ...props }: ButtonProps) {
   return (

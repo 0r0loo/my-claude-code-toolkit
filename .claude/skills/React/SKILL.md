@@ -16,8 +16,8 @@ React 컴포넌트 설계 및 개발에 적용되는 핵심 규칙이다.
 - 클래스 컴포넌트를 사용하지 않는다
 - `React.FC`를 사용하지 않는다 - Props를 직접 타이핑한다
 
-### Props interface 명시
-- 모든 컴포넌트는 Props 타입을 `interface`로 선언한다
+### Props 타입 명시
+- 모든 컴포넌트는 Props 타입을 `type`으로 선언한다
 - Props 네이밍은 `컴포넌트명 + Props`로 한다
 
 ### SRP (Single Responsibility Principle)
@@ -35,9 +35,9 @@ const UserPage = () => {
 };
 
 // Good
-interface UserPageProps {
+type UserPageProps = {
   userId: string;
-}
+};
 
 export function UserPage({ userId }: UserPageProps) {
   const { user, isLoading } = useUser(userId);
@@ -68,16 +68,16 @@ export function UserPage({ userId }: UserPageProps) {
 
 ```typescript
 // Bad
-interface ButtonProps {
+type ButtonProps = {
   clickHandler: () => void;
   deleteCallback: () => void;
-}
+};
 
 // Good
-interface ButtonProps {
+type ButtonProps = {
   onClick: () => void;
   onDelete: () => void;
-}
+};
 ```
 
 ### 객체 통째 전달 지양
@@ -86,15 +86,15 @@ interface ButtonProps {
 
 ```typescript
 // Bad - 불필요한 데이터까지 전달
-interface UserAvatarProps {
+type UserAvatarProps = {
   user: User; // user.name, user.avatar만 사용하는데 전체 객체 전달
-}
+};
 
 // Good - 필요한 값만 전달
-interface UserAvatarProps {
+type UserAvatarProps = {
   name: string;
   avatarUrl: string;
-}
+};
 ```
 
 ---
