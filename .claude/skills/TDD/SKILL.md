@@ -7,8 +7,8 @@ description: TDD(테스트 주도 개발) 공통 원칙. 테스트 작성 시 Re
 
 이 문서는 모든 테스트 코드 작성 시 적용되는 공통 원칙을 정의한다.
 FE/BE별 상세 규칙은 각각의 파일을 참고한다.
-- `frontend.md` - React Testing Library 기반 프론트엔드 테스트 규칙
-- `backend.md` - NestJS 백엔드 테스트 규칙
+- `references/frontend.md` - React Testing Library 기반 프론트엔드 테스트 규칙
+- `references/backend.md` - NestJS 백엔드 테스트 규칙
 
 ---
 
