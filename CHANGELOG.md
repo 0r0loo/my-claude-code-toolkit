@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.8
+
+- **FIX**: install.sh 파일 경로 오류 수정
+  - references/ 구조 반영 (`copy_file` → `copy_dir` 변경)
+  - 삭제된 파일 참조 제거 (Coding/frontend.md, Coding/backend.md, TDD 개별 파일)
+  - 누락된 스킬/디렉토리 추가 (NestJS, FailureRecovery, Curation, prompts)
+- **FIX**: Task Header를 코드블록으로 감싸 메시지와 시각적 구분
+  - CLAUDE.md, Planning 스킬의 Task Header 예시를 코드블록 형식으로 변경
+- **FEAT**: 루트 CLAUDE.md 추가 (install.sh 동기화 규칙 + 배포 체크리스트)
+- **DEPRECATE**: v1.2.7 (install.sh 오류로 설치 실패)
+
 ## 1.2.7
 
 - **FEAT**: Task Header 의사결정 가시화
