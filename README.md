@@ -53,8 +53,16 @@
 │   │   ├── SKILL.md             ← TDD 핵심 원칙
 │   │   ├── frontend.md          ← React 테스트 규칙
 │   │   └── backend.md           ← NestJS 테스트 규칙
-│   └── Git/
-│       └── SKILL.md             ← 커밋/PR/브랜치 규칙
+│   ├── Git/
+│   │   └── SKILL.md             ← 커밋/PR/브랜치 규칙
+│   ├── FailureRecovery/
+│   │   └── SKILL.md             ← 실패 복구 프로토콜
+│   └── Curation/
+│       └── SKILL.md             ← AI 결과물 큐레이션 체크리스트
+├── prompts/
+│   ├── feature.md               ← /feature [기능명] 커스텀 커맨드
+│   ├── fix.md                   ← /fix [증상] 커스텀 커맨드
+│   └── review.md                ← /review 커스텀 커맨드
 ├── hooks/
 │   ├── prompt-hook.sh           ← 통합 hook (품질 체크 + 스킬 추천 + 구조 변경 감지)
 │   └── skill-keywords.conf      ← 스킬별 키워드 매핑 설정

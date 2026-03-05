@@ -55,6 +55,21 @@ Step 4: 수정/삭제 → 확인
 
 ---
 
+## 2-1. 완료 기준 (Definition of Done)
+
+각 작업 단위는 다음 조건을 **모두 만족**해야 "완료"로 판단한다.
+에이전트는 구현 후 이 체크리스트를 자체 검증한다.
+
+### 공통 DoD
+- [ ] 타입 에러 없음 (`tsc --noEmit` 통과)
+- [ ] 미사용 import/변수 없음
+- [ ] 기존 테스트가 깨지지 않음
+- [ ] 기존 프로젝트 패턴과 일관성 유지
+
+> FE/BE별 추가 DoD는 프로젝트 루트 `CLAUDE.md`에서 오버라이드한다.
+
+---
+
 ## 3. 티어별 워크플로우
 
 ### S 티어 (trivial)
@@ -111,6 +126,13 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/skills/DDD/SKILL.md` - DDD 전술적 패턴 (Entity, VO, Aggregate, Repository, Domain Event)
 - `.claude/skills/Planning/SKILL.md` - 작업 계획 (티어 판단, 작업 분해, 의존성 확인)
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
+- `.claude/skills/FailureRecovery/SKILL.md` - 실패 복구 프로토콜 (진단, 처방, 에스컬레이션)
+- `.claude/skills/Curation/SKILL.md` - AI 결과물 큐레이션 체크리스트
+
+### Prompts (커스텀 커맨드)
+- `.claude/prompts/feature.md` - /feature [기능명] -> 새 기능 구현 시작
+- `.claude/prompts/fix.md` - /fix [증상] -> 버그 수정
+- `.claude/prompts/review.md` - /review -> 현재 변경사항 리뷰
 
 ### Scripts
 - `.claude/scripts/generate-project-map.sh` - PROJECT_MAP.md 자동 생성
