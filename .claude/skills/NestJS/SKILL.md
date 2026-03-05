@@ -1,7 +1,12 @@
-# Coding Skill - Backend (NestJS)
+---
+name: nestjs
+description: NestJS 백엔드 개발 가이드. 레이어별 책임, DTO, 에러 핸들링, DI, 네이밍 컨벤션 등 NestJS 코드 작성 시 참조한다.
+---
+
+# NestJS Skill - 백엔드 핵심 규칙
 
 NestJS 백엔드 코드에 적용되는 규칙이다.
-공통 원칙은 `SKILL.md`를 함께 참고한다.
+공통 코딩 원칙은 `../Coding/SKILL.md`를 함께 참고한다.
 
 ---
 

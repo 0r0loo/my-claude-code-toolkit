@@ -149,9 +149,8 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/agents/git-manager.md` - Git 작업 전문가
 
 ### Skills (도메인 지식)
-- `.claude/skills/Coding/` - 코딩 원칙 및 패턴
-  - `SKILL.md` - 공통 원칙
-  - `backend.md` - NestJS 백엔드 규칙
+- `.claude/skills/Coding/SKILL.md` - 공통 코딩 원칙
+- `.claude/skills/NestJS/SKILL.md` - NestJS 백엔드 규칙 (레이어, DTO, DI, 에러 핸들링)
 - `.claude/skills/React/SKILL.md` - React 컴포넌트, 훅, 상태 관리
 - `.claude/skills/NextJS/SKILL.md` - Next.js App Router, SSR, Server Actions
 - `.claude/skills/TailwindCSS/SKILL.md` - Tailwind CSS 유틸리티 패턴
@@ -162,8 +161,8 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/skills/TypeORM/SKILL.md` - TypeORM Entity, Repository, QueryBuilder
 - `.claude/skills/TDD/` - TDD 테스트 원칙 및 패턴
   - `SKILL.md` - 공통 TDD 원칙
-  - `frontend.md` - React 테스트 규칙
-  - `backend.md` - NestJS 테스트 규칙
+  - `references/frontend.md` - React 테스트 규칙
+  - `references/backend.md` - NestJS 테스트 규칙
 - `.claude/skills/DDD/SKILL.md` - DDD 전술적 패턴 (Entity, VO, Aggregate, Repository, Domain Event)
 - `.claude/skills/Planning/SKILL.md` - 작업 계획 (티어 판단, 작업 분해, 의존성 확인)
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
