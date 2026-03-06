@@ -172,6 +172,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
   - `references/backend.md` - NestJS 테스트 규칙
 - `.claude/skills/DDD/SKILL.md` - DDD 전술적 패턴 (Entity, VO, Aggregate, Repository, Domain Event)
 - `.claude/skills/Planning/SKILL.md` - 작업 계획 (티어 판단, 작업 분해, 의존성 확인)
+- `.claude/skills/SVGIcon/SKILL.md` - SVG 아이콘 생성 (디자인 시스템용, React 래핑)
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
 - `.claude/skills/FailureRecovery/SKILL.md` - 실패 복구 프로토콜 (진단, 처방, 에스컬레이션)
 - `.claude/skills/Curation/SKILL.md` - AI 결과물 큐레이션 체크리스트

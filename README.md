@@ -60,6 +60,8 @@
 │   │   └── references/          ← React 테스트, NestJS 테스트
 │   ├── Git/
 │   │   └── SKILL.md             ← 커밋/PR/브랜치 규칙
+│   ├── SVGIcon/
+│   │   └── SKILL.md             ← SVG 아이콘 생성 (디자인 시스템)
 │   ├── FailureRecovery/
 │   │   └── SKILL.md             ← 실패 복구 프로토콜
 │   └── Curation/
@@ -101,7 +103,7 @@ npx @choblue/claude-code-toolkit --global --fe
 ### 소스에서 설치
 
 ```bash
-# 레포 클론
+# 레포 클론[과제.ipynb](../../Downloads/%EA%B3%BC%EC%A0%9C.ipynb)
 git clone https://github.com/0r0loo/my-claude-code-toolkit.git
 cd my-claude-code-toolkit
 

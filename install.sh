@@ -269,6 +269,7 @@ copy_fe() {
   copy_dir "skills/TanStackQuery"
   copy_dir "skills/Zustand"
   copy_dir "skills/ReactHookForm"
+  copy_dir "skills/SVGIcon"
 
 }
 

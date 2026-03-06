@@ -12,10 +12,13 @@ INPUT=$(cat)
 
 # ─── 1. Quality Gate ───
 cat << 'EOF'
-[Quality Gate] 티어를 판단하고 Task Header를 출력한 후 워크플로우를 따르라.
-- S: 📋 ⚡ 📁
-- M: 📋 ⚡ 📚 🔄 📁
-- L: 📋 ⚡ 📚 🔄 📁 📌Plan
+[Quality Gate] 코드 작성 전 반드시 다음을 수행하라:
+1. 티어 판단 → Task Header 출력
+   - S: 📋 ⚡ 📁
+   - M: 📋 ⚡ 📚 🔄 📁
+   - L: 📋 ⚡ 📚 🔄 📁 📌Plan
+2. 관련 스킬이 있으면 반드시 Read한 후 규칙을 따르라
+3. M 이상은 에이전트 위임을 우선하라. 직접 구현 시에도 스킬 규칙 필수
 EOF
 
 # ─── 2. Skill Detector ───
@@ -72,7 +75,7 @@ if [[ -f "$CONF_FILE" ]]; then
         MAX=${#SORTED_INDICES[@]}
       fi
 
-      echo "[Skill Detector] 다음 스킬을 참조하라:"
+      echo "[Skill Detector] 코드 작성 전 다음 스킬을 Read하고 규칙을 따르라:"
       for ((i = 0; i < MAX; i++)); do
         idx=${SORTED_INDICES[$i]}
         echo "- ${SKILL_NAMES[$idx]}: /skill ${SKILL_COMMANDS[$idx]}"

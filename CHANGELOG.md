@@ -1,5 +1,16 @@
 # Changelog
 
+## 1.2.9
+
+- **FEAT**: SVG Icon 생성 스킬 추가 (`SVGIcon/SKILL.md`)
+  - Stroke 기반 24x24 디자인 시스템용 아이콘 규격
+  - React 컴포넌트 래핑 패턴 (개별 컴포넌트 + 팩토리)
+  - 접근성, 파일 구조, 자주 쓰는 경로 레퍼런스
+- **FIX**: Hook 메시지 강화 (스킬 규칙 준수율 개선)
+  - Quality Gate: 3단계 명시 (티어 판단 → 스킬 Read → 에이전트 위임)
+  - Skill Detector: "참조하라" → "Read하고 규칙을 따르라"
+  - M 이상 직접 구현 시에도 스킬 규칙 필수 명시
+
 ## 1.2.8
 
 - **FIX**: install.sh 파일 경로 오류 수정
