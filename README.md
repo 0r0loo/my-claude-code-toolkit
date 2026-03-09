@@ -27,7 +27,8 @@
 │   ├── Coding/
 │   │   └── SKILL.md             ← 공통 코딩 원칙
 │   ├── NestJS/
-│   │   └── SKILL.md             ← NestJS 백엔드 규칙
+│   │   ├── SKILL.md             ← NestJS 백엔드 규칙
+│   │   └── references/          ← 인증/인가, 유효성 검증, 캐싱
 │   ├── Planning/
 │   │   └── SKILL.md             ← 작업 계획 (티어 판단, 작업 분해)
 │   ├── React/
@@ -60,6 +61,10 @@
 │   │   └── references/          ← React 테스트, NestJS 테스트
 │   ├── Git/
 │   │   └── SKILL.md             ← 커밋/PR/브랜치 규칙
+│   ├── APIDesign/
+│   │   └── SKILL.md             ← REST API 설계 원칙
+│   ├── Database/
+│   │   └── SKILL.md             ← DB 설계 & 최적화
 │   ├── SVGIcon/
 │   │   └── SKILL.md             ← SVG 아이콘 생성 (디자인 시스템)
 │   ├── FailureRecovery/

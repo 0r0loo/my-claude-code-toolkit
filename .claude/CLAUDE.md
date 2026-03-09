@@ -158,6 +158,9 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 ### Skills (도메인 지식)
 - `.claude/skills/Coding/SKILL.md` - 공통 코딩 원칙
 - `.claude/skills/NestJS/SKILL.md` - NestJS 백엔드 규칙 (레이어, DTO, DI, 에러 핸들링)
+  - `references/auth.md` - 인증/인가 (JWT, Guard, Role, Refresh Token)
+  - `references/validation.md` - 유효성 검증 (class-validator, 커스텀 데코레이터)
+  - `references/caching.md` - 캐싱 (Redis, TTL 전략, 무효화)
 - `.claude/skills/React/SKILL.md` - React 컴포넌트, 훅, 상태 관리
 - `.claude/skills/NextJS/SKILL.md` - Next.js App Router, SSR, Server Actions
 - `.claude/skills/TailwindCSS/SKILL.md` - Tailwind CSS 유틸리티 패턴
@@ -172,6 +175,8 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
   - `references/backend.md` - NestJS 테스트 규칙
 - `.claude/skills/DDD/SKILL.md` - DDD 전술적 패턴 (Entity, VO, Aggregate, Repository, Domain Event)
 - `.claude/skills/Planning/SKILL.md` - 작업 계획 (티어 판단, 작업 분해, 의존성 확인)
+- `.claude/skills/APIDesign/SKILL.md` - REST API 설계 (URL, 응답 포맷, 페이지네이션, 에러 코드)
+- `.claude/skills/Database/SKILL.md` - DB 설계 & 최적화 (정규화, 인덱싱, N+1, 쿼리 최적화)
 - `.claude/skills/SVGIcon/SKILL.md` - SVG 아이콘 생성 (디자인 시스템용, React 래핑)
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
 - `.claude/skills/FailureRecovery/SKILL.md` - 실패 복구 프로토콜 (진단, 처방, 에스컬레이션)

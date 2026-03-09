@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.3.0
+
+- **FEAT**: BE 스킬 확장
+  - NestJS references 추가: 인증/인가(auth.md), 유효성 검증(validation.md), 캐싱(caching.md)
+  - Auth 독립 스킬 → NestJS/references/auth.md로 이동
+- **FEAT**: 공통 스킬 추가
+  - APIDesign: REST API 설계 원칙 (URL, 응답 포맷, 에러 코드, 페이지네이션)
+    - 응답: 모든 성공을 `data`로 감싸기, 목록은 `data` + `meta`
+    - 에러: `field` + `reason` 구조 (FE 폼 setError 직접 매핑)
+    - DELETE는 200 + 삭제 리소스 id 반환 (FE 캐시 무효화용)
+  - Database: DB 설계 & 최적화 (정규화, 인덱싱, N+1, Soft Delete, 커넥션 풀)
+
 ## 1.2.9
 
 - **FEAT**: SVG Icon 생성 스킬 추가 (`SVGIcon/SKILL.md`)

@@ -100,3 +100,11 @@ throw new UserNotFoundException(userId);
 - `any` 타입 사용 금지
 - 환경 변수 직접 접근 (`process.env`) 금지 → `ConfigService` 사용
 - 순환 의존 금지 (Module 간, Service 간)
+
+---
+
+## 심화 가이드 (references/)
+
+- `references/auth.md` — 인증/인가 (JWT, Guard, Role, Refresh Token, 비밀번호)
+- `references/validation.md` — 유효성 검증 (class-validator, 커스텀 데코레이터, Mapped Types)
+- `references/caching.md` — 캐싱 (Redis, CacheModule, TTL 전략, 무효화)

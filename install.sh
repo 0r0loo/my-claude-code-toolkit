@@ -239,6 +239,8 @@ copy_common() {
   copy_dir "skills/Git"
   copy_dir "skills/Planning"
   copy_dir "skills/TDD"
+  copy_dir "skills/APIDesign"
+  copy_dir "skills/Database"
   copy_dir "skills/FailureRecovery"
   copy_dir "skills/Curation"
 
