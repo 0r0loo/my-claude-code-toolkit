@@ -24,7 +24,7 @@ Claude는 작업 시작 전 반드시 이 규칙을 따라야 한다.
 - 갱신: `.claude/scripts/generate-project-map.sh` 실행
 
 ### 에이전트 위임 대상
-- **탐색/검색 작업** → `explore` 에이전트 (haiku)
+- **탐색 + 스킬/에이전트 식별** → `explore` 에이전트 (haiku) — 코드 탐색과 함께 필요한 스킬, 권장 에이전트 흐름을 식별하여 반환
 - **구현 (M 티어)** → `code-writer-fe` 또는 `code-writer-be` 에이전트 (opus)
 - **구현+테스트 (L 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (opus)
 - **코드 리뷰** → `code-reviewer` 에이전트 (opus)
@@ -126,14 +126,14 @@ Main Agent가 직접 처리한다. 서브에이전트 위임 불필요.
 ### M 티어 (moderate)
 TDD/Review를 생략하고 핵심 단계만 수행한다.
 1. **Task Header 출력**
-2. **Planning**: 요구사항 정리, 필요 시 `explore`로 탐색
+2. **Planning**: `explore`로 탐색 + 스킬/에이전트 식별 → explore 결과 기반으로 Task Header의 📚, 🔄 결정
 3. **Implementation**: `code-writer` 에이전트에 구현 위임 (단위별로 나눠 호출)
 4. **Commit**: `git-manager`로 커밋/PR 생성
 
 ### L 티어 (complex)
 파일 기반 설계 후 **단위별로** 구현한다.
 1. **Task Header 출력**
-2. **Research**: `explore`로 탐색 → `research.md` 작성 (관련 코드 분석, 제약 조건)
+2. **Research**: `explore`로 탐색 + 스킬/에이전트 식별 → `research.md` 작성 (관련 코드 분석, 제약 조건, 필요 스킬)
 3. **Plan**: `plan.md` 작성 (접근 방식, 변경 파일, 트레이드 오프, **단위별 작업 순서**)
 4. **주석 사이클**: 사용자가 plan.md에 메모 → 반영 → **승인 전까지 구현 금지**
 5. **Implementation + Test**: plan.md의 각 단위를 순서대로 `implementer`에 위임 (단위당 1회 호출)

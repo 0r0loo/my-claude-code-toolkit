@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.3.1
+
+- **FEAT**: explore 에이전트 강화 (haiku → sonnet)
+  - 코드 탐색 + 기존 패턴 파악 + 스킬 식별 + 티어 판단 + 에이전트 흐름 권장
+  - Main Agent가 바로 실행할 수 있는 수준의 컨텍스트 반환
+  - CLAUDE.md M/L 워크플로우에 explore 기반 의사결정 반영
+- **STYLE**: README 설치 섹션을 상단으로 이동
+
 ## 1.3.0
 
 - **FEAT**: BE 스킬 확장
