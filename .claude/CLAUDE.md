@@ -128,6 +128,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 1. **Task Header 출력**
 2. **Planning**: `explore`로 탐색 + 스킬/에이전트 식별 → explore 결과 기반으로 Task Header의 📚, 🔄 결정
 3. **Implementation**: `code-writer` 에이전트에 구현 위임 (단위별로 나눠 호출)
+   - **위임 시 explore가 식별한 스킬 경로를 반드시 전달한다** (예: `스킬: APIDesign(.claude/skills/APIDesign/SKILL.md), NestJS(.claude/skills/NestJS/SKILL.md)`)
 4. **Commit**: `git-manager`로 커밋/PR 생성
 
 ### L 티어 (complex)
@@ -137,6 +138,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 3. **Plan**: `plan.md` 작성 (접근 방식, 변경 파일, 트레이드 오프, **단위별 작업 순서**)
 4. **주석 사이클**: 사용자가 plan.md에 메모 → 반영 → **승인 전까지 구현 금지**
 5. **Implementation + Test**: plan.md의 각 단위를 순서대로 `implementer`에 위임 (단위당 1회 호출)
+   - **위임 시 explore가 식별한 스킬 경로를 반드시 전달한다**
 6. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
 
 ### 풀스택 작업 (FE + BE 동시 변경)

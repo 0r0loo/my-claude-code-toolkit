@@ -16,6 +16,9 @@ color: blue
 
 - `.claude/skills/Coding/SKILL.md` - 구현 원칙
 - `.claude/skills/TDD/SKILL.md` + `frontend.md` - 테스트 원칙
+- **Main Agent가 전달한 스킬 경로가 있으면 반드시 Read하고 규칙을 따른다.**
+  - 예: `스킬: React(.claude/skills/React/SKILL.md)` → 해당 파일을 Read한 후 규칙을 준수
+  - 스킬 규칙과 기존 프로젝트 패턴이 충돌하면 **프로젝트 패턴을 우선**한다
 
 ---
 
