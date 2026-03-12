@@ -5,6 +5,10 @@
 - **FEAT**: 서브에이전트 스킬 전달 체계 구축
   - code-writer-be/fe, implementer-be/fe에 "Main Agent가 전달한 스킬 경로 Read 필수" 규칙 추가
   - CLAUDE.md M/L 워크플로우에 위임 시 스킬 경로 전달 필수 명시
+- **FEAT**: Coding 스킬에 상수 관리 규칙 추가
+  - 매직 넘버/스트링 금지 → 의미 있는 상수로 추출
+  - 상수 분리 기준 (모듈 내 vs 공유 디렉토리)
+  - `as const` 활용 (리터럴 타입 보장 + 유니온 타입 추출)
 - **FIX**: APIDesign 스킬 응답 래핑 규칙 보강
   - 개별 핸들러 수동 래핑 금지 → 프레임워크 공통 응답 처리 계층에서 일괄 적용
   - 인프라 엔드포인트(health, version)는 `data` 래핑 대상 제외

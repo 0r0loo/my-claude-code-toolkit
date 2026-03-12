@@ -128,6 +128,41 @@ async function processOrder(order: Order): Promise<void> {
 }
 ```
 
+### 상수 관리
+
+**매직 넘버/스트링 금지** — 의미 없는 리터럴을 코드에 직접 사용하지 않는다.
+
+```typescript
+// Bad - 매직 넘버
+if (password.length < 8) { ... }
+if (status === 'APPROVED') { ... }
+setTimeout(callback, 300000);
+
+// Good - 상수로 추출
+const MIN_PASSWORD_LENGTH = 8;
+const ORDER_STATUS = { APPROVED: 'APPROVED', REJECTED: 'REJECTED' } as const;
+const FIVE_MINUTES_MS = 5 * 60 * 1000;
+
+if (password.length < MIN_PASSWORD_LENGTH) { ... }
+if (status === ORDER_STATUS.APPROVED) { ... }
+setTimeout(callback, FIVE_MINUTES_MS);
+```
+
+**상수 분리 기준**
+- **한 모듈에서만 사용** → 같은 파일 상단 또는 모듈 내 `constants.ts`
+- **여러 모듈에서 공유** → `src/constants/` 또는 `src/shared/constants/`에 도메인별 분리
+
+**`as const` 활용** — 객체/배열 상수는 `as const`로 리터럴 타입을 보장한다.
+
+```typescript
+// as const 없이 — 타입이 string[]으로 넓어짐
+const ROLES = ['ADMIN', 'USER', 'GUEST'];
+
+// as const — 타입이 readonly ['ADMIN', 'USER', 'GUEST']
+const ROLES = ['ADMIN', 'USER', 'GUEST'] as const;
+type Role = (typeof ROLES)[number]; // 'ADMIN' | 'USER' | 'GUEST'
+```
+
 ---
 
 ## 2. 네이밍 컨벤션
