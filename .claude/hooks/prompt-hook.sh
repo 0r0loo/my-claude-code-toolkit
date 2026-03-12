@@ -10,8 +10,24 @@ CLAUDE_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 # ─── stdin 읽기 (한 번만) ───
 INPUT=$(cat)
 
-# ─── 1. Quality Gate ───
-cat << 'EOF'
+# ─── JSON에서 prompt 필드 추출 ───
+PROMPT=""
+if command -v jq &>/dev/null; then
+  PROMPT=$(echo "$INPUT" | jq -r '.prompt // empty' 2>/dev/null)
+elif command -v python3 &>/dev/null; then
+  PROMPT=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('prompt',''))" 2>/dev/null)
+fi
+if [ -z "$PROMPT" ]; then
+  # jq/python3 모두 없으면 sed fallback
+  PROMPT=$(echo "$INPUT" | sed -n 's/.*"prompt"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1)
+  [ -z "$PROMPT" ] && PROMPT="$INPUT"
+fi
+PROMPT_LOWER=$(echo "$PROMPT" | tr '[:upper:]' '[:lower:]')
+
+# ─── 1. Quality Gate (작업 키워드가 있을 때만) ───
+ACTION_KEYWORDS="만들어|구현|추가|수정|삭제|리팩|refactor|변경|생성|fix|버그|개선|이동|제거|작성|빌드|배포|설치|업데이트|마이그|테스트 작성|연결|분리|통합|적용|개발"
+if echo "$PROMPT_LOWER" | grep -qE "$ACTION_KEYWORDS"; then
+  cat << 'EOF'
 [Quality Gate] 코드 작성 전 반드시 다음을 수행하라:
 1. 티어 판단 → Task Header 출력
    - S: 📋 ⚡ 📁
@@ -20,14 +36,13 @@ cat << 'EOF'
 2. 관련 스킬이 있으면 반드시 Read한 후 규칙을 따르라
 3. M 이상은 에이전트 위임을 우선하라. 직접 구현 시에도 스킬 규칙 필수
 EOF
+fi
 
 # ─── 2. Skill Detector ───
 CONF_FILE="${SCRIPT_DIR}/skill-keywords.conf"
 if [[ -f "$CONF_FILE" ]]; then
-  PROMPT=$(echo "$INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('prompt',''))" 2>/dev/null || echo "$INPUT")
 
   if [[ -n "$PROMPT" ]]; then
-    PROMPT_LOWER=$(echo "$PROMPT" | tr '[:upper:]' '[:lower:]')
 
     declare -a SKILL_NAMES=()
     declare -a SKILL_COMMANDS=()
@@ -78,7 +93,7 @@ if [[ -f "$CONF_FILE" ]]; then
       echo "[Skill Detector] 코드 작성 전 다음 스킬을 Read하고 규칙을 따르라:"
       for ((i = 0; i < MAX; i++)); do
         idx=${SORTED_INDICES[$i]}
-        echo "- ${SKILL_NAMES[$idx]}: /skill ${SKILL_COMMANDS[$idx]}"
+        echo "- ${SKILL_NAMES[$idx]}: Read .claude/skills/${SKILL_COMMANDS[$idx]}/SKILL.md"
       done
     fi
   fi

@@ -218,6 +218,51 @@ copy_dir() {
   done
 }
 
+# === settings.json 머지 ===
+merge_settings_json() {
+  local source_file="$SOURCE_DIR/settings.json"
+  local target_file="$TARGET_DIR/settings.json"
+
+  if [ ! -f "$target_file" ]; then
+    # 기존 파일 없음 → 그냥 복사
+    cp "$source_file" "$target_file"
+    echo "  복사: settings.json"
+  else
+    # 기존 파일 있음 → hook이 이미 등록되어 있는지 확인
+    if grep -q "prompt-hook.sh" "$target_file" 2>/dev/null; then
+      echo "  건너뜀: settings.json (prompt-hook 이미 등록됨)"
+    else
+      # jq가 있으면 머지, 없으면 백업 후 덮어쓰기
+      if command -v jq &>/dev/null; then
+        local HOOK_ENTRY='{"matcher":"","hooks":[{"type":"command","command":".claude/hooks/prompt-hook.sh"}]}'
+
+        if jq -e '.hooks.UserPromptSubmit' "$target_file" &>/dev/null; then
+          # 기존 UserPromptSubmit 배열에 추가
+          jq --argjson entry "$HOOK_ENTRY" \
+            '.hooks.UserPromptSubmit += [$entry]' \
+            "$target_file" > "${target_file}.tmp" && mv "${target_file}.tmp" "$target_file"
+        else
+          # hooks.UserPromptSubmit 생성
+          jq --argjson entry "$HOOK_ENTRY" \
+            '.hooks.UserPromptSubmit = [$entry]' \
+            "$target_file" > "${target_file}.tmp" && mv "${target_file}.tmp" "$target_file"
+        fi
+        echo "  머지: settings.json (prompt-hook 추가)"
+      else
+        # jq 없음 → 백업 후 덮어쓰기 + 경고
+        cp "$target_file" "${target_file}.bak"
+        cp "$source_file" "$target_file"
+        echo "  ⚠️  settings.json - 기존 파일 백업(.bak) 후 덮어씀 (jq 설치 시 머지 가능)"
+      fi
+    fi
+  fi
+
+  # 매니페스트에 기록
+  local new_hash
+  new_hash="$(file_hash "$target_file")"
+  NEW_MANIFEST="${NEW_MANIFEST}${new_hash} settings.json"$'\n'
+}
+
 # === 복사 함수 ===
 
 # 공통 (항상 설치)
@@ -226,7 +271,7 @@ copy_common() {
 
   # 루트 설정 파일
   copy_file "CLAUDE.md"
-  copy_file "settings.json"
+  merge_settings_json
 
   # 공통 에이전트
   copy_file "agents/explore.md"
