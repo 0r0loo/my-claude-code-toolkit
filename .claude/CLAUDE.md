@@ -25,8 +25,8 @@ Claude는 작업 시작 전 반드시 이 규칙을 따라야 한다.
 
 ### 에이전트 위임 대상
 - **탐색 + 스킬/에이전트 식별** → `explore` 에이전트 (haiku) — 코드 탐색과 함께 필요한 스킬, 권장 에이전트 흐름을 식별하여 반환
-- **구현 (M 티어)** → `code-writer-fe` 또는 `code-writer-be` 에이전트 (opus)
-- **구현+테스트 (L 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (opus)
+- **구현 (M 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현만)
+- **구현+테스트 (L 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현 + 테스트)
 - **코드 리뷰** → `code-reviewer` 에이전트 (opus)
 - **Git 작업** → `git-manager` 에이전트 (sonnet)
 
@@ -127,7 +127,7 @@ Main Agent가 직접 처리한다. 서브에이전트 위임 불필요.
 TDD/Review를 생략하고 핵심 단계만 수행한다.
 1. **Task Header 출력**
 2. **Planning**: `explore`로 탐색 + 스킬/에이전트 식별 → explore 결과 기반으로 Task Header의 📚, 🔄 결정
-3. **Implementation**: `code-writer` 에이전트에 구현 위임 (단위별로 나눠 호출)
+3. **Implementation**: `implementer` 에이전트에 구현 위임 (단위별로 나눠 호출, "테스트 없이 구현만" 지시)
    - **위임 시 explore가 식별한 스킬 경로를 반드시 전달한다** (예: `스킬: APIDesign(.claude/skills/APIDesign/SKILL.md), NestJS(.claude/skills/NestJS/SKILL.md)`)
 4. **Commit**: `git-manager`로 커밋/PR 생성
 
@@ -150,10 +150,8 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 
 ### Agents (서브에이전트 프롬프트)
 - `.claude/agents/explore.md` - 코드베이스 탐색 전문가
-- `.claude/agents/code-writer-fe.md` - React 프론트엔드 구현 (M 티어)
-- `.claude/agents/code-writer-be.md` - NestJS 백엔드 구현 (M 티어)
-- `.claude/agents/implementer-fe.md` - React 구현+테스트 (L 티어)
-- `.claude/agents/implementer-be.md` - NestJS 구현+테스트 (L 티어)
+- `.claude/agents/implementer-fe.md` - React 프론트엔드 구현 (M: 구현만, L: 구현+테스트)
+- `.claude/agents/implementer-be.md` - NestJS 백엔드 구현 (M: 구현만, L: 구현+테스트)
 - `.claude/agents/code-reviewer.md` - 코드 리뷰 전문가
 - `.claude/agents/git-manager.md` - Git 작업 전문가
 

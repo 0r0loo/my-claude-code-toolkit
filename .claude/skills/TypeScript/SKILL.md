@@ -1,6 +1,7 @@
 ---
 name: typescript
 description: TypeScript 고급 패턴 가이드. 타입 추론, 유틸리티 타입, 제네릭, 타입 가드, 고급 타입 패턴 등 TypeScript 코드 작성 시 참조한다.
+lastUpdated: 2025-03-01
 ---
 
 # TypeScript Skill - 고급 패턴 규칙

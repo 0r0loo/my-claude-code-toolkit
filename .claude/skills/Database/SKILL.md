@@ -1,6 +1,7 @@
 ---
 name: database
 description: 데이터베이스 설계 및 최적화 가이드. 스키마 설계, 정규화, 관계, 인덱싱, N+1 방지, 쿼리 최적화 등 언어/ORM 무관한 DB 원칙을 제공한다.
+lastUpdated: 2025-03-01
 ---
 
 # Database Skill - DB 설계 & 최적화

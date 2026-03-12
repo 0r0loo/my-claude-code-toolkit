@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # install.sh - my-claude-code-toolkit을 .claude/에 설치한다
-# Usage: ./install.sh [--global] [--fe] [--be] [--force]
+# Usage: ./install.sh [--global] [--fe] [--be] [--force] [--uninstall]
 #   기본값: 현재 디렉토리의 .claude/에 전체 설치 (프로젝트 로컬)
 #   --global: ~/.claude/에 설치 (글로벌)
 #   --fe: 공통 + 프론트엔드 스킬만 설치
@@ -26,6 +26,7 @@ usage() {
   echo ""
   echo "옵션:"
   echo "  --force        사용자 수정 파일도 강제 덮어쓰기"
+  echo "  --uninstall    매니페스트 기반으로 설치된 파일 제거"
   echo ""
   echo "예시:"
   echo "  $0                    # 전체 설치 (로컬)"
@@ -41,6 +42,7 @@ INSTALL_MODE="local"
 INSTALL_FE=false
 INSTALL_BE=false
 FORCE_OVERWRITE=false
+UNINSTALL=false
 
 for arg in "$@"; do
   case "$arg" in
@@ -55,6 +57,9 @@ for arg in "$@"; do
       ;;
     --force)
       FORCE_OVERWRITE=true
+      ;;
+    --uninstall)
+      UNINSTALL=true
       ;;
     --help|-h)
       usage
@@ -94,6 +99,52 @@ if [ "$INSTALL_MODE" = "global" ]; then
 else
   TARGET_DIR="$(pwd)/.claude"
   MODE_LABEL="로컬 설치 ($(pwd)/.claude/)"
+fi
+
+# === uninstall 함수 ===
+uninstall_toolkit() {
+  local manifest="$TARGET_DIR/.toolkit-manifest"
+  if [ ! -f "$manifest" ]; then
+    echo "Error: 매니페스트를 찾을 수 없습니다. ($manifest)"
+    echo "수동으로 .claude/ 디렉토리를 확인하세요."
+    exit 1
+  fi
+
+  echo "=== my-claude-code-toolkit 제거 ==="
+  echo ""
+
+  local count=0
+  while IFS=' ' read -r hash filepath; do
+    [ -z "$filepath" ] && continue
+    if [ -f "$TARGET_DIR/$filepath" ]; then
+      rm "$TARGET_DIR/$filepath"
+      echo "  삭제: $filepath"
+      count=$((count + 1))
+    fi
+  done < "$manifest"
+
+  # 빈 디렉토리 정리
+  find "$TARGET_DIR" -type d -empty -delete 2>/dev/null
+
+  # 매니페스트 자체도 삭제
+  rm "$manifest"
+
+  # settings.json에서 prompt-hook 제거
+  if [ -f "$TARGET_DIR/settings.json" ] && command -v jq &>/dev/null; then
+    jq 'del(.hooks.UserPromptSubmit[] | select(.hooks[].command | contains("prompt-hook.sh")))' \
+      "$TARGET_DIR/settings.json" > "${TARGET_DIR}/settings.json.tmp" \
+      && mv "${TARGET_DIR}/settings.json.tmp" "$TARGET_DIR/settings.json"
+    echo "  정리: settings.json에서 prompt-hook 제거"
+  fi
+
+  echo ""
+  echo "=== 제거 완료 ($count개 파일) ==="
+}
+
+# === uninstall 분기 ===
+if [ "$UNINSTALL" = true ]; then
+  uninstall_toolkit
+  exit 0
 fi
 
 echo "=== my-claude-code-toolkit 설치 ==="
@@ -306,7 +357,6 @@ copy_fe() {
   echo "[FE]"
 
   # FE 에이전트
-  copy_file "agents/code-writer-fe.md"
   copy_file "agents/implementer-fe.md"
 
   # FE 스킬 (디렉토리 전체)
@@ -325,7 +375,6 @@ copy_be() {
   echo "[BE]"
 
   # BE 에이전트
-  copy_file "agents/code-writer-be.md"
   copy_file "agents/implementer-be.md"
 
   # BE 스킬 (디렉토리 전체)
@@ -367,6 +416,11 @@ if [ -n "$OLD_MANIFEST_CONTENT" ]; then
       fi
     fi
   done <<< "$OLD_MANIFEST_CONTENT"
+
+  # 빈 디렉토리 정리
+  find "$TARGET_DIR/skills" -type d -empty -delete 2>/dev/null
+  find "$TARGET_DIR/agents" -type d -empty -delete 2>/dev/null
+
   echo ""
 fi
 

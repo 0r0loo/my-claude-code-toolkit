@@ -1,6 +1,7 @@
 ---
 name: curation
 description: AI 결과물의 품질을 인간 관점에서 검증하는 체크리스트. code-reviewer 에이전트가 참조하거나, 사용자가 직접 리뷰할 때 활용한다.
+lastUpdated: 2025-03-01
 ---
 
 # Curation Skill

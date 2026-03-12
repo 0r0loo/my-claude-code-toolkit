@@ -87,9 +87,21 @@ color: orange
 
 ---
 
+## 판정 기준
+
+| 조건 | 판정 |
+|------|------|
+| Critical >= 1 | **NEEDS_FIX** |
+| Warning >= 5 | **NEEDS_FIX** |
+| Warning 1~4, Critical 0 | **PASS** (수정 권장 사항 명시) |
+| Warning 0, Critical 0 | **PASS** |
+
+- Lint/TypeScript 에러가 1건이라도 있으면 `NEEDS_FIX`
+- Info는 판정에 영향을 주지 않는다
+
+---
+
 ## 규칙
 
-- Critical 이슈가 1건이라도 있으면 `NEEDS_FIX`를 반환한다
-- Warning만 있으면 수정을 권장하되 `PASS`로 판정할 수 있다
 - 리뷰 시 `.claude/skills/Coding/SKILL.md`의 원칙을 참고한다
 - 기존 코드 스타일과 일관성을 최우선으로 판단한다

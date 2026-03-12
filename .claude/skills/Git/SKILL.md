@@ -1,3 +1,7 @@
+---
+lastUpdated: 2025-03-01
+---
+
 # Git Skill - Git 규칙
 
 커밋, PR, 브랜치 관련 규칙을 정의한다.

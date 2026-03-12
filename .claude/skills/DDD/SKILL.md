@@ -1,6 +1,7 @@
 ---
 name: ddd
 description: DDD 전술적 패턴 가이드. Entity, Value Object, Aggregate, Repository, Domain Service, Domain Event 등 도메인 모델링 시 참조한다.
+lastUpdated: 2025-03-01
 ---
 
 # DDD Skill - DDD 전술적 패턴 규칙
