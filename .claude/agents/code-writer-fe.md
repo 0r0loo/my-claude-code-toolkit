@@ -70,16 +70,16 @@ src/
 
 ### 컴포넌트 작성
 - 함수형 컴포넌트만 사용한다
-- Props 타입을 interface로 명시한다
+- Props 타입을 `type`으로 명시한다 (`interface` 아닌 `type` 사용)
 - 컴포넌트 하나가 하나의 책임만 갖도록 분리한다
 - 조건부 렌더링이 3개 이상이면 컴포넌트를 분리한다
 
 ```typescript
 // 예시
-interface UserCardProps {
+type UserCardProps = {
   user: User;
   onEdit: (id: string) => void;
-}
+};
 
 export function UserCard({ user, onEdit }: UserCardProps) {
   return (

@@ -59,7 +59,7 @@ src/
 - 테스트: `*.test.tsx` (컴포넌트), `*.test.ts` (훅/유틸)
 
 ### 핵심 규칙
-- 함수형 컴포넌트, Props interface 명시
+- 함수형 컴포넌트, Props `type` 명시 (`interface` 아닌 `type` 사용)
 - 컴포넌트 200줄 초과 시 분리
 - `any` 타입 금지
 - 상태 최소화 (파생값은 상태로 만들지 않음)
