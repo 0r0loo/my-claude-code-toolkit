@@ -46,3 +46,39 @@ lastUpdated: 2025-03-01
 - 동일 유형 실패가 2회 반복
 - 처방 후에도 새로운 유형의 에러 발생
 - 아키텍처/설계 수준의 변경이 필요한 경우
+
+## 4. 흔한 실패 시나리오와 처방
+
+### TypeORM Migration 실패
+- **증상**: `QueryFailedError: relation "xxx" already exists`
+- **원인**: 마이그레이션이 꼬여서 이미 적용된 마이그레이션을 재실행
+- **처방**:
+  1. `typeorm migration:show`로 적용 상태 확인
+  2. 문제 마이그레이션의 down() 실행
+  3. 마이그레이션 파일 수정 후 재실행
+
+### React Hydration Mismatch
+- **증상**: `Text content did not match. Server: "X" Client: "Y"`
+- **원인**: SSR/CSR 결과 불일치 (Date, Math.random, window 접근 등)
+- **처방**:
+  1. 에러 메시지에서 불일치 위치 확인
+  2. 해당 컴포넌트에서 서버/클라이언트 분기 코드 찾기
+  3. `useEffect` + `useState`로 클라이언트 전용 값 처리
+  4. 또는 `suppressHydrationWarning` (최후의 수단)
+
+### NestJS Circular Dependency
+- **증상**: `Nest can't resolve dependencies of the XService`
+- **원인**: A→B→A 순환 참조
+- **처방**:
+  1. `@Inject(forwardRef(() => XService))` 임시 해결
+  2. 근본적: 공통 로직을 별도 서비스로 추출하여 순환 제거
+  3. 이벤트 기반으로 변경 (EventEmitter2)
+
+### 빌드는 되지만 런타임 에러
+- **증상**: `TypeError: Cannot read properties of undefined`
+- **원인**: 타입 시스템을 우회하는 런타임 값 (API 응답, 옵셔널 체이닝 누락)
+- **처방**:
+  1. 에러 스택 트레이스에서 정확한 위치 확인
+  2. 해당 값의 타입과 실제 런타임 값 비교
+  3. 옵셔널 체이닝(`?.`) 또는 null guard 추가
+  4. API 응답 타입과 실제 응답의 불일치면 DTO/타입 수정

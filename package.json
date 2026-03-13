@@ -18,6 +18,9 @@
     "toolkit",
     "agents"
   ],
+  "engines": {
+    "node": ">=16"
+  },
   "author": "choblue",
   "license": "MIT",
   "repository": {

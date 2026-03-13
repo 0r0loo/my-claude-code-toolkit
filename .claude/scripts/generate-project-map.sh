@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # generate-project-map.sh - PROJECT_MAP.md를 자동 생성한다
-# Usage: .claude/scripts/generate-project-map.sh
+# Usage: .claude/scripts/generate-project-map.sh [depth]
 # 프로젝트 루트에서 실행하면 .claude/PROJECT_MAP.md를 생성한다.
+# depth: 디렉토리 탐색 깊이 (기본값: 3)
 
 set -e
 
@@ -164,10 +165,11 @@ except:
   echo ""
   echo '```'
 
+  DEPTH=${1:-3}
   EXCLUDE_DIRS="node_modules|.git|.next|dist|build|coverage|.cache|.turbo|__pycache__|.venv|vendor"
 
   find_dirs() {
-    find . -maxdepth 3 -type d \
+    find . -maxdepth "$DEPTH" -type d \
       \( -name node_modules -o -name .git -o -name .next -o -name dist \
          -o -name build -o -name coverage -o -name .cache -o -name .turbo \
          -o -name __pycache__ -o -name .venv -o -name vendor \
@@ -176,7 +178,7 @@ except:
   }
 
   if command -v tree &>/dev/null; then
-    tree -d -L 3 -I "$EXCLUDE_DIRS|.idea|.vscode" --noreport 2>/dev/null || find_dirs
+    tree -d -L "$DEPTH" -I "$EXCLUDE_DIRS|.idea|.vscode" --noreport 2>/dev/null || find_dirs
   else
     find_dirs
   fi

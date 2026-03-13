@@ -27,13 +27,15 @@ usage() {
   echo "옵션:"
   echo "  --force        사용자 수정 파일도 강제 덮어쓰기"
   echo "  --uninstall    매니페스트 기반으로 설치된 파일 제거"
+  echo "  --skills=LIST  쉼표로 구분된 스킬만 선택 설치 (예: React,TailwindCSS)"
   echo ""
   echo "예시:"
-  echo "  $0                    # 전체 설치 (로컬)"
-  echo "  $0 --fe               # 공통 + FE만 (로컬)"
-  echo "  $0 --be               # 공통 + BE만 (로컬)"
-  echo "  $0 --global --fe      # 공통 + FE만 (글로벌)"
-  echo "  $0 --force            # 수정된 파일도 강제 덮어쓰기"
+  echo "  $0                              # 전체 설치 (로컬)"
+  echo "  $0 --fe                         # 공통 + FE만 (로컬)"
+  echo "  $0 --be                         # 공통 + BE만 (로컬)"
+  echo "  $0 --global --fe                # 공통 + FE만 (글로벌)"
+  echo "  $0 --force                      # 수정된 파일도 강제 덮어쓰기"
+  echo "  $0 --skills=React,TailwindCSS   # 공통 + 지정 스킬만"
   exit 0
 }
 
@@ -43,6 +45,7 @@ INSTALL_FE=false
 INSTALL_BE=false
 FORCE_OVERWRITE=false
 UNINSTALL=false
+CUSTOM_SKILLS=""
 
 for arg in "$@"; do
   case "$arg" in
@@ -61,6 +64,9 @@ for arg in "$@"; do
     --uninstall)
       UNINSTALL=true
       ;;
+    --skills=*)
+      CUSTOM_SKILLS="${arg#*=}"
+      ;;
     --help|-h)
       usage
       ;;
@@ -78,7 +84,9 @@ if [ "$INSTALL_FE" = false ] && [ "$INSTALL_BE" = false ]; then
 fi
 
 # 스택 라벨 결정
-if [ "$INSTALL_FE" = true ] && [ "$INSTALL_BE" = true ]; then
+if [ -n "$CUSTOM_SKILLS" ]; then
+  STACK_LABEL="커스텀 ($CUSTOM_SKILLS)"
+elif [ "$INSTALL_FE" = true ] && [ "$INSTALL_BE" = true ]; then
   STACK_LABEL="FE + BE (전체)"
 elif [ "$INSTALL_FE" = true ]; then
   STACK_LABEL="FE만"
@@ -316,9 +324,9 @@ merge_settings_json() {
 
 # === 복사 함수 ===
 
-# 공통 (항상 설치)
-copy_common() {
-  echo "[공통]"
+# 공통 코어 (최소 공통 — --skills 모드에서도 설치)
+copy_common_core() {
+  echo "[공통 코어]"
 
   # 루트 설정 파일
   copy_file "CLAUDE.md"
@@ -329,16 +337,11 @@ copy_common() {
   copy_file "agents/code-reviewer.md"
   copy_file "agents/git-manager.md"
 
-  # 공통 스킬
+  # 필수 스킬
   copy_file "skills/Coding/SKILL.md"
   copy_dir "skills/TypeScript"
   copy_dir "skills/Git"
   copy_dir "skills/Planning"
-  copy_dir "skills/TDD"
-  copy_dir "skills/APIDesign"
-  copy_dir "skills/Database"
-  copy_dir "skills/FailureRecovery"
-  copy_dir "skills/Curation"
 
   # 커스텀 커맨드
   copy_dir "prompts"
@@ -350,6 +353,18 @@ copy_common() {
   # scripts
   copy_dir "scripts"
   chmod +x "$TARGET_DIR/scripts/"*.sh
+}
+
+# 공통 (항상 설치 — 기존 --fe/--be 모드)
+copy_common() {
+  copy_common_core
+
+  echo "[공통 스킬]"
+  copy_dir "skills/TDD"
+  copy_dir "skills/APIDesign"
+  copy_dir "skills/Database"
+  copy_dir "skills/FailureRecovery"
+  copy_dir "skills/Curation"
 }
 
 # FE (프론트엔드)
@@ -383,24 +398,73 @@ copy_be() {
   copy_dir "skills/DDD"
 }
 
+# 스킬에 맞는 에이전트 자동 설치
+FE_SKILLS="React NextJS TailwindCSS TanStackQuery Zustand ReactHookForm SVGIcon"
+BE_SKILLS="NestJS TypeORM DDD"
+
+install_agents_for_skills() {
+  local skills="$1"
+  local need_fe=false
+  local need_be=false
+
+  for skill in $(echo "$skills" | tr ',' ' '); do
+    skill=$(echo "$skill" | xargs)
+    for fs in $FE_SKILLS; do
+      [ "$skill" = "$fs" ] && need_fe=true
+    done
+    for bs in $BE_SKILLS; do
+      [ "$skill" = "$bs" ] && need_be=true
+    done
+  done
+
+  if [ "$need_fe" = true ]; then
+    echo "[에이전트]"
+    copy_file "agents/implementer-fe.md"
+  fi
+  if [ "$need_be" = true ]; then
+    echo "[에이전트]"
+    copy_file "agents/implementer-be.md"
+  fi
+}
+
 # === 실행 ===
 
 echo "파일을 복사합니다..."
 echo ""
 
-# 공통은 항상 설치
-copy_common
-echo ""
-
-# 선택된 스택 설치
-if [ "$INSTALL_FE" = true ]; then
-  copy_fe
+if [ -n "$CUSTOM_SKILLS" ]; then
+  # --skills 모드: 코어 + 지정 스킬만
+  copy_common_core
   echo ""
-fi
 
-if [ "$INSTALL_BE" = true ]; then
-  copy_be
+  echo "[커스텀 스킬]"
+  IFS=',' read -ra SKILLS <<< "$CUSTOM_SKILLS"
+  for skill in "${SKILLS[@]}"; do
+    skill=$(echo "$skill" | xargs)
+    if [ -d "$SOURCE_DIR/skills/$skill" ]; then
+      copy_dir "skills/$skill"
+    else
+      echo "  ⚠️  스킬 '$skill'을 찾을 수 없습니다. (사용 가능: $(ls -1 "$SOURCE_DIR/skills/" | tr '\n' ', '))"
+    fi
+  done
   echo ""
+
+  install_agents_for_skills "$CUSTOM_SKILLS"
+  echo ""
+else
+  # 기존 --fe/--be 모드
+  copy_common
+  echo ""
+
+  if [ "$INSTALL_FE" = true ]; then
+    copy_fe
+    echo ""
+  fi
+
+  if [ "$INSTALL_BE" = true ]; then
+    copy_be
+    echo ""
+  fi
 fi
 
 # === 오래된 파일 정리 ===
