@@ -1,5 +1,33 @@
 # Changelog
 
+## 1.4.0
+
+### Phase 1: 긴급 수정
+- **FIX**: settings.json 머지 로직 도입 — 기존 사용자 설정을 보존하며 hook만 추가
+- **FIX**: Quality Gate 조건부 출력 — 작업 키워드 감지 시에만 출력 (질문에는 미출력)
+- **FIX**: prompt-hook JSON 파싱 python3 의존 제거 — jq > python3 > sed 3단계 fallback
+- **FIX**: Skill Detector 출력 `/skill X` → `Read .claude/skills/X/SKILL.md`로 수정
+
+### Phase 2: 구조 개선
+- **REFACTOR**: code-writer/implementer 통합 (4파일 → 2파일)
+  - implementer에 실행 모드 분기 추가 (M: 구현만, L: 구현+테스트)
+  - code-writer 고유 콘텐츠(상태 관리, 에러 핸들링, DTO 작성 등) implementer에 머지
+- **FEAT**: explore 출력에 Structured Summary(yaml 블록) 추가
+- **FEAT**: code-reviewer PASS/NEEDS_FIX 판정 기준 테이블 명확화
+- **FEAT**: install.sh `--uninstall` 옵션 추가 (매니페스트 기반 제거)
+- **FIX**: 오래된 파일 삭제 후 빈 디렉토리 자동 정리
+- **FEAT**: 전체 스킬 frontmatter에 targetLib/lastUpdated 추가
+
+### Phase 3: 확장성
+- **FEAT**: install.sh `--skills=React,TailwindCSS` 선택 설치 지원
+  - `copy_common_core()` 분리 (최소 공통)
+  - 스킬에 맞는 에이전트 자동 설치
+- **FEAT**: FailureRecovery 스킬에 4개 실패 시나리오/처방 추가
+- **REFACTOR**: Planning/CLAUDE.md 중복 제거 (CLAUDE.md는 요약, Planning이 정본)
+- **FEAT**: /feature, /fix 프롬프트에 구체적 예시 추가
+- **FEAT**: package.json engines 필드 추가 (node>=16)
+- **FEAT**: generate-project-map.sh depth 인자 지원
+
 ## 1.3.2
 
 - **FEAT**: 서브에이전트 스킬 전달 체계 구축

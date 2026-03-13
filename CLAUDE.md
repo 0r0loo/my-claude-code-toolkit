@@ -16,9 +16,12 @@
 - hooks, scripts 추가/삭제
 
 ### install.sh 구조
-- `copy_common()` — 공통 파일 (항상 설치)
+- `copy_common_core()` — 최소 공통 (--skills 모드에서도 설치)
+- `copy_common()` — 전체 공통 (기존 --fe/--be 모드)
 - `copy_fe()` — FE 전용 파일 (--fe)
 - `copy_be()` — BE 전용 파일 (--be)
+- `merge_settings_json()` — settings.json 머지 (기존 설정 보존)
+- `uninstall_toolkit()` — 매니페스트 기반 제거 (--uninstall)
 - `copy_dir "path"` — 디렉토리 전체를 재귀 복사 (references/ 포함)
 - `copy_file "path"` — 개별 파일 복사
 
