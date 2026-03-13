@@ -68,14 +68,15 @@ if [[ -f "$CONF_FILE" ]]; then
       fi
     done < "$CONF_FILE"
 
-    if ((${#SKILL_NAMES[@]} > 0)); then
+    if [[ ${#SKILL_NAMES[@]:-0} -gt 0 ]]; then
       SORTED_INDICES=()
-      for i in "${!SKILL_SCORES[@]}"; do
+      for i in $(seq 0 $((${#SKILL_SCORES[@]} - 1))); do
         SORTED_INDICES+=("$i")
       done
 
-      for ((i = 0; i < ${#SORTED_INDICES[@]}; i++)); do
-        for ((j = i + 1; j < ${#SORTED_INDICES[@]}; j++)); do
+      SORTED_LEN=${#SORTED_INDICES[@]}
+      for ((i = 0; i < SORTED_LEN; i++)); do
+        for ((j = i + 1; j < SORTED_LEN; j++)); do
           idx_i=${SORTED_INDICES[$i]}
           idx_j=${SORTED_INDICES[$j]}
           if ((SKILL_SCORES[idx_j] > SKILL_SCORES[idx_i])); then
@@ -86,8 +87,8 @@ if [[ -f "$CONF_FILE" ]]; then
       done
 
       MAX=5
-      if ((${#SORTED_INDICES[@]} < MAX)); then
-        MAX=${#SORTED_INDICES[@]}
+      if ((SORTED_LEN < MAX)); then
+        MAX=$SORTED_LEN
       fi
 
       echo "[Skill Detector] 코드 작성 전 다음 스킬을 Read하고 규칙을 따르라:"
