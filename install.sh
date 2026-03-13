@@ -1,45 +1,40 @@
 #!/usr/bin/env bash
-# install.sh - my-claude-code-toolkit을 .claude/에 설치한다
-# Usage: ./install.sh [--global] [--fe] [--be] [--force] [--uninstall]
-#   기본값: 현재 디렉토리의 .claude/에 전체 설치 (프로젝트 로컬)
-#   --global: ~/.claude/에 설치 (글로벌)
-#   --fe: 공통 + 프론트엔드 스킬만 설치
-#   --be: 공통 + 백엔드 스킬만 설치
-#   --fe --be: 전체 설치 (= 기본값)
-#   --force: 사용자 수정 파일도 강제 덮어쓰기
+# install.sh - Install my-claude-code-toolkit into .claude/
+# Usage: ./install.sh [--global] [--fe] [--be] [--force] [--uninstall] [--skills=LIST]
 
 set -e
 
-# 도움말 출력
+# Help
 usage() {
-  echo "Usage: $0 [--global] [--fe] [--be] [--force]"
+  echo "Usage: $0 [--global] [--fe] [--be] [--force] [--uninstall] [--skills=LIST]"
   echo ""
-  echo "스택 선택:"
-  echo "  (기본값)       전체 설치 (공통 + FE + BE)"
-  echo "  --fe           공통 + 프론트엔드만 설치"
-  echo "  --be           공통 + 백엔드만 설치"
-  echo "  --fe --be      전체 설치 (= 기본값)"
+  echo "Stack selection:"
+  echo "  (default)      Full install (common + FE + BE)"
+  echo "  --fe           Common + frontend skills only"
+  echo "  --be           Common + backend skills only"
+  echo "  --fe --be      Full install (same as default)"
   echo ""
-  echo "설치 위치:"
-  echo "  (기본값)       현재 디렉토리의 .claude/에 설치 (프로젝트 로컬)"
-  echo "  --global       ~/.claude/에 설치 (글로벌)"
+  echo "Install location:"
+  echo "  (default)      Project local (.claude/ in current directory)"
+  echo "  --global       Global install (~/.claude/)"
   echo ""
-  echo "옵션:"
-  echo "  --force        사용자 수정 파일도 강제 덮어쓰기"
-  echo "  --uninstall    매니페스트 기반으로 설치된 파일 제거"
-  echo "  --skills=LIST  쉼표로 구분된 스킬만 선택 설치 (예: React,TailwindCSS)"
+  echo "Options:"
+  echo "  --force        Overwrite user-modified files"
+  echo "  --uninstall    Remove installed files using manifest"
+  echo "  --skills=LIST  Install only specified skills (e.g., React,TailwindCSS)"
   echo ""
-  echo "예시:"
-  echo "  $0                              # 전체 설치 (로컬)"
-  echo "  $0 --fe                         # 공통 + FE만 (로컬)"
-  echo "  $0 --be                         # 공통 + BE만 (로컬)"
-  echo "  $0 --global --fe                # 공통 + FE만 (글로벌)"
-  echo "  $0 --force                      # 수정된 파일도 강제 덮어쓰기"
-  echo "  $0 --skills=React,TailwindCSS   # 공통 + 지정 스킬만"
+  echo "Examples:"
+  echo "  $0                              # Full install (local)"
+  echo "  $0 --fe                         # Common + FE only (local)"
+  echo "  $0 --be                         # Common + BE only (local)"
+  echo "  $0 --global --fe                # Common + FE only (global)"
+  echo "  $0 --force                      # Force overwrite modified files"
+  echo "  $0 --skills=React,TailwindCSS   # Common + specified skills only"
+  echo "  $0 --uninstall                  # Remove installed files"
   exit 0
 }
 
-# 인자 파싱
+# Parse arguments
 INSTALL_MODE="local"
 INSTALL_FE=false
 INSTALL_BE=false
@@ -71,27 +66,27 @@ for arg in "$@"; do
       usage
       ;;
     *)
-      echo "Error: 알 수 없는 옵션 '$arg'"
+      echo "Error: Unknown option '$arg'"
       usage
       ;;
   esac
 done
 
-# --fe도 --be도 지정하지 않으면 둘 다 true (전체 설치)
+# Default: install both FE and BE
 if [ "$INSTALL_FE" = false ] && [ "$INSTALL_BE" = false ]; then
   INSTALL_FE=true
   INSTALL_BE=true
 fi
 
-# 스택 라벨 결정
+# Stack label
 if [ -n "$CUSTOM_SKILLS" ]; then
-  STACK_LABEL="커스텀 ($CUSTOM_SKILLS)"
+  STACK_LABEL="Custom ($CUSTOM_SKILLS)"
 elif [ "$INSTALL_FE" = true ] && [ "$INSTALL_BE" = true ]; then
-  STACK_LABEL="FE + BE (전체)"
+  STACK_LABEL="FE + BE (full)"
 elif [ "$INSTALL_FE" = true ]; then
-  STACK_LABEL="FE만"
+  STACK_LABEL="FE only"
 else
-  STACK_LABEL="BE만"
+  STACK_LABEL="BE only"
 fi
 
 if [ -n "$PACKAGE_ROOT" ]; then
@@ -103,22 +98,22 @@ fi
 
 if [ "$INSTALL_MODE" = "global" ]; then
   TARGET_DIR="$HOME/.claude"
-  MODE_LABEL="글로벌 설치 (~/.claude/)"
+  MODE_LABEL="Global (~/.claude/)"
 else
   TARGET_DIR="$(pwd)/.claude"
-  MODE_LABEL="로컬 설치 ($(pwd)/.claude/)"
+  MODE_LABEL="Local ($(pwd)/.claude/)"
 fi
 
-# === uninstall 함수 ===
+# === Uninstall ===
 uninstall_toolkit() {
   local manifest="$TARGET_DIR/.toolkit-manifest"
   if [ ! -f "$manifest" ]; then
-    echo "Error: 매니페스트를 찾을 수 없습니다. ($manifest)"
-    echo "수동으로 .claude/ 디렉토리를 확인하세요."
+    echo "Error: Manifest not found ($manifest)"
+    echo "Please check your .claude/ directory manually."
     exit 1
   fi
 
-  echo "=== my-claude-code-toolkit 제거 ==="
+  echo "=== Uninstalling my-claude-code-toolkit ==="
   echo ""
 
   local count=0
@@ -126,53 +121,52 @@ uninstall_toolkit() {
     [ -z "$filepath" ] && continue
     if [ -f "$TARGET_DIR/$filepath" ]; then
       rm "$TARGET_DIR/$filepath"
-      echo "  삭제: $filepath"
+      echo "  Removed: $filepath"
       count=$((count + 1))
     fi
   done < "$manifest"
 
-  # 빈 디렉토리 정리
+  # Clean up empty directories
   find "$TARGET_DIR" -type d -empty -delete 2>/dev/null
 
-  # 매니페스트 자체도 삭제
+  # Remove manifest itself
   rm "$manifest"
 
-  # settings.json에서 prompt-hook 제거
+  # Remove prompt-hook from settings.json
   if [ -f "$TARGET_DIR/settings.json" ] && command -v jq &>/dev/null; then
     jq 'del(.hooks.UserPromptSubmit[] | select(.hooks[].command | contains("prompt-hook.sh")))' \
       "$TARGET_DIR/settings.json" > "${TARGET_DIR}/settings.json.tmp" \
       && mv "${TARGET_DIR}/settings.json.tmp" "$TARGET_DIR/settings.json"
-    echo "  정리: settings.json에서 prompt-hook 제거"
+    echo "  Cleaned: removed prompt-hook from settings.json"
   fi
 
   echo ""
-  echo "=== 제거 완료 ($count개 파일) ==="
+  echo "=== Uninstall complete ($count files removed) ==="
 }
 
-# === uninstall 분기 ===
 if [ "$UNINSTALL" = true ]; then
   uninstall_toolkit
   exit 0
 fi
 
-echo "=== my-claude-code-toolkit 설치 ==="
+echo "=== Installing my-claude-code-toolkit ==="
 echo ""
-echo "모드:   $MODE_LABEL"
-echo "스택:   $STACK_LABEL"
+echo "Mode:   $MODE_LABEL"
+echo "Stack:  $STACK_LABEL"
 echo "Source: $SOURCE_DIR"
 echo "Target: $TARGET_DIR"
 echo ""
 
-# Source 디렉토리 존재 확인
+# Verify source directory
 if [ ! -d "$SOURCE_DIR" ]; then
-  echo "Error: $SOURCE_DIR 디렉토리를 찾을 수 없습니다."
+  echo "Error: Source directory not found ($SOURCE_DIR)"
   exit 1
 fi
 
-# TARGET_DIR 생성
+# Create target directory
 mkdir -p "$TARGET_DIR"
 
-# === 해시 함수 ===
+# === Hash function ===
 file_hash() {
   if command -v shasum &>/dev/null; then
     shasum -a 256 "$1" | cut -d' ' -f1
@@ -184,18 +178,15 @@ file_hash() {
   fi
 }
 
-# === 매니페스트 관리 ===
+# === Manifest management ===
 MANIFEST_FILE="$TARGET_DIR/.toolkit-manifest"
 NEW_MANIFEST=""
 
-# 이전 매니페스트 로드 (grep 기반으로 bash 3.x 호환)
-# OLD_MANIFEST_CONTENT: 한 줄에 "<sha256hash> <relative_path>" 형식
 OLD_MANIFEST_CONTENT=""
 if [ -f "$MANIFEST_FILE" ]; then
   OLD_MANIFEST_CONTENT="$(cat "$MANIFEST_FILE")"
 fi
 
-# 이전 매니페스트에서 특정 파일의 해시를 조회
 old_manifest_hash() {
   local path="$1"
   if [ -z "$OLD_MANIFEST_CONTENT" ]; then
@@ -205,9 +196,8 @@ old_manifest_hash() {
   echo "$OLD_MANIFEST_CONTENT" | grep " ${path}$" | head -1 | cut -d' ' -f1
 }
 
-# === 헬퍼 함수 ===
+# === Helper functions ===
 
-# 개별 파일 복사 (상대경로 기준, 매니페스트 체크섬 비교)
 copy_file() {
   local rel_path="$1"
   local dir
@@ -222,45 +212,37 @@ copy_file() {
     old_hash="$(old_manifest_hash "$rel_path")"
 
     if [ -n "$old_hash" ]; then
-      # 매니페스트에 기록이 있음 → 사용자 수정 여부 확인
       local current_hash
       current_hash="$(file_hash "$target_file")"
 
       if [ "$current_hash" = "$old_hash" ]; then
-        # 사용자가 수정하지 않음 → 새 버전으로 덮어씀
         cp "$source_file" "$target_file"
-        echo "  복사: $rel_path"
+        echo "  Copied: $rel_path"
       else
-        # 사용자가 수정함
         if [ "$FORCE_OVERWRITE" = true ]; then
           cp "$target_file" "$target_file.bak"
           cp "$source_file" "$target_file"
-          echo "  ⚠️  $rel_path - 사용자 수정 감지, 강제 덮어씀"
+          echo "  Forced: $rel_path (user modification detected, backup created)"
         else
-          echo "  ⚠️  $rel_path - 사용자 수정 감지, 건너뜀 (강제: --force)"
-          # 건너뛴 파일도 매니페스트에는 현재 해시로 기록 (추적 유지)
+          echo "  Skipped: $rel_path (user modification detected, use --force to overwrite)"
           NEW_MANIFEST="${NEW_MANIFEST}${current_hash} ${rel_path}"$'\n'
           return
         fi
       fi
     else
-      # 매니페스트에 기록 없음 (첫 설치 or 매니페스트 없음) → 그냥 복사
       cp "$source_file" "$target_file"
-      echo "  복사: $rel_path"
+      echo "  Copied: $rel_path"
     fi
   else
-    # 대상 파일이 존재하지 않음 → 그냥 복사
     cp "$source_file" "$target_file"
-    echo "  복사: $rel_path"
+    echo "  Copied: $rel_path"
   fi
 
-  # 복사 성공한 파일의 해시를 새 매니페스트에 추가
   local new_hash
   new_hash="$(file_hash "$target_file")"
   NEW_MANIFEST="${NEW_MANIFEST}${new_hash} ${rel_path}"$'\n'
 }
 
-# 디렉토리 전체 복사 (개별 파일 단위로 처리하여 매니페스트에 기록)
 copy_dir() {
   local rel_path="$1"
   local file
@@ -277,89 +259,76 @@ copy_dir() {
   done
 }
 
-# === settings.json 머지 ===
+# === Merge settings.json ===
 merge_settings_json() {
   local source_file="$SOURCE_DIR/settings.json"
   local target_file="$TARGET_DIR/settings.json"
 
   if [ ! -f "$target_file" ]; then
-    # 기존 파일 없음 → 그냥 복사
     cp "$source_file" "$target_file"
-    echo "  복사: settings.json"
+    echo "  Copied: settings.json"
   else
-    # 기존 파일 있음 → hook이 이미 등록되어 있는지 확인
     if grep -q "prompt-hook.sh" "$target_file" 2>/dev/null; then
-      echo "  건너뜀: settings.json (prompt-hook 이미 등록됨)"
+      echo "  Skipped: settings.json (prompt-hook already registered)"
     else
-      # jq가 있으면 머지, 없으면 백업 후 덮어쓰기
       if command -v jq &>/dev/null; then
         local HOOK_ENTRY='{"matcher":"","hooks":[{"type":"command","command":".claude/hooks/prompt-hook.sh"}]}'
 
         if jq -e '.hooks.UserPromptSubmit' "$target_file" &>/dev/null; then
-          # 기존 UserPromptSubmit 배열에 추가
           jq --argjson entry "$HOOK_ENTRY" \
             '.hooks.UserPromptSubmit += [$entry]' \
             "$target_file" > "${target_file}.tmp" && mv "${target_file}.tmp" "$target_file"
         else
-          # hooks.UserPromptSubmit 생성
           jq --argjson entry "$HOOK_ENTRY" \
             '.hooks.UserPromptSubmit = [$entry]' \
             "$target_file" > "${target_file}.tmp" && mv "${target_file}.tmp" "$target_file"
         fi
-        echo "  머지: settings.json (prompt-hook 추가)"
+        echo "  Merged: settings.json (prompt-hook added)"
       else
-        # jq 없음 → 백업 후 덮어쓰기 + 경고
         cp "$target_file" "${target_file}.bak"
         cp "$source_file" "$target_file"
-        echo "  ⚠️  settings.json - 기존 파일 백업(.bak) 후 덮어씀 (jq 설치 시 머지 가능)"
+        echo "  Warning: settings.json backed up (.bak) and overwritten (install jq for merge support)"
       fi
     fi
   fi
 
-  # 매니페스트에 기록
   local new_hash
   new_hash="$(file_hash "$target_file")"
   NEW_MANIFEST="${NEW_MANIFEST}${new_hash} settings.json"$'\n'
 }
 
-# === 복사 함수 ===
+# === Copy functions ===
 
-# 공통 코어 (최소 공통 — --skills 모드에서도 설치)
+# Common core (minimal — installed in --skills mode too)
 copy_common_core() {
-  echo "[공통 코어]"
+  echo "[Common core]"
 
-  # 루트 설정 파일
   copy_file "CLAUDE.md"
   merge_settings_json
 
-  # 공통 에이전트
   copy_file "agents/explore.md"
   copy_file "agents/code-reviewer.md"
   copy_file "agents/git-manager.md"
 
-  # 필수 스킬
   copy_file "skills/Coding/SKILL.md"
   copy_dir "skills/TypeScript"
   copy_dir "skills/Git"
   copy_dir "skills/Planning"
 
-  # 커스텀 커맨드
   copy_dir "prompts"
 
-  # hooks
   copy_dir "hooks"
   chmod +x "$TARGET_DIR/hooks/"*.sh
 
-  # scripts
   copy_dir "scripts"
   chmod +x "$TARGET_DIR/scripts/"*.sh
 }
 
-# 공통 (항상 설치 — 기존 --fe/--be 모드)
+# Common full (for --fe/--be mode)
 copy_common() {
   copy_common_core
 
-  echo "[공통 스킬]"
+  echo "[Common skills]"
   copy_dir "skills/TDD"
   copy_dir "skills/APIDesign"
   copy_dir "skills/Database"
@@ -367,14 +336,12 @@ copy_common() {
   copy_dir "skills/Curation"
 }
 
-# FE (프론트엔드)
+# FE (frontend)
 copy_fe() {
   echo "[FE]"
 
-  # FE 에이전트
   copy_file "agents/implementer-fe.md"
 
-  # FE 스킬 (디렉토리 전체)
   copy_dir "skills/React"
   copy_dir "skills/NextJS"
   copy_dir "skills/TailwindCSS"
@@ -382,23 +349,20 @@ copy_fe() {
   copy_dir "skills/Zustand"
   copy_dir "skills/ReactHookForm"
   copy_dir "skills/SVGIcon"
-
 }
 
-# BE (백엔드)
+# BE (backend)
 copy_be() {
   echo "[BE]"
 
-  # BE 에이전트
   copy_file "agents/implementer-be.md"
 
-  # BE 스킬 (디렉토리 전체)
   copy_dir "skills/NestJS"
   copy_dir "skills/TypeORM"
   copy_dir "skills/DDD"
 }
 
-# 스킬에 맞는 에이전트 자동 설치
+# Auto-install agents based on selected skills
 FE_SKILLS="React NextJS TailwindCSS TanStackQuery Zustand ReactHookForm SVGIcon"
 BE_SKILLS="NestJS TypeORM DDD"
 
@@ -418,33 +382,33 @@ install_agents_for_skills() {
   done
 
   if [ "$need_fe" = true ]; then
-    echo "[에이전트]"
+    echo "[Agents]"
     copy_file "agents/implementer-fe.md"
   fi
   if [ "$need_be" = true ]; then
-    echo "[에이전트]"
+    echo "[Agents]"
     copy_file "agents/implementer-be.md"
   fi
 }
 
-# === 실행 ===
+# === Execute ===
 
-echo "파일을 복사합니다..."
+echo "Copying files..."
 echo ""
 
 if [ -n "$CUSTOM_SKILLS" ]; then
-  # --skills 모드: 코어 + 지정 스킬만
+  # --skills mode: core + specified skills only
   copy_common_core
   echo ""
 
-  echo "[커스텀 스킬]"
+  echo "[Custom skills]"
   IFS=',' read -ra SKILLS <<< "$CUSTOM_SKILLS"
   for skill in "${SKILLS[@]}"; do
     skill=$(echo "$skill" | xargs)
     if [ -d "$SOURCE_DIR/skills/$skill" ]; then
       copy_dir "skills/$skill"
     else
-      echo "  ⚠️  스킬 '$skill'을 찾을 수 없습니다. (사용 가능: $(ls -1 "$SOURCE_DIR/skills/" | tr '\n' ', '))"
+      echo "  Warning: Skill '$skill' not found. Available: $(ls -1 "$SOURCE_DIR/skills/" | tr '\n' ', ')"
     fi
   done
   echo ""
@@ -452,7 +416,7 @@ if [ -n "$CUSTOM_SKILLS" ]; then
   install_agents_for_skills "$CUSTOM_SKILLS"
   echo ""
 else
-  # 기존 --fe/--be 모드
+  # Default --fe/--be mode
   copy_common
   echo ""
 
@@ -467,35 +431,33 @@ else
   fi
 fi
 
-# === 오래된 파일 정리 ===
-# 이전 매니페스트에는 있지만 새 매니페스트에는 없는 파일 삭제
+# === Clean up old files ===
 if [ -n "$OLD_MANIFEST_CONTENT" ]; then
   while IFS=' ' read -r old_hash old_path; do
     [ -z "$old_path" ] && continue
-    # 새 매니페스트에 해당 경로가 없으면 삭제
     if ! echo "$NEW_MANIFEST" | grep -q " ${old_path}$"; then
       if [ -f "$TARGET_DIR/$old_path" ]; then
         rm "$TARGET_DIR/$old_path"
-        echo "  🗑️  $old_path - 더 이상 사용하지 않는 파일 삭제"
+        echo "  Removed: $old_path (no longer used)"
       fi
     fi
   done <<< "$OLD_MANIFEST_CONTENT"
 
-  # 빈 디렉토리 정리
+  # Clean up empty directories
   find "$TARGET_DIR/skills" -type d -empty -delete 2>/dev/null
   find "$TARGET_DIR/agents" -type d -empty -delete 2>/dev/null
 
   echo ""
 fi
 
-# === 새 매니페스트 작성 ===
+# === Write new manifest ===
 printf '%s' "$NEW_MANIFEST" > "$MANIFEST_FILE"
 
-echo "=== 설치 완료 ($MODE_LABEL) ==="
+echo "=== Installation complete ($MODE_LABEL) ==="
 echo ""
-echo "스택: $STACK_LABEL"
+echo "Stack: $STACK_LABEL"
 echo ""
-echo "설치된 파일:"
+echo "Installed:"
 echo "  $TARGET_DIR/CLAUDE.md"
 echo "  $TARGET_DIR/settings.json"
 echo "  $TARGET_DIR/agents/"
@@ -504,11 +466,11 @@ echo "  $TARGET_DIR/hooks/"
 echo "  $TARGET_DIR/scripts/"
 echo ""
 if [ "$INSTALL_MODE" = "global" ]; then
-  echo "이제 어떤 프로젝트에서든 Claude Code를 실행하면 자동으로 적용됩니다."
+  echo "Claude Code will now use these settings in any project."
 else
-  echo "현재 프로젝트($(pwd))에서 Claude Code를 실행하면 자동으로 적용됩니다."
-  echo "다른 프로젝트에도 적용하려면 --global 옵션을 사용하세요."
+  echo "Claude Code will use these settings in $(pwd)."
+  echo "Use --global to apply to all projects."
 fi
 echo ""
-echo "PROJECT_MAP.md를 생성하면 explore 에이전트가 더 빠르게 동작합니다:"
+echo "Generate PROJECT_MAP.md for faster explore agent:"
 echo "  $TARGET_DIR/scripts/generate-project-map.sh"

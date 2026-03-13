@@ -734,25 +734,29 @@ npx @choblue/claude-code-toolkit --auto
 ## 작업 순서 요약
 
 ```
-Phase 1 (v1.4.0) — 긴급, 독립 작업 가능
-├── 1-1. settings.json 머지         ← 최우선
-├── 1-2. Quality Gate 조건부 출력
-├── 1-3. python3 의존성 제거
-└── 1-4. /skill 포맷 수정
+Phase 1 (v1.4.0) — ✅ 완료
+├── ✅ 1-1. settings.json 머지
+├── ✅ 1-2. Quality Gate 조건부 출력
+├── ✅ 1-3. python3 의존성 제거
+└── ✅ 1-4. /skill 포맷 수정
 
-Phase 2 (v1.5.0) — 구조 개선
-├── 2-1. code-writer/implementer 통합  ← 가장 큰 변경
-├── 2-2. explore 출력 구조화
-├── 2-3. code-reviewer 기준 명확화
-├── 2-4. --uninstall 옵션
-├── 2-5. 빈 디렉토리 정리
-└── 2-6. 스킬 frontmatter 버전 추가
+Phase 2 (v1.4.0) — ✅ 완료
+├── ✅ 2-1. code-writer/implementer 통합
+├── ✅ 2-2. explore 출력 구조화
+├── ✅ 2-3. code-reviewer 기준 명확화
+├── ✅ 2-4. --uninstall 옵션
+├── ✅ 2-5. 빈 디렉토리 정리
+└── ✅ 2-6. 스킬 frontmatter 버전 추가
 
-Phase 3 (v2.0.0) — 확장성
-├── 3-1. --skills 선택 설치          ← 가장 큰 변경
-├── 3-2. FailureRecovery 보강
-├── 3-3. Planning/CLAUDE.md 중복 제거
-├── 3-4. 프롬프트 예시 보강
-├── 3-5. engines 필드 추가
-└── 3-6. generate-project-map depth
+Phase 3 (v1.4.0) — ✅ 완료
+├── ✅ 3-1. --skills 선택 설치
+├── ✅ 3-2. FailureRecovery 보강
+├── ✅ 3-3. Planning/CLAUDE.md 중복 제거
+├── ✅ 3-4. 프롬프트 예시 보강
+├── ✅ 3-5. engines 필드 추가
+└── ✅ 3-6. generate-project-map depth
+
+추가 완료:
+├── ✅ GitHub Actions CI 추가
+└── ✅ install.sh 에러 메시지 영어화
 ```

@@ -1,0 +1,105 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  install-test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Full install (FE + BE)
+        run: |
+          mkdir -p /tmp/test-full && cd /tmp/test-full
+          bash $GITHUB_WORKSPACE/install.sh
+          # 핵심 파일 존재 확인
+          test -f .claude/CLAUDE.md
+          test -f .claude/settings.json
+          test -f .claude/agents/explore.md
+          test -f .claude/agents/implementer-fe.md
+          test -f .claude/agents/implementer-be.md
+          test -f .claude/skills/Coding/SKILL.md
+          test -f .claude/skills/React/SKILL.md
+          test -f .claude/skills/NestJS/SKILL.md
+          test -f .claude/hooks/prompt-hook.sh
+          test -x .claude/hooks/prompt-hook.sh
+          echo "✅ Full install OK"
+
+      - name: FE only install
+        run: |
+          mkdir -p /tmp/test-fe && cd /tmp/test-fe
+          bash $GITHUB_WORKSPACE/install.sh --fe
+          test -f .claude/skills/React/SKILL.md
+          test ! -f .claude/skills/NestJS/SKILL.md
+          echo "✅ FE-only install OK"
+
+      - name: BE only install
+        run: |
+          mkdir -p /tmp/test-be && cd /tmp/test-be
+          bash $GITHUB_WORKSPACE/install.sh --be
+          test -f .claude/skills/NestJS/SKILL.md
+          test ! -f .claude/skills/React/SKILL.md
+          echo "✅ BE-only install OK"
+
+      - name: Custom skills install
+        run: |
+          mkdir -p /tmp/test-skills && cd /tmp/test-skills
+          bash $GITHUB_WORKSPACE/install.sh --skills=React,TailwindCSS
+          test -f .claude/skills/React/SKILL.md
+          test -f .claude/skills/TailwindCSS/SKILL.md
+          test ! -f .claude/skills/NestJS/SKILL.md
+          test -f .claude/agents/implementer-fe.md
+          test ! -f .claude/agents/implementer-be.md
+          echo "✅ Custom skills install OK"
+
+      - name: Uninstall
+        run: |
+          cd /tmp/test-full
+          bash $GITHUB_WORKSPACE/install.sh --uninstall
+          test ! -f .claude/agents/explore.md
+          echo "✅ Uninstall OK"
+
+      - name: Reinstall (settings.json merge)
+        run: |
+          mkdir -p /tmp/test-merge/.claude && cd /tmp/test-merge
+          echo '{"hooks":{"PreToolUse":[{"matcher":"","hooks":[{"type":"command","command":"echo hi"}]}]}}' > .claude/settings.json
+          bash $GITHUB_WORKSPACE/install.sh
+          # PreToolUse가 보존되었는지 확인
+          grep -q "PreToolUse" .claude/settings.json
+          grep -q "prompt-hook" .claude/settings.json
+          echo "✅ Settings merge OK"
+
+  prompt-hook-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Quality Gate - action prompt
+        run: |
+          result=$(echo '{"prompt":"댓글 기능 추가해줘"}' | bash .claude/hooks/prompt-hook.sh 2>&1)
+          echo "$result" | grep -q "Quality Gate"
+          echo "✅ Quality Gate fires on action prompt"
+
+      - name: Quality Gate - question prompt (should NOT fire)
+        run: |
+          result=$(echo '{"prompt":"이 함수 뭐야?"}' | bash .claude/hooks/prompt-hook.sh 2>&1)
+          if echo "$result" | grep -q "Quality Gate"; then
+            echo "❌ Quality Gate should not fire on questions"
+            exit 1
+          fi
+          echo "✅ Quality Gate silent on question prompt"
+
+      - name: Skill Detector output format
+        run: |
+          result=$(echo '{"prompt":"React 컴포넌트 만들어줘"}' | bash .claude/hooks/prompt-hook.sh 2>&1)
+          echo "$result" | grep -q "Read .claude/skills/"
+          echo "✅ Skill Detector uses Read format"
