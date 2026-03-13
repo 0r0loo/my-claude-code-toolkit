@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.5.1
+
+- **FIX**: prompt-hook.sh bash 3.2 호환성 수정
+  - macOS 기본 bash 3.2에서 `set -u` + 빈 배열 접근 시 "unbound variable" 에러 발생하던 문제 수정
+  - `${#array[@]}` → `${#array[@]:-0}`, `${!array[@]}` → `seq` 기반으로 변경
+  - v1.2.0 ~ v1.5.0에 존재하던 간헐적 hook error 해결
+
 ## 1.5.0
 
 - **FEAT**: `diagnose.sh` 프로젝트 진단 CLI 추가
