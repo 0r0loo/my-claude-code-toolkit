@@ -4,12 +4,15 @@ const { execSync } = require("child_process");
 const path = require("path");
 
 const packageRoot = path.resolve(__dirname, "..");
-const installScript = path.join(packageRoot, "install.sh");
+const args = process.argv.slice(2);
 
-const args = process.argv.slice(2).join(" ");
+const isDiagnose = args.includes("--diagnose");
+const scriptName = isDiagnose ? "diagnose.sh" : "install.sh";
+const scriptPath = path.join(packageRoot, scriptName);
+const passArgs = args.filter((a) => a !== "--diagnose").join(" ");
 
 try {
-  execSync(`bash "${installScript}" ${args}`, {
+  execSync(`bash "${scriptPath}" ${passArgs}`, {
     stdio: "inherit",
     env: { ...process.env, PACKAGE_ROOT: packageRoot },
   });

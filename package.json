@@ -9,6 +9,7 @@
     ".claude/",
     "bin/",
     "install.sh",
+    "diagnose.sh",
     "README.md"
   ],
   "keywords": [
