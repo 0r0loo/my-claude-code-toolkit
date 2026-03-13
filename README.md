@@ -28,6 +28,9 @@ npx @choblue/claude-code-toolkit --global --fe
 # 스킬 선택 설치 (필요한 것만)
 npx @choblue/claude-code-toolkit --skills=React,TailwindCSS,Zustand
 
+# 프로젝트 진단 (에이전트 준비도 체크)
+npx @choblue/claude-code-toolkit --diagnose
+
 # 제거
 npx @choblue/claude-code-toolkit --uninstall
 ```
@@ -54,6 +57,9 @@ cd my-claude-code-toolkit
 # 스킬 선택 설치
 ./install.sh --skills=React,TailwindCSS
 
+# 프로젝트 진단
+bash diagnose.sh
+
 # 제거
 ./install.sh --uninstall
 ```
@@ -66,6 +72,7 @@ cd my-claude-code-toolkit
 | `--fe --be` | 전체 설치 (기본값과 동일) |
 | `--global` | `~/.claude/`에 글로벌 설치 |
 | `--skills=LIST` | 쉼표로 구분된 스킬만 선택 설치 |
+| `--diagnose` | 프로젝트 에이전트 준비도 진단 |
 | `--uninstall` | 매니페스트 기반 설치 파일 제거 |
 | `--force` | 사용자 수정 파일도 강제 덮어쓰기 |
 
@@ -159,6 +166,23 @@ git pull
 └── scripts/
     └── generate-project-map.sh  ← PROJECT_MAP.md 자동 생성
 ```
+
+## 프로젝트 진단
+
+설치 전/후에 프로젝트의 에이전트 코딩 준비도를 체크할 수 있다.
+
+```bash
+npx @choblue/claude-code-toolkit --diagnose
+```
+
+체크 항목:
+- **스택 감지**: package.json 기반 기술 스택 자동 식별
+- **Entry Point**: CLAUDE.md 존재 여부, 빌드/테스트 명령어 문서화
+- **Invariant**: 린터, 포매터, TypeScript strict, pre-commit hook, CI/CD
+- **구조**: README, .gitignore, .env.example, 테스트 파일
+- **Claude 통합**: .claude/, skills, agents, hooks, PROJECT_MAP.md
+
+결과로 점수(0-100), 성숙도 레벨(L1-L5), 권장 스킬, Quick Win을 출력한다.
 
 ## 작동 방식
 

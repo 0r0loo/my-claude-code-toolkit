@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.5.0
+
+- **FEAT**: `diagnose.sh` 프로젝트 진단 CLI 추가
+  - 기술 스택 자동 감지 (Next.js, React, NestJS, TailwindCSS, Zustand, TanStack Query, TypeORM 등)
+  - 에이전트 준비도 체크 (CLAUDE.md, 린터, pre-commit hook, CI/CD, TypeScript strict 등)
+  - 점수(0-100) + 성숙도 레벨(L1-L5) 산출
+  - 스택 기반 권장 스킬 + Quick Win 제안
+  - `npx @choblue/claude-code-toolkit --diagnose` 또는 `bash diagnose.sh` 실행
+- **FEAT**: `bin/cli.js`에 `--diagnose` 플래그 지원
+
 ## 1.4.0
 
 ### Phase 1: 긴급 수정

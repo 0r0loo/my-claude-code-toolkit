@@ -155,6 +155,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 
 ### Scripts
 - `.claude/scripts/generate-project-map.sh` - PROJECT_MAP.md 자동 생성
+- `diagnose.sh` - 프로젝트 에이전트 준비도 진단 CLI (스택 감지, 점수, 권장 스킬)
 
 ### Hooks
 - `.claude/hooks/prompt-hook.sh` - 통합 hook (품질 체크 + 스킬 추천 + 구조 변경 감지)
