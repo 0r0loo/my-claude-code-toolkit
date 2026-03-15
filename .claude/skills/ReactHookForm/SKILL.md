@@ -65,6 +65,62 @@ interface CreateUserForm {
 }
 ```
 
+### z.input vs z.output (z.infer) 구분
+
+`.default()`, `.transform()`, `.preprocess()`를 사용하면 **입력 타입과 출력 타입이 달라진다.**
+이때 `z.infer`(= `z.output`)만 사용하면 빌드 타임 타입 에러가 발생할 수 있다.
+
+```typescript
+const settingsSchema = z.object({
+  theme: z.enum(['light', 'dark']).default('light'),
+  pageSize: z.number().default(10),
+  nickname: z.string(), // default 없음
+});
+
+// z.output (= z.infer) — 검증 후 출력 타입. default가 적용되므로 모두 required
+type SettingsOutput = z.output<typeof settingsSchema>;
+// { theme: 'light' | 'dark'; pageSize: number; nickname: string }
+
+// z.input — 검증 전 입력 타입. default가 있는 필드는 optional
+type SettingsInput = z.input<typeof settingsSchema>;
+// { theme?: 'light' | 'dark'; pageSize?: number; nickname: string }
+```
+
+#### 폼에서의 올바른 사용
+
+```typescript
+// useForm의 제네릭과 defaultValues에는 input 타입을 사용한다
+type SettingsFormInput = z.input<typeof settingsSchema>;
+type SettingsFormOutput = z.output<typeof settingsSchema>;
+
+function SettingsForm() {
+  const { handleSubmit, register } = useForm<SettingsFormInput>({
+    resolver: zodResolver(settingsSchema),
+    defaultValues: {
+      nickname: '',
+      // theme, pageSize는 Zod default가 처리하므로 생략 가능
+    },
+  });
+
+  // onSubmit의 data는 Zod 검증을 통과한 output 타입
+  const onSubmit = (data: SettingsFormOutput) => {
+    // data.theme은 반드시 'light' | 'dark' (undefined 아님)
+    saveSettings(data);
+  };
+
+  return <form onSubmit={handleSubmit(onSubmit as any)}>{/* ... */}</form>;
+}
+```
+
+#### 규칙
+
+- `.default()` 사용 시 → `z.input`(폼 입력)과 `z.output`(검증 후 데이터) 타입을 **반드시 구분**한다
+- `.default()` 미사용 시 → `z.infer` 하나로 충분하다 (input과 output이 동일)
+- **빌드 에러가 나더라도 `.default()` 로직을 제거하지 않는다** — `z.input`/`z.output` 구분으로 해결한다
+- `defaultValues`와 Zod `.default()`는 역할이 다르다:
+  - `defaultValues`: 폼 UI의 초기값 (React Hook Form)
+  - `.default()`: 검증 시 누락된 값을 채움 (Zod)
+
 ---
 
 ## 3. zodResolver 연동
@@ -128,6 +184,7 @@ function CreateUserForm() {
 - `handleSubmit` 없이 `onSubmit` 직접 처리 금지 - `handleSubmit`이 검증을 수행한다
 - 폼 타입과 스키마를 별도로 정의 금지 - 타입 불일치 위험이 있으므로 `z.infer`를 사용한다
 - 에러 메시지 하드코딩 금지 - Zod 스키마에 메시지를 정의한다
+- 타입 에러 시 `.default()` 제거 금지 - `z.input`/`z.output` 구분으로 해결한다
 
 ---
 
