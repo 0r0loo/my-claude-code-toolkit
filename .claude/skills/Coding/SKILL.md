@@ -53,6 +53,43 @@ function processOrder(order: Order): void {
 }
 ```
 
+### 삼항 연산자 (Ternary Operator)
+
+- **1단만 허용한다.** 중첩 삼항은 금지.
+- 삼항이 한 줄(80자)을 넘기면 `if/else` 또는 early return으로 전환한다
+- JSX 조건부 렌더링: 표시/숨김은 `&&`, 분기는 삼항 1단, 그 이상은 변수 추출 또는 컴포넌트 분리
+
+```typescript
+// Bad - 중첩 삼항
+const label = status === 'active' ? '활성' : status === 'pending' ? '대기' : '비활성';
+
+// Bad - 긴 삼항
+const message = user.isAdmin ? `관리자 ${user.name}님 환영합니다` : `${user.name}님 환영합니다`;
+
+// Good - 중첩은 맵 또는 함수로 전환
+const STATUS_LABEL: Record<string, string> = {
+  active: '활성',
+  pending: '대기',
+  inactive: '비활성',
+};
+const label = STATUS_LABEL[status] ?? '알 수 없음';
+
+// Good - 길면 if/else 또는 변수 추출
+const message = user.isAdmin
+  ? `관리자 ${user.name}님 환영합니다`
+  : `${user.name}님 환영합니다`;
+```
+
+```tsx
+// Bad - JSX 내 중첩 삼항
+{isLoading ? <Spinner /> : error ? <ErrorView /> : <Content />}
+
+// Good - 변수 추출 후 단순화
+const content = isLoading ? <Spinner /> : <Content />;
+if (error) return <ErrorView />;
+return content;
+```
+
 ### DRY (Don't Repeat Yourself)
 - 동일한 로직이 3번 이상 반복되면 추출한다
 - 단, 2번까지는 중복을 허용한다 (섣부른 추상화 방지)
