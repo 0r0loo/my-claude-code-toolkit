@@ -103,14 +103,15 @@ git pull
 ├── CLAUDE.md                    ← 핵심 워크플로우/위임 규칙
 ├── settings.json                ← hooks 설정
 ├── agents/
-│   ├── explore.md               ← 코드베이스 탐색 (sonnet)
+│   ├── explore.md               ← 코드베이스 탐색 (haiku)
 │   ├── implementer-fe.md        ← React 프론트엔드 구현 (M: 구현만, L: +테스트)
 │   ├── implementer-be.md        ← NestJS 백엔드 구현 (M: 구현만, L: +테스트)
 │   ├── code-reviewer.md         ← 코드 품질 리뷰 (opus)
 │   └── git-manager.md           ← Git 작업 (sonnet)
 ├── skills/
 │   ├── Coding/
-│   │   └── SKILL.md             ← 공통 코딩 원칙
+│   │   ├── SKILL.md             ← 공통 코딩 원칙
+│   │   └── references/          ← 설계 패턴, 에러 핸들링 예시
 │   ├── NestJS/
 │   │   ├── SKILL.md             ← NestJS 백엔드 규칙
 │   │   └── references/          ← 인증/인가, 유효성 검증, 캐싱
@@ -126,9 +127,11 @@ git pull
 │   │   ├── SKILL.md             ← Tailwind CSS 핵심 규칙
 │   │   └── references/          ← 반응형/다크모드, 패턴, 트랜지션
 │   ├── TanStackQuery/
-│   │   └── SKILL.md             ← TanStack Query 서버 상태
+│   │   ├── SKILL.md             ← TanStack Query 서버 상태
+│   │   └── references/          ← useQuery, useMutation, Optimistic Update 예시
 │   ├── Zustand/
-│   │   └── SKILL.md             ← Zustand 클라이언트 상태
+│   │   ├── SKILL.md             ← Zustand 클라이언트 상태
+│   │   └── references/          ← Store, Selector, Middleware, Slice 예시
 │   ├── ReactHookForm/
 │   │   ├── SKILL.md             ← React Hook Form 핵심 규칙
 │   │   └── references/          ← Controller, 동적 필드, 중첩 스키마
@@ -147,7 +150,8 @@ git pull
 │   ├── Git/
 │   │   └── SKILL.md             ← 커밋/PR/브랜치 규칙
 │   ├── APIDesign/
-│   │   └── SKILL.md             ← REST API 설계 원칙
+│   │   ├── SKILL.md             ← REST API 설계 원칙
+│   │   └── references/          ← URL, 응답 포맷, 에러 응답 예시
 │   ├── Database/
 │   │   └── SKILL.md             ← DB 설계 & 최적화
 │   ├── SVGIcon/
@@ -161,8 +165,7 @@ git pull
 │   ├── fix.md                   ← /fix [증상] 커스텀 커맨드
 │   └── review.md                ← /review 커스텀 커맨드
 ├── hooks/
-│   ├── prompt-hook.sh           ← 통합 hook (품질 체크 + 스킬 추천 + 구조 변경 감지)
-│   └── skill-keywords.conf      ← 스킬별 키워드 매핑 설정
+│   └── prompt-hook.sh           ← hook (품질 체크 + 구조 변경 감지)
 └── scripts/
     └── generate-project-map.sh  ← PROJECT_MAP.md 자동 생성
 ```

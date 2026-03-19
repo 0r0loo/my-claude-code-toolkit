@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.6.0
+
+### Skills 2.0 대응 & 구조 개선
+
+- **FEAT**: 19개 스킬에 Skills 2.0 frontmatter 도입
+  - `user-invocable`, `agent`, `context`, `disable-model-invocation` 등 적용
+  - Planning: `agent: Plan`, `context: fork` 설정
+  - Curation, SVGIcon: `disable-model-invocation: true` (명시적 호출만 허용)
+  - FailureRecovery: `context: fork` (메인 컨텍스트 오염 방지)
+- **REFACTOR**: prompt-hook.sh에서 Skill Detector 제거
+  - Skills 2.0 description 기반 자동 매칭으로 대체
+  - `skill-keywords.conf` 삭제
+  - hook 책임을 품질 체크 + 구조 변경 감지로 축소
+- **FIX**: 글로벌 설치 시 hook 경로를 절대경로(`$HOME/.claude/hooks/...`)로 분기
+  - jq 없이 글로벌 설치 시 에러로 차단 (경로 깨짐 방지)
+- **REFACTOR**: explore agent 경량화
+  - 스킬 식별 책임 제거 (Skills 2.0 자동 매칭에 위임)
+  - model: sonnet → haiku (비용 절감)
+- **REFACTOR**: 7개 스킬 문서 경량화 (코드 예시 → references/ 분리)
+  - DDD: 569→107줄, TypeORM: 336→92줄, TypeScript: 321→79줄
+  - TanStackQuery: 299→96줄, Zustand: 293→85줄, Coding: 286→73줄, APIDesign: 286→108줄
+- **FEAT**: CLAUDE.md에 토큰 절약 원칙 섹션 추가
+- **FEAT**: install.sh uninstall 시 빈 배열/객체 cleanup 개선
+- **DOCS**: README.md에 보안 & 실행 범위 섹션 추가
+
 ## 1.5.1
 
 - **FIX**: prompt-hook.sh bash 3.2 호환성 수정
