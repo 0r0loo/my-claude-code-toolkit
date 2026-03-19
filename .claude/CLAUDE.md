@@ -24,11 +24,13 @@ Claude는 작업 시작 전 반드시 이 규칙을 따라야 한다.
 - 갱신: `.claude/scripts/generate-project-map.sh` 실행
 
 ### 에이전트 위임 대상
-- **탐색 + 스킬/에이전트 식별** → `explore` 에이전트 (haiku) — 코드 탐색과 함께 필요한 스킬, 권장 에이전트 흐름을 식별하여 반환
+- **탐색** → `explore` 에이전트 (haiku) — 코드 탐색, 기존 패턴 파악, 티어 판단, 에이전트 흐름 권장
 - **구현 (M 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현만)
 - **구현+테스트 (L 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현 + 테스트)
 - **코드 리뷰** → `code-reviewer` 에이전트 (opus)
 - **Git 작업** → `git-manager` 에이전트 (sonnet)
+
+> 스킬 매칭은 Skills 2.0 frontmatter의 description 기반 자동 매칭에 위임한다.
 
 ---
 
@@ -92,19 +94,17 @@ Main Agent가 직접 처리한다. 서브에이전트 위임 불필요.
 ### M 티어 (moderate)
 TDD/Review를 생략하고 핵심 단계만 수행한다.
 1. **Task Header 출력**
-2. **Planning**: `explore`로 탐색 + 스킬/에이전트 식별 → explore 결과 기반으로 Task Header의 📚, 🔄 결정
+2. **Planning**: `explore`로 탐색 → explore 결과 기반으로 Task Header의 📚, 🔄 결정
 3. **Implementation**: `implementer` 에이전트에 구현 위임 (단위별로 나눠 호출, "테스트 없이 구현만" 지시)
-   - **위임 시 explore가 식별한 스킬 경로를 반드시 전달한다** (예: `스킬: APIDesign(.claude/skills/APIDesign/SKILL.md), NestJS(.claude/skills/NestJS/SKILL.md)`)
 4. **Commit**: `git-manager`로 커밋/PR 생성
 
 ### L 티어 (complex)
 파일 기반 설계 후 **단위별로** 구현한다.
 1. **Task Header 출력**
-2. **Research**: `explore`로 탐색 + 스킬/에이전트 식별 → `research.md` 작성 (관련 코드 분석, 제약 조건, 필요 스킬)
+2. **Research**: `explore`로 탐색 → `research.md` 작성 (관련 코드 분석, 제약 조건)
 3. **Plan**: `plan.md` 작성 (접근 방식, 변경 파일, 트레이드 오프, **단위별 작업 순서**)
 4. **주석 사이클**: 사용자가 plan.md에 메모 → 반영 → **승인 전까지 구현 금지**
 5. **Implementation + Test**: plan.md의 각 단위를 순서대로 `implementer`에 위임 (단위당 1회 호출)
-   - **위임 시 explore가 식별한 스킬 경로를 반드시 전달한다**
 6. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
 
 ### 풀스택 작업 (FE + BE 동시 변경)
@@ -158,12 +158,21 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `diagnose.sh` - 프로젝트 에이전트 준비도 진단 CLI (스택 감지, 점수, 권장 스킬)
 
 ### Hooks
-- `.claude/hooks/prompt-hook.sh` - 통합 hook (품질 체크 + 스킬 추천 + 구조 변경 감지)
-- `.claude/hooks/skill-keywords.conf` - 스킬별 키워드 매핑 설정
+- `.claude/hooks/prompt-hook.sh` - hook (품질 체크 + 구조 변경 감지)
 
 ---
 
-## 6. 프로젝트별 오버라이드
+## 6. 토큰 절약 원칙
+
+- **탐색**: `explore` 에이전트 (haiku) 우선. 단순 구조 확인은 PROJECT_MAP.md로 대체
+- **계획**: Planning 스킬 (`context: fork`) — 메인 컨텍스트 오염 방지
+- **구현/리뷰만 opus 사용**: implementer, code-reviewer
+- **자동 호출 제한**: `disable-model-invocation: true` 스킬(Curation, SVGIcon)은 명시적 호출만 허용
+- **스킬 매칭**: Skills 2.0 description 기반 자동 매칭 — hook 기반 스킬 추천 불필요
+
+---
+
+## 7. 프로젝트별 오버라이드
 
 프로젝트 루트에 `CLAUDE.md`가 있으면 이 글로벌 규칙보다 우선한다.
 프로젝트별 규칙은 글로벌 규칙을 확장하되, 충돌 시 프로젝트 규칙을 따른다.

@@ -2,7 +2,8 @@
 name: react
 description: React 컴포넌트 설계 및 상태 관리 가이드. React 컴포넌트, Props, 커스텀 훅, 렌더링 최적화 등 React 코드 작성 시 참조한다.
 targetLib: "react@18"
-lastUpdated: 2025-03-01
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # React Skill - React 핵심 규칙

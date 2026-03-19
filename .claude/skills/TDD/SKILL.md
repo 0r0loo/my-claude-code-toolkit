@@ -1,7 +1,8 @@
 ---
 name: tdd
 description: TDD(테스트 주도 개발) 공통 원칙. 테스트 작성 시 Red-Green-Refactor 사이클, FIRST 원칙, AAA 패턴, Mock/Stub/Spy 사용법을 참조한다.
-lastUpdated: 2025-03-01
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # TDD Skill - 핵심 원칙

@@ -1,7 +1,9 @@
 ---
 name: svg-icon
 description: SVG 아이콘 생성 가이드. 디자인 시스템용 아이콘을 일관된 규칙으로 생성하며, React 컴포넌트 래핑 패턴을 제공한다.
-lastUpdated: 2025-03-01
+user-invocable: true
+disable-model-invocation: true
+lastUpdated: 2026-03-19
 ---
 
 # SVG Icon Skill

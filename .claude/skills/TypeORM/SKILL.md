@@ -2,7 +2,8 @@
 name: typeorm
 description: TypeORM Entity, Repository, QueryBuilder 가이드. NestJS에서 TypeORM을 사용한 Entity 정의, Relations, Repository 패턴, 마이그레이션, 트랜잭션 등 데이터베이스 작업 시 참조한다.
 targetLib: "typeorm@0.3"
-lastUpdated: 2025-03-01
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # TypeORM Skill - TypeORM 규칙

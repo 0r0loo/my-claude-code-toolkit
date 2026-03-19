@@ -2,7 +2,8 @@
 name: nestjs
 description: NestJS 백엔드 개발 가이드. 레이어별 책임, DTO, 에러 핸들링, DI, 네이밍 컨벤션 등 NestJS 코드 작성 시 참조한다.
 targetLib: "@nestjs/core@10"
-lastUpdated: 2025-03-01
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # NestJS Skill - 백엔드 핵심 규칙

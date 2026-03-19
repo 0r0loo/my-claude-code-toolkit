@@ -1,5 +1,10 @@
 ---
-lastUpdated: 2025-03-01
+name: planning
+description: 작업을 스코프된 실행 계획으로 분해한다. 티어 판단, Task Header, 작업 분해, 의존성 확인 시 참조한다.
+agent: Plan
+context: fork
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # Planning Skill

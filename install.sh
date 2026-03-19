@@ -89,6 +89,13 @@ else
   STACK_LABEL="BE only"
 fi
 
+# Preflight: global install requires jq
+if [ "$INSTALL_MODE" = "global" ] && ! command -v jq &>/dev/null; then
+  echo "Error: Global install requires jq for correct hook path resolution."
+  echo "Install: brew install jq (macOS) or apt-get install jq (Linux)"
+  exit 1
+fi
+
 if [ -n "$PACKAGE_ROOT" ]; then
   SOURCE_DIR="$PACKAGE_ROOT/.claude"
 else
@@ -132,9 +139,11 @@ uninstall_toolkit() {
   # Remove manifest itself
   rm "$manifest"
 
-  # Remove prompt-hook from settings.json
+  # Remove prompt-hook from settings.json and clean up empty arrays
   if [ -f "$TARGET_DIR/settings.json" ] && command -v jq &>/dev/null; then
-    jq 'del(.hooks.UserPromptSubmit[] | select(.hooks[].command | contains("prompt-hook.sh")))' \
+    jq 'del(.hooks.UserPromptSubmit[] | select(.hooks[].command | contains("prompt-hook.sh")))
+        | if .hooks.UserPromptSubmit == [] then del(.hooks.UserPromptSubmit) else . end
+        | if .hooks == {} then del(.hooks) else . end' \
       "$TARGET_DIR/settings.json" > "${TARGET_DIR}/settings.json.tmp" \
       && mv "${TARGET_DIR}/settings.json.tmp" "$TARGET_DIR/settings.json"
     echo "  Cleaned: removed prompt-hook from settings.json"
@@ -272,7 +281,13 @@ merge_settings_json() {
       echo "  Skipped: settings.json (prompt-hook already registered)"
     else
       if command -v jq &>/dev/null; then
-        local HOOK_ENTRY='{"matcher":"","hooks":[{"type":"command","command":".claude/hooks/prompt-hook.sh"}]}'
+        local HOOK_CMD
+        if [ "$INSTALL_MODE" = "global" ]; then
+          HOOK_CMD="\$HOME/.claude/hooks/prompt-hook.sh"
+        else
+          HOOK_CMD=".claude/hooks/prompt-hook.sh"
+        fi
+        local HOOK_ENTRY="{\"matcher\":\"\",\"hooks\":[{\"type\":\"command\",\"command\":\"${HOOK_CMD}\"}]}"
 
         if jq -e '.hooks.UserPromptSubmit' "$target_file" &>/dev/null; then
           jq --argjson entry "$HOOK_ENTRY" \
@@ -285,6 +300,10 @@ merge_settings_json() {
         fi
         echo "  Merged: settings.json (prompt-hook added)"
       else
+        if [ "$INSTALL_MODE" = "global" ]; then
+          echo "  Error: Global install requires jq for correct hook path. Install: brew install jq"
+          exit 1
+        fi
         cp "$target_file" "${target_file}.bak"
         cp "$source_file" "$target_file"
         echo "  Warning: settings.json backed up (.bak) and overwritten (install jq for merge support)"

@@ -2,7 +2,8 @@
 name: tanstack-query
 description: TanStack Query 서버 상태 관리 가이드. useQuery, useMutation, queryKey 팩토리, Optimistic Update, Prefetching 등 서버 상태 관리 시 참조한다.
 targetLib: "@tanstack/react-query@5"
-lastUpdated: 2025-03-01
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # TanStack Query Skill - 서버 상태 관리 규칙

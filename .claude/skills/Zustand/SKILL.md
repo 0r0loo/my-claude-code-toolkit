@@ -2,7 +2,8 @@
 name: zustand
 description: Zustand 클라이언트 상태 관리 가이드. 스토어 설계, Selector 패턴, 미들웨어(persist, devtools, immer), Slice 패턴 등 클라이언트 상태 관리 시 참조한다.
 targetLib: "zustand@4"
-lastUpdated: 2025-03-01
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # Zustand Skill - 클라이언트 상태 관리 규칙

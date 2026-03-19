@@ -1,7 +1,8 @@
 ---
 name: failure-recovery
 description: 에이전트가 잘못된 결과를 냈을 때의 디버깅 및 재시도 프로토콜. 단순 재실행이 아닌 원인 분석 후 처방한다.
-lastUpdated: 2025-03-01
+context: fork
+lastUpdated: 2026-03-19
 ---
 
 # Failure Recovery Skill

@@ -1,7 +1,8 @@
 ---
 name: coding
 description: 공통 코딩 원칙과 패턴. 코드 작성 시 항상 참조하며, SRP, 네이밍 컨벤션, 에러 처리, 코드 품질 체크리스트를 제공한다.
-lastUpdated: 2025-03-01
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # Coding Skill - 공통 원칙

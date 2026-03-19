@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# prompt-hook.sh - 통합 UserPromptSubmit hook
-# quality-gate + skill-detector + project-map-detector를 하나로 합친다.
+# prompt-hook.sh - UserPromptSubmit hook
+# quality-gate + project-map-detector (Skills 2.0 자동 매칭으로 skill-detector 제거)
 
 set -uo pipefail
 
@@ -38,69 +38,7 @@ if echo "$PROMPT_LOWER" | grep -qE "$ACTION_KEYWORDS"; then
 EOF
 fi
 
-# ─── 2. Skill Detector ───
-CONF_FILE="${SCRIPT_DIR}/skill-keywords.conf"
-if [[ -f "$CONF_FILE" ]]; then
-
-  if [[ -n "$PROMPT" ]]; then
-
-    declare -a SKILL_NAMES=()
-    declare -a SKILL_COMMANDS=()
-    declare -a SKILL_SCORES=()
-
-    while IFS= read -r line; do
-      [[ -z "$line" || "$line" == \#* ]] && continue
-      SKILL_NAME=$(echo "$line" | cut -d'|' -f1)
-      SKILL_CMD=$(echo "$line" | cut -d'|' -f2)
-      KEYWORDS_STR=$(echo "$line" | cut -d'|' -f3)
-
-      SCORE=0
-      for keyword in $KEYWORDS_STR; do
-        if [[ "$PROMPT_LOWER" == *"$keyword"* ]]; then
-          SCORE=$((SCORE + 1))
-        fi
-      done
-
-      if ((SCORE > 0)); then
-        SKILL_NAMES+=("$SKILL_NAME")
-        SKILL_COMMANDS+=("$SKILL_CMD")
-        SKILL_SCORES+=("$SCORE")
-      fi
-    done < "$CONF_FILE"
-
-    if [[ ${#SKILL_NAMES[@]:-0} -gt 0 ]]; then
-      SORTED_INDICES=()
-      for i in $(seq 0 $((${#SKILL_SCORES[@]} - 1))); do
-        SORTED_INDICES+=("$i")
-      done
-
-      SORTED_LEN=${#SORTED_INDICES[@]}
-      for ((i = 0; i < SORTED_LEN; i++)); do
-        for ((j = i + 1; j < SORTED_LEN; j++)); do
-          idx_i=${SORTED_INDICES[$i]}
-          idx_j=${SORTED_INDICES[$j]}
-          if ((SKILL_SCORES[idx_j] > SKILL_SCORES[idx_i])); then
-            SORTED_INDICES[$i]=$idx_j
-            SORTED_INDICES[$j]=$idx_i
-          fi
-        done
-      done
-
-      MAX=5
-      if ((SORTED_LEN < MAX)); then
-        MAX=$SORTED_LEN
-      fi
-
-      echo "[Skill Detector] 코드 작성 전 다음 스킬을 Read하고 규칙을 따르라:"
-      for ((i = 0; i < MAX; i++)); do
-        idx=${SORTED_INDICES[$i]}
-        echo "- ${SKILL_NAMES[$idx]}: Read .claude/skills/${SKILL_COMMANDS[$idx]}/SKILL.md"
-      done
-    fi
-  fi
-fi
-
-# ─── 3. Project Map Detector ───
+# ─── 2. Project Map Detector ───
 MAP_FILE="$CLAUDE_DIR/PROJECT_MAP.md"
 CACHE_FILE="$CLAUDE_DIR/.project-map-cache"
 

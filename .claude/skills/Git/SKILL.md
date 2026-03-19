@@ -1,5 +1,8 @@
 ---
-lastUpdated: 2025-03-01
+name: git
+description: Git 커밋, PR, 브랜치 규칙. 커밋 메시지 컨벤션, 브랜치 전략, PR 작성 시 참조한다.
+user-invocable: true
+lastUpdated: 2026-03-19
 ---
 
 # Git Skill - Git 규칙
