@@ -103,11 +103,11 @@ git pull
 ├── CLAUDE.md                    ← 핵심 워크플로우/위임 규칙
 ├── settings.json                ← hooks 설정
 ├── agents/
-│   ├── explore.md               ← 코드베이스 탐색 (haiku)
 │   ├── implementer-fe.md        ← React 프론트엔드 구현 (M: 구현만, L: +테스트)
 │   ├── implementer-be.md        ← NestJS 백엔드 구현 (M: 구현만, L: +테스트)
 │   ├── code-reviewer.md         ← 코드 품질 리뷰 (opus)
 │   └── git-manager.md           ← Git 작업 (sonnet)
+│   # 탐색은 built-in Explore 에이전트 사용 (haiku, read-only)
 ├── skills/
 │   ├── Coding/
 │   │   ├── SKILL.md             ← 공통 코딩 원칙

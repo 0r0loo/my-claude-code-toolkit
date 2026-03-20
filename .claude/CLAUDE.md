@@ -15,16 +15,34 @@ Claude는 작업 시작 전 반드시 이 규칙을 따라야 한다.
 | **M (moderate)** | 명확한 기능, 단일 레이어 | 단일 컴포넌트 추가, API 엔드포인트 1개, 유틸 함수 추가 |
 | **L (complex)** | 설계 필요, 레이어 횡단 | 새 도메인 모듈, 핵심 엔티티 변경, FE+BE 동시 변경 |
 
-> **판단 기준**: 파일 수보다 **변경 영향도**를 우선한다. 20파일 일괄 rename은 S, 핵심 도메인 엔티티 1개 변경은 L이다.
+### 티어 판단 Decision Tree
 
-### PROJECT_MAP.md 활용
-- `.claude/PROJECT_MAP.md`가 있으면 explore 전에 반드시 먼저 Read하라
-- 단순 구조 확인은 explore 생략 가능
-- 세부 코드 탐색이 필요할 때만 explore 위임
+다음 질문을 순서대로 확인한다. **하나라도 Yes면 해당 티어 이상**이다.
+
+```
+Q1. 핵심 도메인 로직이 바뀌는가? (엔티티 구조, 비즈니스 규칙 변경)
+    → Yes: L
+Q2. 새로운 아키텍처/패턴 도입이 필요한가? (새 모듈, 새 라이브러리, 설계 결정)
+    → Yes: L
+Q3. FE + BE 동시 변경이 필요한가?
+    → Yes: 영향도에 따라 M 또는 L (핵심 도메인이면 L, 단순 연동이면 M)
+Q4. 단일 레이어에서 명확한 기능 추가/수정인가?
+    → Yes: M
+Q5. 위 모두 No — 단순 수정인가?
+    → Yes: S
+```
+
+> **핵심**: 파일 수보다 **변경 영향도**를 우선한다. 20파일 일괄 rename은 S, 핵심 도메인 엔티티 1개 변경은 L이다.
+
+### 탐색 및 패턴 파악
+
+- `.claude/PROJECT_MAP.md`가 있으면 탐색 전에 반드시 먼저 Read하라
+- 단순 구조 확인은 PROJECT_MAP.md로 충분. 코드 탐색이 필요할 때만 built-in `Explore` 에이전트를 사용
+- 탐색 후 위 Decision Tree로 티어를 판단한다
 - 갱신: `.claude/scripts/generate-project-map.sh` 실행
 
 ### 에이전트 위임 대상
-- **탐색** → `explore` 에이전트 (haiku) — 코드 탐색, 기존 패턴 파악, 티어 판단, 에이전트 흐름 권장
+- **탐색** → built-in `Explore` 에이전트 (haiku, read-only) — 코드 탐색, 기존 패턴 파악
 - **구현 (M 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현만)
 - **구현+테스트 (L 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현 + 테스트)
 - **코드 리뷰** → `code-reviewer` 에이전트 (opus)
@@ -93,15 +111,15 @@ Main Agent가 직접 처리한다. 서브에이전트 위임 불필요.
 
 ### M 티어 (moderate)
 TDD/Review를 생략하고 핵심 단계만 수행한다.
-1. **Task Header 출력**
-2. **Planning**: `explore`로 탐색 → explore 결과 기반으로 Task Header의 📚, 🔄 결정
+1. **Task Header 출력** (초기 티어 판단)
+2. **탐색**: built-in `Explore`로 관련 코드 탐색 → 탐색 결과 기반으로 티어 확정 + Task Header의 📚, 🔄 결정
 3. **Implementation**: `implementer` 에이전트에 구현 위임 (단위별로 나눠 호출, "테스트 없이 구현만" 지시)
 4. **Commit**: `git-manager`로 커밋/PR 생성
 
 ### L 티어 (complex)
 파일 기반 설계 후 **단위별로** 구현한다.
-1. **Task Header 출력**
-2. **Research**: `explore`로 탐색 → `research.md` 작성 (관련 코드 분석, 제약 조건)
+1. **Task Header 출력** (초기 티어 판단)
+2. **Research**: built-in `Explore`로 관련 코드 탐색 → `research.md` 작성 (관련 코드 분석, 제약 조건)
 3. **Plan**: `plan.md` 작성 (접근 방식, 변경 파일, 트레이드 오프, **단위별 작업 순서**)
 4. **주석 사이클**: 사용자가 plan.md에 메모 → 반영 → **승인 전까지 구현 금지**
 5. **Implementation + Test**: plan.md의 각 단위를 순서대로 `implementer`에 위임 (단위당 1회 호출)
@@ -115,11 +133,11 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 ## 5. 문서 참조 가이드
 
 ### Agents (서브에이전트 프롬프트)
-- `.claude/agents/explore.md` - 코드베이스 탐색 전문가
 - `.claude/agents/implementer-fe.md` - React 프론트엔드 구현 (M: 구현만, L: 구현+테스트)
 - `.claude/agents/implementer-be.md` - NestJS 백엔드 구현 (M: 구현만, L: 구현+테스트)
 - `.claude/agents/code-reviewer.md` - 코드 리뷰 전문가
 - `.claude/agents/git-manager.md` - Git 작업 전문가
+- 탐색은 built-in `Explore` 에이전트를 사용 (별도 커스텀 agent 없음)
 
 ### Skills (도메인 지식)
 - `.claude/skills/Coding/SKILL.md` - 공통 코딩 원칙
@@ -164,7 +182,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 
 ## 6. 토큰 절약 원칙
 
-- **탐색**: `explore` 에이전트 (haiku) 우선. 단순 구조 확인은 PROJECT_MAP.md로 대체
+- **탐색**: built-in `Explore` (haiku, read-only) 사용. 단순 구조 확인은 PROJECT_MAP.md로 대체
 - **계획**: Planning 스킬 (`context: fork`) — 메인 컨텍스트 오염 방지
 - **구현/리뷰만 opus 사용**: implementer, code-reviewer
 - **자동 호출 제한**: `disable-model-invocation: true` 스킬(Curation, SVGIcon)은 명시적 호출만 허용

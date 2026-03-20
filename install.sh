@@ -325,7 +325,6 @@ copy_common_core() {
   copy_file "CLAUDE.md"
   merge_settings_json
 
-  copy_file "agents/explore.md"
   copy_file "agents/code-reviewer.md"
   copy_file "agents/git-manager.md"
 
