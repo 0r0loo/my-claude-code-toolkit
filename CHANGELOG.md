@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.7.0
+
+### 워크플로우 개선
+
+- **BREAKING**: 커스텀 `explore.md` agent 삭제 → built-in `Explore` (haiku, read-only)로 전환
+  - Anthropic 자체 개선 자동 반영, 유지보수 비용 0
+  - 티어 판단은 CLAUDE.md Decision Tree로 Main Agent가 직접 수행
+- **FEAT**: CLAUDE.md에 티어 판단 Decision Tree 추가 (Q1~Q5 순차 판단)
+- **FEAT**: M/L 워크플로우에 '계획 제시 → 승인 대기' 단계 추가
+  - 탐색 후 바로 구현하지 않고, 계획을 먼저 보여주고 승인 후 구현
+- **FEAT**: M/L 워크플로우에 요구사항 명확화 질문 단계 추가
+  - 불명확한 요구사항은 추측하지 않고 사용자에게 질문
+  - 질문과 계획을 동시에 제시 가능
+- **FIX**: `implementer-be`에 스키마 변경 시 Entity/Migration 우선 규칙 추가
+- **REFACTOR**: install.sh에서 explore.md 복사 제거
+
 ## 1.6.0
 
 ### Skills 2.0 대응 & 구조 개선
