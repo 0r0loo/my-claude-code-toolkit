@@ -1,5 +1,21 @@
 # Changelog
 
+## 1.11.0
+
+### E2E 테스트 + 워크플로우 강화
+
+- **FEAT**: `skills/E2E/SKILL.md` + `references/patterns.md` 신규
+  - Playwright 기반 E2E 테스트 규칙 (TDD 스킬과 분리)
+  - Page Object Model, 셀렉터 우선순위, Waiting 전략, storageState, 네트워크 모킹
+  - AI 함정 목록 포함
+- **FEAT**: `agents/e2e-tester.md` 신규
+  - 프로젝트 설정 탐색 → 테스트 설계 → 작성 → 실행
+  - tester(단위/통합)와 역할 분리
+- **FIX**: M/L 공통 원칙 강화 — "승인 전에는 어떤 파일도 생성/수정/삭제하지 않는다"
+- **FIX**: 계획 제시 단계에 참조 스킬 목록 명시 규칙 추가
+- **FIX**: git-manager에 커밋 분리 규칙 추가
+- **DOCS**: README에 권장 Permission 설정 섹션 추가
+
 ## 1.10.0
 
 ### 워크플로우 & git-manager 개선
