@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.9.0
+
+### Anthropic 스킬 베스트 프랙티스 적용
+
+- **FEAT**: 19개 스킬 description을 "언제 실행할지" 관점으로 변경
+  - AI가 스킬 선택 시 매칭 정확도 향상
+- **FEAT**: API 레퍼런스 스킬 8개에 `⚠️ AI 함정 목록` 섹션 추가
+  - React, NestJS, TypeORM, TanStackQuery, NextJS, TypeScript, Zustand, (+ 시드 항목)
+  - 사용 중 실패 발견 시 한 줄씩 추가하는 방식
+
 ## 1.8.0
 
 ### tester 에이전트 분리 & 레거시 정리
