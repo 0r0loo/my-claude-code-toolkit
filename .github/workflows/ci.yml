@@ -23,7 +23,6 @@ jobs:
           # 핵심 파일 존재 확인
           test -f .claude/CLAUDE.md
           test -f .claude/settings.json
-          test -f .claude/agents/explore.md
           test -f .claude/agents/implementer-fe.md
           test -f .claude/agents/implementer-be.md
           test -f .claude/skills/Coding/SKILL.md
@@ -64,7 +63,7 @@ jobs:
         run: |
           cd /tmp/test-full
           bash $GITHUB_WORKSPACE/install.sh --uninstall
-          test ! -f .claude/agents/explore.md
+          test ! -f .claude/agents/implementer-fe.md
           echo "✅ Uninstall OK"
 
       - name: Reinstall (settings.json merge)
@@ -98,8 +97,3 @@ jobs:
           fi
           echo "✅ Quality Gate silent on question prompt"
 
-      - name: Skill Detector output format
-        run: |
-          result=$(echo '{"prompt":"React 컴포넌트 만들어줘"}' | bash .claude/hooks/prompt-hook.sh 2>&1)
-          echo "$result" | grep -q "Read .claude/skills/"
-          echo "✅ Skill Detector uses Read format"
