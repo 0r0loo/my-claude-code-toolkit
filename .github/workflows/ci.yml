@@ -25,6 +25,7 @@ jobs:
           test -f .claude/settings.json
           test -f .claude/agents/implementer-fe.md
           test -f .claude/agents/implementer-be.md
+          test -f .claude/agents/tester.md
           test -f .claude/skills/Coding/SKILL.md
           test -f .claude/skills/React/SKILL.md
           test -f .claude/skills/NestJS/SKILL.md

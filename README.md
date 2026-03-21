@@ -105,6 +105,7 @@ git pull
 ├── agents/
 │   ├── implementer-fe.md        ← React 프론트엔드 구현 (M: 구현만, L: +테스트)
 │   ├── implementer-be.md        ← NestJS 백엔드 구현 (M: 구현만, L: +테스트)
+│   ├── tester.md                ← 테스트 코드 작성 (FE/BE 통합, opus)
 │   ├── code-reviewer.md         ← 코드 품질 리뷰 (opus)
 │   └── git-manager.md           ← Git 작업 (sonnet)
 ├── skills/

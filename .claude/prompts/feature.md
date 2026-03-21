@@ -26,7 +26,7 @@
 📋 실시간 알림 시스템 구현
 ⚡ L — WebSocket 도입, FE+BE 동시 변경, 새 인프라 패턴
 📚 NestJS, React, APIDesign
-🔄 research.md → plan.md → 승인 → implementer-be → implementer-fe → code-reviewer → git-manager
+🔄 research.md → plan.md → 승인 → implementer-be → implementer-fe → tester → code-reviewer → git-manager
 📁 10+ files
 📌 Plan:
   ○ Step 1: WebSocket Gateway 구현 (BE)
