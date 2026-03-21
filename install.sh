@@ -490,5 +490,5 @@ else
   echo "Use --global to apply to all projects."
 fi
 echo ""
-echo "Generate PROJECT_MAP.md for faster explore agent:"
+echo "Generate PROJECT_MAP.md for faster code exploration:"
 echo "  $TARGET_DIR/scripts/generate-project-map.sh"
