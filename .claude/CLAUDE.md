@@ -44,7 +44,8 @@ Q5. 위 모두 No — 단순 수정인가?
 ### 에이전트 위임 대상
 - **탐색** → built-in `Explore` 에이전트 (haiku, read-only) — 코드 탐색, 기존 패턴 파악
 - **구현** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현만)
-- **테스트** → `tester` 에이전트 (명시적 호출 시에만)
+- **테스트** → `tester` 에이전트 (단위/통합 테스트, 명시적 호출 시에만)
+- **E2E 테스트** → `e2e-tester` 에이전트 (Playwright, 명시적 호출 시에만)
 - **코드 리뷰** → `code-reviewer` 에이전트 (opus)
 - **Git 작업** → `git-manager` 에이전트 (sonnet)
 
@@ -152,7 +153,8 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 ### Agents (서브에이전트 프롬프트)
 - `.claude/agents/implementer-fe.md` - React 프론트엔드 구현
 - `.claude/agents/implementer-be.md` - NestJS 백엔드 구현
-- `.claude/agents/tester.md` - 테스트 코드 작성 (FE/BE 통합)
+- `.claude/agents/tester.md` - 단위/통합 테스트 작성 (FE/BE 통합)
+- `.claude/agents/e2e-tester.md` - E2E 테스트 작성 (Playwright)
 - `.claude/agents/code-reviewer.md` - 코드 리뷰 전문가
 - `.claude/agents/git-manager.md` - Git 작업 전문가
 - 탐색은 built-in `Explore` 에이전트를 사용 (별도 커스텀 agent 없음)
@@ -180,6 +182,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/skills/APIDesign/SKILL.md` - REST API 설계 (URL, 응답 포맷, 페이지네이션, 에러 코드)
 - `.claude/skills/Database/SKILL.md` - DB 설계 & 최적화 (정규화, 인덱싱, N+1, 쿼리 최적화)
 - `.claude/skills/SVGIcon/SKILL.md` - SVG 아이콘 생성 (디자인 시스템용, React 래핑)
+- `.claude/skills/E2E/SKILL.md` - Playwright E2E 테스트 (Page Object, 셀렉터, Waiting 전략)
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
 - `.claude/skills/FailureRecovery/SKILL.md` - 실패 복구 프로토콜 (진단, 처방, 에스컬레이션)
 - `.claude/skills/Curation/SKILL.md` - AI 결과물 큐레이션 체크리스트

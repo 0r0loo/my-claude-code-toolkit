@@ -328,6 +328,7 @@ copy_common_core() {
   copy_file "agents/code-reviewer.md"
   copy_file "agents/git-manager.md"
   copy_file "agents/tester.md"
+  copy_file "agents/e2e-tester.md"
 
   copy_file "skills/Coding/SKILL.md"
   copy_dir "skills/TypeScript"
@@ -349,6 +350,7 @@ copy_common() {
 
   echo "[Common skills]"
   copy_dir "skills/TDD"
+  copy_dir "skills/E2E"
   copy_dir "skills/APIDesign"
   copy_dir "skills/Database"
   copy_dir "skills/FailureRecovery"
