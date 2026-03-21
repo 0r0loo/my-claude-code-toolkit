@@ -327,6 +327,7 @@ copy_common_core() {
 
   copy_file "agents/code-reviewer.md"
   copy_file "agents/git-manager.md"
+  copy_file "agents/tester.md"
 
   copy_file "skills/Coding/SKILL.md"
   copy_dir "skills/TypeScript"

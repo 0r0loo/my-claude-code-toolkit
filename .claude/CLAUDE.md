@@ -43,8 +43,8 @@ Q5. 위 모두 No — 단순 수정인가?
 
 ### 에이전트 위임 대상
 - **탐색** → built-in `Explore` 에이전트 (haiku, read-only) — 코드 탐색, 기존 패턴 파악
-- **구현 (M 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현만)
-- **구현+테스트 (L 티어)** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현 + 테스트)
+- **구현** → `implementer-fe` 또는 `implementer-be` 에이전트 (구현만)
+- **테스트** → `tester` 에이전트 (명시적 호출 시에만)
 - **코드 리뷰** → `code-reviewer` 에이전트 (opus)
 - **Git 작업** → `git-manager` 에이전트 (sonnet)
 
@@ -127,8 +127,9 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 3. **명확화 질문**: 불명확한 부분이 있으면 사용자에게 질문한다. 명확해진 후 다음 단계 진행
 4. **Plan**: `plan.md` 작성 (접근 방식, 변경 파일, 트레이드 오프, **단위별 작업 순서**)
 5. **승인 대기**: 사용자가 plan.md에 메모 → 반영 → **승인 전까지 구현 금지**
-6. **Implementation + Test**: plan.md의 각 단위를 순서대로 `implementer`에 위임 (단위당 1회 호출)
-7. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
+6. **Implementation**: plan.md의 각 단위를 순서대로 `implementer`에 위임 (단위당 1회 호출)
+7. **Test** (필요 시): `tester` 에이전트로 테스트 작성
+8. **Review**: `code-reviewer`로 리뷰 → `git-manager`로 커밋/PR
 
 ### M/L 공통 원칙
 
@@ -148,8 +149,9 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 ## 5. 문서 참조 가이드
 
 ### Agents (서브에이전트 프롬프트)
-- `.claude/agents/implementer-fe.md` - React 프론트엔드 구현 (M: 구현만, L: 구현+테스트)
-- `.claude/agents/implementer-be.md` - NestJS 백엔드 구현 (M: 구현만, L: 구현+테스트)
+- `.claude/agents/implementer-fe.md` - React 프론트엔드 구현
+- `.claude/agents/implementer-be.md` - NestJS 백엔드 구현
+- `.claude/agents/tester.md` - 테스트 코드 작성 (FE/BE 통합)
 - `.claude/agents/code-reviewer.md` - 코드 리뷰 전문가
 - `.claude/agents/git-manager.md` - Git 작업 전문가
 - 탐색은 built-in `Explore` 에이전트를 사용 (별도 커스텀 agent 없음)
