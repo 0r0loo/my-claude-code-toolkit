@@ -1,6 +1,6 @@
 ---
 name: curation
-description: AI 결과물의 품질을 인간 관점에서 검증하는 체크리스트. code-reviewer 에이전트가 참조하거나, 사용자가 직접 리뷰할 때 활용한다.
+description: AI가 생성한 코드의 최종 품질을 검증할 때 호출. 사용자가 /review하거나 code-reviewer가 동작할 때 참조.
 user-invocable: true
 disable-model-invocation: true
 lastUpdated: 2026-03-19

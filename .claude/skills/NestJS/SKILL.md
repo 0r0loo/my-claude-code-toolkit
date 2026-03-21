@@ -1,6 +1,6 @@
 ---
 name: nestjs
-description: NestJS 백엔드 개발 가이드. 레이어별 책임, DTO, 에러 핸들링, DI, 네이밍 컨벤션 등 NestJS 코드 작성 시 참조한다.
+description: NestJS 모듈, 서비스, 컨트롤러, DTO를 생성하거나 수정할 때 호출. DI 패턴, 에러 핸들링, 레이어 분리가 필요할 때 참조.
 targetLib: "@nestjs/core@10"
 user-invocable: true
 lastUpdated: 2026-03-19
@@ -103,6 +103,17 @@ throw new UserNotFoundException(userId);
 - `any` 타입 사용 금지
 - 환경 변수 직접 접근 (`process.env`) 금지 → `ConfigService` 사용
 - 순환 의존 금지 (Module 간, Service 간)
+
+---
+
+## ⚠️ AI 함정 목록
+
+> AI가 자주 틀리는 실수. 새로운 실패 발견 시 한 줄씩 추가한다.
+
+- `@Injectable()` 누락 → DI 실패. 모든 Provider에 반드시 추가
+- DTO class-validator 데코레이터만 달고 `ValidationPipe` 등록 안 함 → 검증이 동작 안 함
+- `@Body()` 파라미터에 interface 사용 → 런타임에 검증 불가. 반드시 class DTO 사용
+- 순환 의존 시 `forwardRef()` 빼먹음 → 앱 부팅 실패
 
 ---
 

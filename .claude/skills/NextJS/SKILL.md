@@ -1,6 +1,6 @@
 ---
 name: nextjs
-description: Next.js App Router 기반 개발 가이드. Next.js 프로젝트에서 Server/Client Component, 데이터 페칭, Route Handler, Middleware, Server Actions 구현 시 참조한다.
+description: Next.js App Router 프로젝트에서 페이지, 레이아웃, Route Handler, Server Actions, Middleware를 구현할 때 호출. 'use client' 판단이 필요할 때도 참조.
 targetLib: "next@14"
 user-invocable: true
 lastUpdated: 2026-03-19
@@ -130,6 +130,17 @@ export function UserTabs() {
 - 외부 폰트를 `<link>` 태그로 로드 금지 - `next/font` 사용
 - `router.push()`를 Server Component에서 사용 금지 - `redirect()` 사용
 - API Route에서 비즈니스 로직 직접 구현 금지 - 별도 서비스 레이어로 분리
+
+---
+
+## ⚠️ AI 함정 목록
+
+> AI가 자주 틀리는 실수. 새로운 실패 발견 시 한 줄씩 추가한다.
+
+- Server Component에서 `useState`/`useEffect` 사용 → 빌드 에러. `'use client'` 추가 필요
+- `'use client'`를 페이지 최상단에 넣으면 하위 전체가 Client → 필요한 컴포넌트만 분리
+- `fetch`에 `cache: 'no-store'` 빠뜨리면 정적 빌드 시 데이터가 고정됨
+- Server Actions에서 redirect()를 try-catch 안에서 호출하면 동작 안 함 → try 밖에서 호출
 
 ---
 

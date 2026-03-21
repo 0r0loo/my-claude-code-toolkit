@@ -1,6 +1,6 @@
 ---
 name: typescript
-description: TypeScript 고급 패턴 가이드. 타입 추론, 유틸리티 타입, 제네릭, 타입 가드, 고급 타입 패턴 등 TypeScript 코드 작성 시 참조한다.
+description: 복잡한 타입 설계, 제네릭 함수 작성, 유틸리티 타입 조합, 타입 가드 구현 시 호출. any/as 사용을 피하고 타입 안전한 코드를 작성할 때 참조.
 user-invocable: true
 lastUpdated: 2026-03-19
 ---
@@ -66,6 +66,17 @@ FE/BE 공통으로 적용되는 TypeScript 심화 규칙을 정의한다.
 - **[Generics](./references/generics.md)** - 제네릭 함수, 제약 조건, 고급 제네릭 패턴
 - **[Type Guards](./references/type-guards.md)** - 타입 가드, 판별 유니온, 완전성 검사
 - **[Advanced Patterns](./references/advanced-patterns.md)** - 조건부 타입, 매핑 타입, 템플릿 리터럴 타입
+
+---
+
+## ⚠️ AI 함정 목록
+
+> AI가 자주 틀리는 실수. 새로운 실패 발견 시 한 줄씩 추가한다.
+
+- `as` 단언으로 타입 에러를 "해결"하면 런타임에 터짐 → 타입 가드나 설계 변경으로 해결
+- `Partial<T>`로 업데이트 DTO를 만들면 빈 객체도 통과됨 → 최소 1개 필드 필수 조건 추가
+- 유니언 타입에서 공통 필드만 접근 가능 → 판별 유니온(discriminated union)으로 설계
+- `Record<string, T>`에서 없는 키 접근 시 undefined인데 타입은 T → `noUncheckedIndexedAccess` 권장
 
 ---
 

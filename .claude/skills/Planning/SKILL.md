@@ -1,6 +1,6 @@
 ---
 name: planning
-description: 작업을 스코프된 실행 계획으로 분해한다. 티어 판단, Task Header, 작업 분해, 의존성 확인 시 참조한다.
+description: M/L 티어 작업 시작 시 호출. 티어 판단, Task Header 작성, 작업 분해, 의존성 순서 결정에 참조.
 agent: Plan
 context: fork
 user-invocable: true

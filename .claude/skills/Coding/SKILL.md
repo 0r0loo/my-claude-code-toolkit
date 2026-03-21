@@ -1,6 +1,6 @@
 ---
 name: coding
-description: 공통 코딩 원칙과 패턴. 코드 작성 시 항상 참조하며, SRP, 네이밍 컨벤션, 에러 처리, 코드 품질 체크리스트를 제공한다.
+description: 코드를 작성하거나 리팩터링할 때 호출. SRP 위반, 네이밍 문제, 에러 처리 누락을 방지한다.
 user-invocable: true
 lastUpdated: 2026-03-19
 ---

@@ -1,6 +1,6 @@
 ---
 name: ddd
-description: DDD 전술적 패턴 가이드. Entity, Value Object, Aggregate, Repository, Domain Service, Domain Event 등 도메인 모델링 시 참조한다.
+description: 도메인 모델링, Entity/VO/Aggregate 설계, Repository 인터페이스 정의 시 호출. 비즈니스 로직의 위치(Entity vs Service)를 판단할 때 참조.
 user-invocable: true
 lastUpdated: 2026-03-19
 ---

@@ -1,6 +1,6 @@
 ---
 name: tailwindcss
-description: Tailwind CSS 유틸리티 패턴 가이드. 스타일링, 반응형 디자인, 다크 모드, CVA 패턴, cn() 유틸리티 등 Tailwind 기반 스타일 작업 시 참조한다.
+description: Tailwind 클래스로 스타일링할 때 호출. 반응형 디자인, 다크 모드, CVA 패턴, cn() 유틸리티 적용 시 참조.
 targetLib: "tailwindcss@3"
 user-invocable: true
 lastUpdated: 2026-03-19

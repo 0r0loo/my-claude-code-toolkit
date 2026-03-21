@@ -1,6 +1,6 @@
 ---
 name: git
-description: Git 커밋, PR, 브랜치 규칙. 커밋 메시지 컨벤션, 브랜치 전략, PR 작성 시 참조한다.
+description: 커밋 메시지 작성, PR 생성, 브랜치 전략 결정 시 호출. git-manager 에이전트가 동작할 때 참조.
 user-invocable: true
 lastUpdated: 2026-03-19
 ---

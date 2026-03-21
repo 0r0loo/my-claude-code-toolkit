@@ -1,6 +1,6 @@
 ---
 name: failure-recovery
-description: 에이전트가 잘못된 결과를 냈을 때의 디버깅 및 재시도 프로토콜. 단순 재실행이 아닌 원인 분석 후 처방한다.
+description: 에이전트 결과가 기대와 다르거나 반복 실패할 때 호출. 단순 재실행 대신 원인 진단 → 처방 → 재시도 사이클 적용.
 context: fork
 lastUpdated: 2026-03-19
 ---

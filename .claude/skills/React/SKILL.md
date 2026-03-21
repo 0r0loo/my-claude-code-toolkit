@@ -1,6 +1,6 @@
 ---
 name: react
-description: React 컴포넌트 설계 및 상태 관리 가이드. React 컴포넌트, Props, 커스텀 훅, 렌더링 최적화 등 React 코드 작성 시 참조한다.
+description: React 컴포넌트, 커스텀 훅, Props 설계, 렌더링 최적화 작업 시 호출. JSX/TSX 파일을 생성하거나 수정할 때 참조.
 targetLib: "react@18"
 user-invocable: true
 lastUpdated: 2026-03-19
@@ -136,6 +136,17 @@ type UserAvatarProps = {
 - 아이콘 버튼에 `aria-label` 누락 금지
 - `outline: none` 단독 사용 금지 (`focus-visible` 대체 필수)
 - 입력 필드에 `onPaste` 차단 금지
+
+---
+
+## ⚠️ AI 함정 목록
+
+> AI가 자주 틀리는 실수. 새로운 실패 발견 시 한 줄씩 추가한다.
+
+- `useEffect` 의존성 배열에 객체/배열을 직접 넣으면 매 렌더링마다 재실행됨 → useMemo로 안정화하거나 원시값으로 분해
+- `useState` 초기값에 props를 넣으면 props 변경 시 반영 안 됨 → key를 바꾸거나 useEffect로 동기화
+- 이벤트 핸들러에서 `e.stopPropagation()` 누락 → 모달/드롭다운 외부 클릭 시 의도치 않은 동작
+- `map` 렌더링 시 key에 index 사용 → 리스트 순서 변경 시 상태 꼬임. 고유 id 사용
 
 ---
 

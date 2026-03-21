@@ -1,6 +1,6 @@
 ---
 name: typeorm
-description: TypeORM Entity, Repository, QueryBuilder 가이드. NestJS에서 TypeORM을 사용한 Entity 정의, Relations, Repository 패턴, 마이그레이션, 트랜잭션 등 데이터베이스 작업 시 참조한다.
+description: TypeORM Entity 정의, Relations 설정, Repository 쿼리 작성 시 호출. 마이그레이션, 트랜잭션, DB 스키마 변경 시에도 참조.
 targetLib: "typeorm@0.3"
 user-invocable: true
 lastUpdated: 2026-03-19
@@ -91,3 +91,14 @@ NestJS 레이어 규칙은 `../Coding/backend.md`, 공통 코딩 원칙은 `../C
 - `find` 시 `where` 조건 없이 전체 조회 금지 - 반드시 조건 또는 pagination 사용
 - Repository 외 레이어에서 직접 쿼리 실행 금지
 - 마이그레이션 `down` 메서드 누락 금지 - 항상 롤백 가능해야 한다
+
+---
+
+## ⚠️ AI 함정 목록
+
+> AI가 자주 틀리는 실수. 새로운 실패 발견 시 한 줄씩 추가한다.
+
+- `findOne({ where: { id } })`에서 id가 undefined면 첫 번째 레코드 반환됨 → 반드시 null 체크 선행
+- `save()` 호출 시 id가 있으면 update, 없으면 insert — 의도치 않은 upsert 주의
+- `@Column({ type: 'varchar' })` 없이 `@Column()` 만 쓰면 DB마다 타입이 달라짐
+- ManyToMany 관계에서 `@JoinTable()` 누락 → 중간 테이블 미생성

@@ -1,6 +1,6 @@
 ---
 name: zustand
-description: Zustand 클라이언트 상태 관리 가이드. 스토어 설계, Selector 패턴, 미들웨어(persist, devtools, immer), Slice 패턴 등 클라이언트 상태 관리 시 참조한다.
+description: 클라이언트 전역 상태(모달, 테마, 사이드바 등)를 관리할 때 호출. Zustand 스토어 생성, Selector, 미들웨어 설정 시 참조.
 targetLib: "zustand@4"
 user-invocable: true
 lastUpdated: 2026-03-19
@@ -73,6 +73,16 @@ Zustand를 사용한 클라이언트 상태 관리 규칙을 정의한다.
 | Slice 파일 | 도메인 + `Slice.ts` | `authSlice.ts` |
 | Action | 동사 + 명사 (camelCase) | `addItem`, `setTheme`, `toggleSidebar` |
 | Store 디렉토리 | `stores/` | `src/stores/authStore.ts` |
+
+---
+
+## ⚠️ AI 함정 목록
+
+> AI가 자주 틀리는 실수. 새로운 실패 발견 시 한 줄씩 추가한다.
+
+- selector 없이 `useStore()`로 전체 구독 → 무관한 상태 변경에도 리렌더링
+- `set` 안에서 `get()` 대신 `state` 콜백 사용 안 함 → 클로저로 인한 stale state
+- persist 미들웨어에서 `partialize` 빠뜨리면 action 함수까지 localStorage에 저장 시도 → 에러
 
 ---
 

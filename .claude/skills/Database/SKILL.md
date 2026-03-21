@@ -1,6 +1,6 @@
 ---
 name: database
-description: 데이터베이스 설계 및 최적화 가이드. 스키마 설계, 정규화, 관계, 인덱싱, N+1 방지, 쿼리 최적화 등 언어/ORM 무관한 DB 원칙을 제공한다.
+description: DB 스키마 설계, 테이블 관계 정의, 인덱스 추가, 쿼리 최적화 시 호출. N+1 문제나 성능 이슈를 해결할 때 참조.
 user-invocable: true
 lastUpdated: 2026-03-19
 ---

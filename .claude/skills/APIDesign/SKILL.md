@@ -1,6 +1,6 @@
 ---
 name: api-design
-description: REST API 설계 가이드. URL 구조, HTTP 메서드, 응답 포맷, 페이지네이션, 에러 코드, 버저닝 등 언어/프레임워크 무관한 API 설계 원칙을 제공한다.
+description: REST API 엔드포인트를 설계하거나 구현할 때 호출. URL 구조, 응답 포맷, 에러 코드, 페이지네이션 결정이 필요할 때 참조.
 user-invocable: true
 lastUpdated: 2026-03-19
 ---
