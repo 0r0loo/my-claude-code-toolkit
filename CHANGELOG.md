@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.8.0
+
+### tester 에이전트 분리 & 레거시 정리
+
+- **FEAT**: `tester.md` 에이전트 신규 — FE/BE 통합 테스트 전문가
+  - 명시적 호출 시에만 테스트 작성 (구현과 테스트 책임 분리)
+  - FE: React Testing Library, MSW 패턴
+  - BE: NestJS createTestingModule, jest.Mocked 패턴
+- **REFACTOR**: `implementer-fe.md`, `implementer-be.md`에서 테스트 모드 제거
+  - 구현에만 집중하도록 경량화
+- **FIX**: 잔여 explore 참조 정리 (prompts, scripts, install.sh, README)
+- **FIX**: CI에서 삭제된 explore/Skill Detector 테스트 제거, tester.md 테스트 추가
+- **FIX**: 임시 작업 파일 삭제 (IMPROVEMENT_PLAN.md, review-report.md 등)
+
 ## 1.7.0
 
 ### 워크플로우 개선
