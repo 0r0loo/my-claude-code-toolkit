@@ -629,6 +629,9 @@ run_init_mode() {
   install_tools
   echo ""
 
+  # Update CLAUDE.md markers
+  update_claude_md_markers
+
   # Write manifest
   printf '%s' "$NEW_MANIFEST" > "$MANIFEST_FILE"
 
@@ -644,6 +647,64 @@ run_init_mode() {
   echo "  claude \"/feature 로그인 페이지\"  ← Build a feature"
   echo "  claude \"/review\"                 ← Code review"
   echo "  claude \"/ship\"                   ← Create PR"
+}
+
+# === Update CLAUDE.md markers ===
+update_claude_md_markers() {
+  local claude_md="$TARGET_DIR/CLAUDE.md"
+  [ -f "$claude_md" ] || return
+
+  # Check for AGENTS marker
+  if grep -q "<!-- AGENTS:START" "$claude_md" 2>/dev/null; then
+    # Build agents section from installed files
+    local agents_content="<!-- AGENTS:START — install.sh init이 자동 갱신. 수동 편집 시 마커 유지 필요 -->"
+    agents_content="${agents_content}\n### Agents (서브에이전트 프롬프트)"
+
+    for agent_file in "$TARGET_DIR/agents/"*.md; do
+      [ -f "$agent_file" ] || continue
+      local name
+      name="$(basename "$agent_file")"
+      agents_content="${agents_content}\n- \`.claude/agents/${name}\`"
+    done
+    agents_content="${agents_content}\n- 탐색은 built-in \`Explore\` 에이전트를 사용 (별도 커스텀 agent 없음)"
+    agents_content="${agents_content}\n<!-- AGENTS:END -->"
+
+    # Replace between markers using awk
+    awk -v new="$agents_content" '
+      /<!-- AGENTS:START/ { print new; skip=1; next }
+      /<!-- AGENTS:END/ { skip=0; next }
+      !skip { print }
+    ' "$claude_md" > "${claude_md}.tmp" && mv "${claude_md}.tmp" "$claude_md"
+    echo "  Updated: CLAUDE.md (agents section)"
+  else
+    echo "  Warning: CLAUDE.md missing AGENTS markers — skipping dynamic update"
+  fi
+
+  # Check for SKILLS marker
+  if grep -q "<!-- SKILLS:START" "$claude_md" 2>/dev/null; then
+    local skills_content="<!-- SKILLS:START — install.sh init이 자동 갱신. 수동 편집 시 마커 유지 필요 -->"
+    skills_content="${skills_content}\n### Skills (도메인 지식)"
+
+    for skill_dir in "$TARGET_DIR/skills/"*/; do
+      [ -d "$skill_dir" ] || continue
+      local skill_name
+      skill_name="$(basename "$skill_dir")"
+      [ "$skill_name" = "manifests" ] && continue
+      if [ -f "$skill_dir/SKILL.md" ]; then
+        skills_content="${skills_content}\n- \`.claude/skills/${skill_name}/SKILL.md\`"
+      fi
+    done
+    skills_content="${skills_content}\n<!-- SKILLS:END -->"
+
+    awk -v new="$skills_content" '
+      /<!-- SKILLS:START/ { print new; skip=1; next }
+      /<!-- SKILLS:END/ { skip=0; next }
+      !skip { print }
+    ' "$claude_md" > "${claude_md}.tmp" && mv "${claude_md}.tmp" "$claude_md"
+    echo "  Updated: CLAUDE.md (skills section)"
+  else
+    echo "  Warning: CLAUDE.md missing SKILLS markers — skipping dynamic update"
+  fi
 }
 
 if [ "$INIT_MODE" = true ]; then

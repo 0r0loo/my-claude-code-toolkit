@@ -150,6 +150,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 
 ## 5. 문서 참조 가이드
 
+<!-- AGENTS:START — install.sh init이 자동 갱신. 수동 편집 시 마커 유지 필요 -->
 ### Agents (서브에이전트 프롬프트)
 - `.claude/agents/implementer-fe.md` - React 프론트엔드 구현
 - `.claude/agents/implementer-be.md` - NestJS 백엔드 구현
@@ -158,7 +159,9 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/agents/code-reviewer.md` - 코드 리뷰 전문가
 - `.claude/agents/git-manager.md` - Git 작업 전문가
 - 탐색은 built-in `Explore` 에이전트를 사용 (별도 커스텀 agent 없음)
+<!-- AGENTS:END -->
 
+<!-- SKILLS:START — install.sh init이 자동 갱신. 수동 편집 시 마커 유지 필요 -->
 ### Skills (도메인 지식)
 - `.claude/skills/Coding/SKILL.md` - 공통 코딩 원칙
 - `.claude/skills/NestJS/SKILL.md` - NestJS 백엔드 규칙 (레이어, DTO, DI, 에러 핸들링)
@@ -186,6 +189,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/skills/Git/SKILL.md` - Git 커밋/PR/브랜치 규칙
 - `.claude/skills/FailureRecovery/SKILL.md` - 실패 복구 프로토콜 (진단, 처방, 에스컬레이션)
 - `.claude/skills/Curation/SKILL.md` - AI 결과물 큐레이션 체크리스트
+<!-- SKILLS:END -->
 
 ### Prompts (커스텀 커맨드)
 - `.claude/prompts/feature.md` - /feature [기능명] -> 새 기능 구현 시작
@@ -208,6 +212,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 
 ### Scripts
 - `.claude/scripts/generate-project-map.sh` - PROJECT_MAP.md 자동 생성
+- `.claude/scripts/detect-stack.sh` - manifest 기반 스택 자동 감지 (install.sh, diagnose.sh에서 공유)
 - `diagnose.sh` - 프로젝트 에이전트 준비도 진단 CLI (스택 감지, 점수, 권장 스킬)
 
 ### Hooks
