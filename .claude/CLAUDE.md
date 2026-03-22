@@ -204,6 +204,9 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/prompts/canary.md` - /canary [URL] -> 배포 후 헬스체크 (접근성, 에러, 성능)
 - `.claude/prompts/qa.md` - /qa [URL] -> 브라우저 기반 QA 테스트 (browse 도구 필요)
 - `.claude/prompts/office-hours.md` - /office-hours [아이디어] -> 제품 진단 + 설계 (진단 모드/빌더 모드)
+- `.claude/prompts/simplify.md` - /simplify -> 변경 코드 품질 점검 (재사용성, 품질, 효율성)
+- `.claude/prompts/document-release.md` - /document-release [범위] -> 배포 후 문서 자동 갱신 (README, CHANGELOG, CLAUDE.md)
+- `.claude/prompts/unfreeze.md` - /unfreeze -> /freeze 해제 (편집 제한 해제)
 
 ### Tools (선택적)
 - `.claude/tools/browse/` - Playwright 기반 헤드리스 브라우저 CLI (gstack browse 기반, MIT)
@@ -227,11 +230,13 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 
 | 현재 상황 | 추천 | 이유 |
 |----------|------|------|
-| 기능 구현 완료 | `/review` | 머지 전 코드 리뷰 |
+| 기능 구현 완료 | `/simplify` | 리뷰 전 자가 품질 점검 |
+| simplify 완료 | `/review` | 머지 전 코드 리뷰 |
 | 버그 발견 / 에러 보고 | `/investigate` | 수정 전 원인 파악 |
 | 원인 확정 (investigation 완료) | `/fix` | 근본 원인 기반 수정 |
 | 코드 리뷰 통과 | `/ship` | PR 생성 + 릴리스 |
 | 배포 완료 | `/canary` | 배포 후 헬스체크 |
+| 배포 후 문서 정리 | `/document-release` | README/CHANGELOG 자동 갱신 |
 | 새 아이디어 논의 | `/office-hours` | 설계 전 문제 정의 |
 | 위험한 환경 (prod, DB) 작업 | `/careful` 또는 `/guard` | 파괴적 명령 방어 |
 | 주말 / 스프린트 끝 | `/retro` | 작업 회고 |
