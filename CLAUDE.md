@@ -16,20 +16,22 @@
 - hooks, scripts 추가/삭제
 
 ### install.sh 구조
-- `copy_common_core()` — 최소 공통 (--skills 모드에서도 설치)
+- `run_init_mode()` — manifest 기반 스택 자동 감지 + 설치 (init 모드)
+- `copy_common_core()` — 최소 공통 (--skills 모드에서도 설치, manifests 포함)
 - `copy_common()` — 전체 공통 (기존 --fe/--be 모드)
-- `copy_fe()` — FE 전용 파일 (--fe)
-- `copy_be()` — BE 전용 파일 (--be)
+- `copy_fe()` — FE 전용 파일 (--fe, 레거시)
+- `copy_be()` — BE 전용 파일 (--be, 레거시)
 - `merge_settings_json()` — settings.json 머지 (기존 설정 보존)
+- `update_claude_md_markers()` — CLAUDE.md의 AGENTS/SKILLS 마커 동적 갱신
 - `uninstall_toolkit()` — 매니페스트 기반 제거 (--uninstall)
 - `copy_dir "path"` — 디렉토리 전체를 재귀 복사 (references/ 포함)
 - `copy_file "path"` — 개별 파일 복사
 
 ### 규칙
-- 새 스킬 디렉토리 추가 시: `copy_dir "skills/스킬명"`을 적절한 함수에 추가
-- 스킬 삭제/이동 시: 기존 `copy_dir`/`copy_file` 경로를 수정
-- references/ 하위 파일은 `copy_dir`이 재귀 처리하므로 개별 추가 불필요
-- **변경 후 반드시 테스트**: `cd /tmp && mkdir test && cd test && bash /path/to/install.sh`
+- 새 스킬 추가 시: `skills/manifests/` 의 적절한 manifest.json에 스킬명 추가
+- 새 스택 추가 시: `skills/manifests/`에 새 JSON 파일 추가 (detect 규칙 + skills 목록)
+- 레거시 모드(--fe/--be): 기존 `copy_dir "skills/스킬명"`을 적절한 함수에 추가
+- **변경 후 반드시 테스트**: `bash test/install-test.sh`
 
 ---
 

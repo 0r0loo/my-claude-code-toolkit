@@ -10,7 +10,20 @@
 clone 없이 바로 설치할 수 있다.
 
 ```bash
-# 전체 설치 (프로젝트 로컬)
+# 자동 감지 설치 (권장) — 스택을 자동으로 감지하고 맞는 스킬만 설치
+npx @choblue/claude-code-toolkit init
+
+# 자동 감지 + 확인 없이
+npx @choblue/claude-code-toolkit init --yes
+
+# 스택 지정 (감지 건너뜀)
+npx @choblue/claude-code-toolkit init --stack=react
+npx @choblue/claude-code-toolkit init --stack=react,nestjs
+
+# 감지 결과만 미리보기
+npx @choblue/claude-code-toolkit init --dry-run
+
+# 전체 설치 (프로젝트 로컬, 레거시)
 npx @choblue/claude-code-toolkit
 
 # FE만 설치 (공통 + React, Next.js, TailwindCSS 등)
@@ -21,9 +34,6 @@ npx @choblue/claude-code-toolkit --be
 
 # 글로벌 설치
 npx @choblue/claude-code-toolkit --global
-
-# 글로벌 + FE만
-npx @choblue/claude-code-toolkit --global --fe
 
 # 스킬 선택 설치 (필요한 것만)
 npx @choblue/claude-code-toolkit --skills=React,TailwindCSS,Zustand
@@ -42,7 +52,10 @@ npx @choblue/claude-code-toolkit --uninstall
 git clone https://github.com/0r0loo/my-claude-code-toolkit.git
 cd my-claude-code-toolkit
 
-# 전체 설치 (프로젝트 로컬)
+# 자동 감지 설치 (권장)
+./install.sh init
+
+# 전체 설치 (프로젝트 로컬, 레거시)
 ./install.sh
 
 # FE만 설치
@@ -66,6 +79,10 @@ bash diagnose.sh
 
 | 옵션 | 설명 |
 |------|------|
+| `init` | 스택 자동 감지 + 맞춤 설치 (권장) |
+| `init --yes` | 확인 없이 자동 설치 |
+| `init --stack=LIST` | 스택 지정 (감지 건너뜀) |
+| `init --dry-run` | 감지 결과만 출력 (설치 안 함) |
 | (없음) | 전체 설치 (FE + BE), 프로젝트 로컬 |
 | `--fe` | 공통 + FE 스킬만 설치 |
 | `--be` | 공통 + BE 스킬만 설치 |
@@ -159,8 +176,12 @@ git pull
 │   │   └── SKILL.md             ← SVG 아이콘 생성 (디자인 시스템)
 │   ├── FailureRecovery/
 │   │   └── SKILL.md             ← 실패 복구 프로토콜
-│   └── Curation/
-│       └── SKILL.md             ← AI 결과물 큐레이션 체크리스트
+│   ├── Curation/
+│   │   └── SKILL.md             ← AI 결과물 큐레이션 체크리스트
+│   └── manifests/               ← 스택 감지 메타데이터 (init 모드)
+│       ├── core.json            ← 스택 무관 핵심 스킬 목록
+│       ├── react.json           ← React 스택 감지 규칙 + 스킬/에이전트
+│       └── nestjs.json          ← NestJS 스택 감지 규칙 + 스킬/에이전트
 ├── prompts/
 │   ├── feature.md               ← /feature [기능명] 커스텀 커맨드
 │   ├── fix.md                   ← /fix [증상] 커스텀 커맨드
@@ -182,7 +203,8 @@ git pull
 ├── hooks/
 │   └── prompt-hook.sh           ← hook (품질 체크 + 구조 변경 감지)
 └── scripts/
-    └── generate-project-map.sh  ← PROJECT_MAP.md 자동 생성
+    ├── generate-project-map.sh  ← PROJECT_MAP.md 자동 생성
+    └── detect-stack.sh          ← manifest 기반 스택 감지 (install.sh/diagnose.sh 공유)
 ```
 
 ## 프로젝트 진단

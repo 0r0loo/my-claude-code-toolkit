@@ -1,5 +1,30 @@
 # Changelog
 
+## 1.13.0
+
+### Manifest 기반 스택 자동 감지 + init 모드
+
+- **FEAT**: `init` 모드 추가 — 스택 자동 감지 후 맞춤 스킬 설치
+  - `npx @choblue/claude-code-toolkit init` (권장 설치 방법)
+  - `--yes`, `--dry-run`, `--stack=react,nestjs` 옵션 지원
+  - confidence 기반 임계값 (50% 미만 시 수동 선택 fallback)
+  - 멀티 스택 동시 감지 (React + NestJS → 양쪽 스킬 병합)
+  - 설치 완료 후 온보딩 메시지 출력
+- **FEAT**: `skills/manifests/` 디렉토리 추가
+  - `core.json` — 스택 무관 핵심 스킬 목록
+  - `react.json` — React 스택 감지 규칙 + 스킬/에이전트
+  - `nestjs.json` — NestJS 스택 감지 규칙 + 스킬/에이전트
+  - 새 스택 추가 시 manifest.json만 추가하면 됨
+- **FEAT**: `scripts/detect-stack.sh` 추가
+  - manifest의 detect 규칙으로 프로젝트 스택 자동 감지
+  - install.sh + diagnose.sh에서 공유 (DRY)
+  - jq 없이도 기본 동작하는 fallback 파서 포함
+- **FEAT**: CLAUDE.md 마커 코멘트 (`<!-- AGENTS:START/END -->`, `<!-- SKILLS:START/END -->`)
+  - init 설치 시 설치된 에이전트/스킬 기반으로 자동 갱신
+  - 마커 없으면 경고만 출력하고 건너뜀
+- **REFACTOR**: diagnose.sh 스택 감지를 detect-stack.sh로 통합
+- **TEST**: `test/install-test.sh` — 38개 회귀 테스트
+
 ## 1.12.0
 
 ### gstack 영감 — 워크플로우 스킬 강화
