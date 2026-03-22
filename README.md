@@ -194,7 +194,10 @@ git pull
 │   ├── retro.md                 ← /retro [기간] git 기반 회고
 │   ├── canary.md                ← /canary [URL] 배포 후 헬스체크
 │   ├── qa.md                    ← /qa [URL] 브라우저 QA (browse 도구 필요)
-│   └── office-hours.md          ← /office-hours [아이디어] 제품 진단 + 설계
+│   ├── office-hours.md          ← /office-hours [아이디어] 제품 진단 + 설계
+│   ├── simplify.md              ← /simplify 변경 코드 품질 점검
+│   ├── document-release.md      ← /document-release 배포 후 문서 갱신
+│   └── unfreeze.md              ← /unfreeze 편집 제한 해제
 ├── tools/
 │   └── browse/                  ← Playwright 헤드리스 브라우저 CLI (선택적, Bun 필요)
 │       ├── src/                 ← TypeScript 소스 (gstack browse 기반, MIT)

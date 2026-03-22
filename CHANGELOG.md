@@ -24,6 +24,11 @@
   - 마커 없으면 경고만 출력하고 건너뜀
 - **REFACTOR**: diagnose.sh 스택 감지를 detect-stack.sh로 통합
 - **TEST**: `test/install-test.sh` — 38개 회귀 테스트
+- **FEAT**: `/simplify` 프롬프트 추가 — 구현 후 자가 품질 점검 (재사용성, 품질, 효율성)
+- **FEAT**: `/document-release` 프롬프트 추가 — 배포 후 README/CHANGELOG/CLAUDE.md 자동 갱신
+- **FEAT**: `/unfreeze` 프롬프트 추가 — `/freeze` 편집 제한 해제
+- **FEAT**: 다음 단계 추천 규칙 추가 (CLAUDE.md 섹션 6)
+  - 작업 완료 시 상황별 커맨드 자동 제안 (/feature→/simplify→/review→/ship)
 
 ## 1.12.0
 
