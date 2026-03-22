@@ -7,6 +7,14 @@
 
 ## 절차
 
+### Phase 0 — Baseline 확인
+
+배포 전 baseline이 있으면 비교용으로 사용한다.
+
+1. `.claude/canary-baseline.json`이 있는지 확인
+2. 있으면 이전 측정값(응답 시간, 에러 수, 리소스 수)을 로드
+3. 없으면 이번 측정이 첫 baseline이 됨 → Phase 4에서 저장
+
 ### Phase 1 — 기본 접근성 확인
 1. 지정 URL에 HTTP 요청을 보낸다
 2. 응답 상태 코드를 확인한다 (200 OK 기대)
@@ -29,7 +37,9 @@
    - 위험: > 3초
 2. 주요 리소스(JS, CSS, 이미지) 로드 실패가 있는지 확인한다
 
-### Phase 4 — 카나리 리포트
+### Phase 4 — Before/After 비교 & 리포트
+
+baseline이 있으면 비교 데이터를 포함한다.
 
 ```
 ## Canary Report — [URL]
@@ -37,23 +47,43 @@
 
 ### 접근성
 - 상태 코드: [200/etc]
-- 응답 시간: [N]ms
+- 응답 시간: [N]ms (baseline: [M]ms, 변화: +/-[K]ms)
 - HTTPS: [정상/비정상]
 
 ### 페이지 검증
 - 콘텐츠 로드: [정상/비정상]
-- 콘솔 에러: [N]건
+- 콘솔 에러: [N]건 (baseline: [M]건)
   - [에러 목록 (있으면)]
-- 네트워크 에러: [N]건
+  - 🆕 새로 발생: [baseline에 없던 에러]
+- 네트워크 에러: [N]건 (baseline: [M]건)
   - [실패 리소스 목록 (있으면)]
 
 ### 성능
 - 응답 시간 판정: [양호/주의/위험]
 - 리소스 로드 실패: [N]건
+- 성능 변화: [개선 ↑ / 유지 → / 악화 ↓]
 
 ### 판정: HEALTHY / WARNING / CRITICAL
 [사유 한 줄 요약]
 ```
+
+### Phase 5 — Baseline 저장
+
+현재 측정값을 `.claude/canary-baseline.json`에 저장한다.
+
+```json
+{
+  "url": "https://myapp.com",
+  "timestamp": "2026-03-22T18:00:00Z",
+  "status": 200,
+  "responseMs": 450,
+  "consoleErrors": 0,
+  "networkErrors": 0,
+  "resourceCount": 25
+}
+```
+
+다음 `/canary` 실행 시 이 데이터와 비교한다.
 
 판정 기준:
 | 조건 | 판정 |

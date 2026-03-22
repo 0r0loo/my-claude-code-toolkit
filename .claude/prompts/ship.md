@@ -43,7 +43,18 @@
    ```
 3. 커버리지 설정이 없으면 이 Phase를 건너뛴다
 
-### Phase 5 — PR 생성 (Pull Request)
+### Phase 5 — 버전 & 변경 이력 (Version & Changelog)
+1. `package.json` (또는 VERSION 파일)이 있으면 버전 bump를 제안한다
+   - 변경 내용 분석: 새 기능이면 minor, 버그 수정/리팩터면 patch
+   - 사용자에게 확인: `버전을 1.13.0 → 1.14.0으로 올릴까요? (patch/minor/skip)`
+   - skip이면 이 단계를 건너뛴다
+2. CHANGELOG.md가 있으면 커밋 히스토리를 분석하여 엔트리를 자동 생성한다
+   - 커밋 prefix 기반 분류: FEAT → `**FEAT**:`, FIX → `**FIX**:`, REFACTOR → `**REFACTOR**:`
+   - 기존 CHANGELOG 문체에 맞춰 작성 (기존 엔트리 패턴 참조)
+   - 생성된 엔트리를 사용자에게 보여주고 확인받은 후 CHANGELOG.md에 추가
+3. 버전/CHANGELOG 변경이 있으면 커밋한다
+
+### Phase 6 — PR 생성 (Pull Request)
 1. `git-manager` 에이전트를 호출하여 PR을 생성한다
 2. PR 제목/본문은 커밋 내역을 기반으로 자동 작성한다
 3. PR URL을 출력한다
@@ -57,11 +68,12 @@
 ```
 🚢 릴리스 파이프라인 — [브랜치명]
 
-Phase 1 (Sync)    ✅
-Phase 2 (Test)    ❌ ← 여기서 중단
-Phase 3 (Review)  ⏸ 미실행
-Phase 4 (Coverage)⏸ 미실행
-Phase 5 (PR)      ⏸ 미실행
+Phase 1 (Sync)      ✅
+Phase 2 (Test)      ❌ ← 여기서 중단
+Phase 3 (Review)    ⏸ 미실행
+Phase 4 (Coverage)  ⏸ 미실행
+Phase 5 (Version)   ⏸ 미실행
+Phase 6 (PR)        ⏸ 미실행
 
 원인: [구체적인 실패 이유]
 ```
@@ -75,7 +87,8 @@ Phase 1 (Sync)     ✅ main과 [N]커밋 차이
 Phase 2 (Test)     ✅ [N]개 통과
 Phase 3 (Review)   ✅ 필수 수정 없음
 Phase 4 (Coverage) ✅ [N]% / ⏭ 건너뜀
-Phase 5 (PR)       ✅ [PR URL]
+Phase 5 (Version)  ✅ v1.13.0 → v1.14.0 / ⏭ 건너뜀
+Phase 6 (PR)       ✅ [PR URL]
 ```
 
 ## 예시
