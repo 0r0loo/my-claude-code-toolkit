@@ -190,6 +190,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 ### Prompts (커스텀 커맨드)
 - `.claude/prompts/feature.md` - /feature [기능명] -> 새 기능 구현 시작
 - `.claude/prompts/fix.md` - /fix [증상] -> 버그 수정
+- `.claude/prompts/investigate.md` - /investigate [증상] -> 조사 없이 수정 금지. 재현 → 원인 확정 → 보고서 → /fix 연계
 - `.claude/prompts/review.md` - /review -> 현재 변경사항 리뷰
 
 ### Scripts
