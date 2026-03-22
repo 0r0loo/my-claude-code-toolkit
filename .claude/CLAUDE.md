@@ -192,6 +192,9 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/prompts/fix.md` - /fix [증상] -> 버그 수정
 - `.claude/prompts/investigate.md` - /investigate [증상] -> 조사 없이 수정 금지. 재현 → 원인 확정 → 보고서 → /fix 연계
 - `.claude/prompts/review.md` - /review -> 현재 변경사항 리뷰
+- `.claude/prompts/ship.md` - /ship [브랜치] -> 릴리스 파이프라인 (main 동기화 → 테스트 → 코드 리뷰 → 커버리지 → PR 생성)
+- `.claude/prompts/careful.md` - /careful [명령] -> 위험 명령 방어 (세션 모드 또는 단일 명령 검토)
+- `.claude/prompts/freeze.md` - /freeze [경로] -> 편집 범위 제한 (--status, --off 서브커맨드)
 
 ### Scripts
 - `.claude/scripts/generate-project-map.sh` - PROJECT_MAP.md 자동 생성
