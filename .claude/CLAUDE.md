@@ -199,6 +199,7 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/prompts/retro.md` - /retro [기간] -> git 히스토리 기반 회고 (작업 요약, 트렌드, 리스크)
 - `.claude/prompts/canary.md` - /canary [URL] -> 배포 후 헬스체크 (접근성, 에러, 성능)
 - `.claude/prompts/qa.md` - /qa [URL] -> 브라우저 기반 QA 테스트 (browse 도구 필요)
+- `.claude/prompts/office-hours.md` - /office-hours [아이디어] -> 제품 진단 + 설계 (진단 모드/빌더 모드)
 
 ### Tools (선택적)
 - `.claude/tools/browse/` - Playwright 기반 헤드리스 브라우저 CLI (gstack browse 기반, MIT)

@@ -172,7 +172,8 @@ git pull
 │   ├── guard.md                 ← /guard [경로] careful + freeze 결합
 │   ├── retro.md                 ← /retro [기간] git 기반 회고
 │   ├── canary.md                ← /canary [URL] 배포 후 헬스체크
-│   └── qa.md                    ← /qa [URL] 브라우저 QA (browse 도구 필요)
+│   ├── qa.md                    ← /qa [URL] 브라우저 QA (browse 도구 필요)
+│   └── office-hours.md          ← /office-hours [아이디어] 제품 진단 + 설계
 ├── tools/
 │   └── browse/                  ← Playwright 헤드리스 브라우저 CLI (선택적, Bun 필요)
 │       ├── src/                 ← TypeScript 소스 (gstack browse 기반, MIT)
