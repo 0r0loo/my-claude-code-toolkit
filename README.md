@@ -197,7 +197,12 @@ git pull
 │   ├── office-hours.md          ← /office-hours [아이디어] 제품 진단 + 설계
 │   ├── simplify.md              ← /simplify 변경 코드 품질 점검
 │   ├── document-release.md      ← /document-release 배포 후 문서 갱신
-│   └── unfreeze.md              ← /unfreeze 편집 제한 해제
+│   ├── unfreeze.md              ← /unfreeze 편집 제한 해제
+│   ├── qa-only.md               ← /qa-only [URL] 리포트 전용 QA
+│   ├── design-review.md         ← /design-review [URL] 시각적 디자인 QA
+│   ├── refactor.md              ← /refactor [대상] 리팩터링
+│   ├── explain.md               ← /explain [대상] 코드 설명
+│   └── migrate.md               ← /migrate [대상] 마이그레이션
 ├── tools/
 │   └── browse/                  ← Playwright 헤드리스 브라우저 CLI (선택적, Bun 필요)
 │       ├── src/                 ← TypeScript 소스 (gstack browse 기반, MIT)

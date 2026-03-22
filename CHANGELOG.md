@@ -1,5 +1,28 @@
 # Changelog
 
+## 1.14.0
+
+### 프롬프트 대폭 확장 + 기존 고도화
+
+- **FEAT**: 8개 신규 프롬프트 추가 (총 20개 커맨드)
+  - `/simplify` — 구현 후 자가 품질 점검 (재사용성, 품질, 효율성)
+  - `/document-release` — 배포 후 README/CHANGELOG/CLAUDE.md 자동 갱신
+  - `/unfreeze` — `/freeze` 편집 제한 해제
+  - `/qa-only` — 리포트 전용 QA (수정 없이 버그 보고만)
+  - `/design-review` — 시각적 디자인 QA (간격, 타이포, 색상, 반응형 5차원)
+  - `/refactor` — 동작 유지 리팩터링 (추출, 이동, 단순화, 중복 제거)
+  - `/explain` — 코드 설명 (온보딩, 인수인계, 코드 이해)
+  - `/migrate` — 안전한 마이그레이션 (DB, 의존성, 프레임워크 전환)
+- **FEAT**: 기존 5개 프롬프트 고도화
+  - `/ship` Phase 5 추가: VERSION bump 제안 + CHANGELOG 자동 생성
+  - `/review` 구조적 위험 패턴 10가지 자동 감지 (SQL injection, XSS, 하드코딩 시크릿 등)
+  - `/qa` Phase 7 추가: 발견→소스수정→원자적커밋→재검증 루프
+  - `/retro` 히스토리 축적: `.claude/retro-history.json`에 저장, 이전 회고 대비 비교
+  - `/canary` before/after baseline: `.claude/canary-baseline.json` 저장, 배포 전후 비교
+- **FEAT**: 다음 단계 추천 규칙 (CLAUDE.md 섹션 6)
+  - 작업 완료 시 상황별 커맨드 자동 제안
+  - /feature→/simplify→/review→/ship→/canary→/document-release 파이프라인
+
 ## 1.13.0
 
 ### Manifest 기반 스택 자동 감지 + init 모드
