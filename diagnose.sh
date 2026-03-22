@@ -72,94 +72,58 @@ echo -e "${DIM}━━━━━━━━━━━━━━━━━━━━━�
 echo -e "  Path: ${BLUE}$PROJECT_DIR${NC}"
 echo ""
 
-# === 1. Tech Stack Detection ===
+# === 1. Tech Stack Detection (manifest-based) ===
 
 echo -e "${BOLD}📦 Tech Stack${NC}"
 
 STACK=""
 
-# Node.js / JavaScript
-if file_exists "package.json"; then
-  PKG="$PROJECT_DIR/package.json"
+# Source manifest-based detector
+DETECT_SCRIPT=""
+if [ -f "$PROJECT_DIR/.claude/scripts/detect-stack.sh" ]; then
+  DETECT_SCRIPT="$PROJECT_DIR/.claude/scripts/detect-stack.sh"
+elif [ -n "${PACKAGE_ROOT:-}" ] && [ -f "$PACKAGE_ROOT/.claude/scripts/detect-stack.sh" ]; then
+  DETECT_SCRIPT="$PACKAGE_ROOT/.claude/scripts/detect-stack.sh"
+elif [ -f "$(dirname "$0")/.claude/scripts/detect-stack.sh" ]; then
+  DETECT_SCRIPT="$(dirname "$0")/.claude/scripts/detect-stack.sh"
+fi
 
-  # Read dependencies
-  DEPS=""
-  if command -v jq &>/dev/null; then
-    DEPS="$(jq -r '(.dependencies // {} | keys[]) + " " + (.devDependencies // {} | keys[])' "$PKG" 2>/dev/null | tr '\n' ' ')"
-  else
-    DEPS="$(cat "$PKG")"
-  fi
+if [ -n "$DETECT_SCRIPT" ]; then
+  # Manifest-based detection
+  MANIFESTS_DIR="$(dirname "$DETECT_SCRIPT")/../skills/manifests"
+  source "$DETECT_SCRIPT"
+  detect_stacks "$PROJECT_DIR" "$MANIFESTS_DIR"
 
-  # Frameworks
-  if echo "$DEPS" | grep -q "next"; then
-    STACK="${STACK} Next.js"
-    add_skill "NextJS"
-    add_skill "React"
-  elif echo "$DEPS" | grep -q "react"; then
-    STACK="${STACK} React"
-    add_skill "React"
-  fi
+  for s in $DETECTED_STACKS; do
+    _display="$(_json_string "$MANIFESTS_DIR/${s}.json" "displayName" 2>/dev/null)"
+    STACK="${STACK} ${_display:-$s}"
+  done
 
-  if echo "$DEPS" | grep -q "@nestjs/core"; then
-    STACK="${STACK} NestJS"
-    add_skill "NestJS"
-  fi
+  for sk in $DETECTED_SKILLS; do
+    add_skill "$sk"
+  done
+fi
 
-  # UI
-  if echo "$DEPS" | grep -q "tailwindcss"; then
-    STACK="${STACK} TailwindCSS"
-    add_skill "TailwindCSS"
-  fi
-
-  # State management
-  if echo "$DEPS" | grep -q "zustand"; then
-    STACK="${STACK} Zustand"
-    add_skill "Zustand"
-  fi
-
-  if echo "$DEPS" | grep -q "@tanstack/react-query"; then
-    STACK="${STACK} TanStack-Query"
-    add_skill "TanStackQuery"
-  fi
-
-  # Forms
-  if echo "$DEPS" | grep -q "react-hook-form"; then
-    STACK="${STACK} React-Hook-Form"
-    add_skill "ReactHookForm"
-  fi
-
-  # ORM
-  if echo "$DEPS" | grep -q "typeorm"; then
-    STACK="${STACK} TypeORM"
-    add_skill "TypeORM"
-  fi
-  if echo "$DEPS" | grep -q "prisma"; then
-    STACK="${STACK} Prisma"
-  fi
-
-  # TypeScript
-  if file_exists "tsconfig.json" || echo "$DEPS" | grep -q "typescript"; then
+# Non-manifest detection (Python, Go, Rust, TypeScript, Git)
+if file_exists "tsconfig.json"; then
+  if ! echo "$STACK" | grep -qi "typescript"; then
     STACK="${STACK} TypeScript"
     add_skill "TypeScript"
   fi
 fi
 
-# Python
 if file_exists "requirements.txt" || file_exists "pyproject.toml" || file_exists "setup.py"; then
   STACK="${STACK} Python"
 fi
 
-# Go
 if file_exists "go.mod"; then
   STACK="${STACK} Go"
 fi
 
-# Rust
 if file_exists "Cargo.toml"; then
   STACK="${STACK} Rust"
 fi
 
-# Git
 if dir_exists ".git"; then
   STACK="${STACK} Git"
 fi
