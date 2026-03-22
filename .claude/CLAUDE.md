@@ -195,6 +195,15 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/prompts/ship.md` - /ship [브랜치] -> 릴리스 파이프라인 (main 동기화 → 테스트 → 코드 리뷰 → 커버리지 → PR 생성)
 - `.claude/prompts/careful.md` - /careful [명령] -> 위험 명령 방어 (세션 모드 또는 단일 명령 검토)
 - `.claude/prompts/freeze.md` - /freeze [경로] -> 편집 범위 제한 (--status, --off 서브커맨드)
+- `.claude/prompts/guard.md` - /guard [경로] -> careful + freeze 동시 활성화 (최대 안전 모드)
+- `.claude/prompts/retro.md` - /retro [기간] -> git 히스토리 기반 회고 (작업 요약, 트렌드, 리스크)
+- `.claude/prompts/canary.md` - /canary [URL] -> 배포 후 헬스체크 (접근성, 에러, 성능)
+- `.claude/prompts/qa.md` - /qa [URL] -> 브라우저 기반 QA 테스트 (browse 도구 필요)
+
+### Tools (선택적)
+- `.claude/tools/browse/` - Playwright 기반 헤드리스 브라우저 CLI (gstack browse 기반, MIT)
+  - 설치: `--tools=browse` 플래그 또는 `bash .claude/tools/browse/setup.sh`
+  - 요구사항: Bun >= 1.0
 
 ### Scripts
 - `.claude/scripts/generate-project-map.sh` - PROJECT_MAP.md 자동 생성

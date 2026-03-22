@@ -1,5 +1,43 @@
 # Changelog
 
+## 1.12.0
+
+### gstack 영감 — 워크플로우 스킬 강화
+
+- **FEAT**: `code-reviewer.md` 2-Pass 시스템 개편
+  - Pass 1 (CRITICAL): 머지 차단 수준 결함 — 명백한 버그/보안 이슈 직접 수정
+  - Pass 2 (INFORMATIONAL): 코드 품질 개선 제안 — 판정에 영향 없음
+  - Warning 5개 기준 폐지 → Pass 1/Pass 2 분류로 대체
+- **FEAT**: `/investigate` 프롬프트 추가
+  - 재현 → 원인 확정 → 보고서 3단계 (수정 전 조사 필수)
+  - 가설 목록 작성 → 코드 근거로 검증 → 근본 원인 확정
+  - `/fix` 연계: investigation-report의 권장 수정 방향을 입력으로 사용
+- **FEAT**: `/ship` 릴리스 파이프라인 추가
+  - 5-Phase: Sync → Test → Review → Coverage → PR
+  - 실패 시 해당 Phase에서 중단 + 상태 보고
+- **FEAT**: `/careful` 위험 명령 방어 추가
+  - 세션 모드: 대화 전체에서 위험 명령 자동 감지
+  - 단일 명령 모드: 즉시 분석 + 대안 제시
+- **FEAT**: `/freeze` 편집 범위 제한 추가
+  - 지정 경로 외 파일 수정/생성/삭제 차단
+  - `--status`, `--off` 서브커맨드
+- **FEAT**: `/guard` 최대 안전 모드 추가
+  - `/careful` + `/freeze` 동시 활성화/해제
+- **FEAT**: `/retro` 주간 회고 추가
+  - git 히스토리 기반 작업 요약, 트렌드, 핫스팟, 잠재 리스크 분석
+  - 기간 지정 가능 (`7d`, `14d`, `1m`)
+- **FEAT**: `/canary` 배포 후 헬스체크 추가
+  - HTTP 상태, 응답 시간, 콘솔/네트워크 에러 탐지
+  - HEALTHY / WARNING / CRITICAL 판정
+- **FEAT**: browse 도구 추가 (`.claude/tools/browse/`)
+  - gstack browse 기반 (MIT) Playwright 헤드리스 브라우저 CLI
+  - `$B goto`, `$B snapshot -i`, `$B click @e3` 등 ~100ms/명령
+  - `--tools=browse` 플래그로 선택 설치, Bun 필요
+- **FEAT**: `/qa` 브라우저 기반 QA 테스트 추가
+  - browse 도구로 실제 브라우저 조작하여 사용자처럼 테스트
+  - Diff-aware 모드 (피처 브랜치에서 변경 관련 페이지만)
+  - Health Score 루브릭 (8개 카테고리, 가중 평균)
+
 ## 1.11.0
 
 ### E2E 테스트 + 워크플로우 강화

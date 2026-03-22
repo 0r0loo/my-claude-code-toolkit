@@ -106,7 +106,8 @@ git pull
 │   ├── implementer-fe.md        ← React 프론트엔드 구현 (M: 구현만, L: +테스트)
 │   ├── implementer-be.md        ← NestJS 백엔드 구현 (M: 구현만, L: +테스트)
 │   ├── tester.md                ← 테스트 코드 작성 (FE/BE 통합, opus)
-│   ├── code-reviewer.md         ← 코드 품질 리뷰 (opus)
+│   ├── code-reviewer.md         ← 2-Pass 코드 리뷰 (Critical/Informational, opus)
+│   ├── e2e-tester.md            ← E2E 테스트 작성 (Playwright)
 │   └── git-manager.md           ← Git 작업 (sonnet)
 ├── skills/
 │   ├── Coding/
@@ -163,7 +164,20 @@ git pull
 ├── prompts/
 │   ├── feature.md               ← /feature [기능명] 커스텀 커맨드
 │   ├── fix.md                   ← /fix [증상] 커스텀 커맨드
-│   └── review.md                ← /review 커스텀 커맨드
+│   ├── investigate.md           ← /investigate [증상] 조사 → 원인 확정 → /fix 연계
+│   ├── review.md                ← /review 커스텀 커맨드
+│   ├── ship.md                  ← /ship [브랜치] 릴리스 파이프라인
+│   ├── careful.md               ← /careful [명령] 위험 명령 방어
+│   ├── freeze.md                ← /freeze [경로] 편집 범위 제한
+│   ├── guard.md                 ← /guard [경로] careful + freeze 결합
+│   ├── retro.md                 ← /retro [기간] git 기반 회고
+│   ├── canary.md                ← /canary [URL] 배포 후 헬스체크
+│   └── qa.md                    ← /qa [URL] 브라우저 QA (browse 도구 필요)
+├── tools/
+│   └── browse/                  ← Playwright 헤드리스 브라우저 CLI (선택적, Bun 필요)
+│       ├── src/                 ← TypeScript 소스 (gstack browse 기반, MIT)
+│       ├── setup.sh             ← 빌드 스크립트
+│       └── package.json
 ├── hooks/
 │   └── prompt-hook.sh           ← hook (품질 체크 + 구조 변경 감지)
 └── scripts/
