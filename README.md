@@ -202,7 +202,8 @@ git pull
 │   ├── design-review.md         ← /design-review [URL] 시각적 디자인 QA
 │   ├── refactor.md              ← /refactor [대상] 리팩터링
 │   ├── explain.md               ← /explain [대상] 코드 설명
-│   └── migrate.md               ← /migrate [대상] 마이그레이션
+│   ├── migrate.md               ← /migrate [대상] 마이그레이션
+│   └── help-me.md               ← /help-me [상황] 커맨드 추천 + 자동 실행
 ├── tools/
 │   └── browse/                  ← Playwright 헤드리스 브라우저 CLI (선택적, Bun 필요)
 │       ├── src/                 ← TypeScript 소스 (gstack browse 기반, MIT)
