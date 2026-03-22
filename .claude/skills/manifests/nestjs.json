@@ -1,0 +1,18 @@
+{
+  "name": "nestjs",
+  "displayName": "NestJS",
+  "description": "NestJS 백엔드, TypeORM, DDD 패턴",
+  "detect": {
+    "dependencies": ["@nestjs/core", "@nestjs/common"],
+    "files": ["nest-cli.json"]
+  },
+  "skills": ["NestJS", "TypeORM", "DDD"],
+  "agents": {
+    "implementer": "implementer-be.md"
+  },
+  "dod": {
+    "lint": "npx eslint --max-warnings 0",
+    "typecheck": "npx tsc --noEmit"
+  },
+  "legacyFlag": "--be"
+}

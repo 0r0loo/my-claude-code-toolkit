@@ -1,0 +1,7 @@
+{
+  "name": "core",
+  "displayName": "Core",
+  "description": "스택 무관 핵심 스킬 — 항상 설치",
+  "skills": ["Coding", "TypeScript", "Git", "Planning", "TDD", "E2E", "APIDesign", "Database", "FailureRecovery", "Curation", "SVGIcon"],
+  "agents": ["code-reviewer.md", "git-manager.md", "tester.md", "e2e-tester.md"]
+}

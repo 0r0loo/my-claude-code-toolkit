@@ -1,0 +1,17 @@
+{
+  "name": "react",
+  "displayName": "React + Next.js",
+  "description": "React 컴포넌트, Next.js App Router, TailwindCSS, 상태관리",
+  "detect": {
+    "dependencies": ["react"]
+  },
+  "skills": ["React", "NextJS", "TailwindCSS", "TanStackQuery", "Zustand", "ReactHookForm"],
+  "agents": {
+    "implementer": "implementer-fe.md"
+  },
+  "dod": {
+    "lint": "npx eslint --max-warnings 0",
+    "typecheck": "npx tsc --noEmit"
+  },
+  "legacyFlag": "--fe"
+}
