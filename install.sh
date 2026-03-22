@@ -6,33 +6,42 @@ set -e
 
 # Help
 usage() {
-  echo "Usage: $0 [--global] [--fe] [--be] [--force] [--uninstall] [--skills=LIST]"
+  echo "Usage: $0 [init] [--global] [--fe] [--be] [--force] [--uninstall] [--skills=LIST]"
   echo ""
-  echo "Stack selection:"
-  echo "  (default)      Full install (common + FE + BE)"
-  echo "  --fe           Common + frontend skills only"
-  echo "  --be           Common + backend skills only"
-  echo "  --fe --be      Full install (same as default)"
+  echo "Modes:"
+  echo "  init             Auto-detect stack and install matching skills (recommended)"
+  echo "  (default)        Full install (common + FE + BE)"
+  echo ""
+  echo "Init options:"
+  echo "  --yes, -y        Skip confirmation prompt"
+  echo "  --dry-run        Show detection results without installing"
+  echo "  --stack=LIST     Specify stacks (e.g., react,nestjs) — skip auto-detection"
+  echo ""
+  echo "Legacy stack selection:"
+  echo "  --fe             Common + frontend skills only"
+  echo "  --be             Common + backend skills only"
+  echo "  --fe --be        Full install (same as default)"
   echo ""
   echo "Install location:"
-  echo "  (default)      Project local (.claude/ in current directory)"
-  echo "  --global       Global install (~/.claude/)"
+  echo "  (default)        Project local (.claude/ in current directory)"
+  echo "  --global         Global install (~/.claude/)"
   echo ""
   echo "Options:"
-  echo "  --force        Overwrite user-modified files"
-  echo "  --uninstall    Remove installed files using manifest"
-  echo "  --skills=LIST  Install only specified skills (e.g., React,TailwindCSS)"
-  echo "  --tools=LIST   Install optional tools (e.g., browse)"
+  echo "  --force          Overwrite user-modified files"
+  echo "  --uninstall      Remove installed files using manifest"
+  echo "  --skills=LIST    Install only specified skills (e.g., React,TailwindCSS)"
+  echo "  --tools=LIST     Install optional tools (e.g., browse)"
   echo ""
   echo "Examples:"
-  echo "  $0                              # Full install (local)"
-  echo "  $0 --fe                         # Common + FE only (local)"
-  echo "  $0 --be                         # Common + BE only (local)"
-  echo "  $0 --global --fe                # Common + FE only (global)"
-  echo "  $0 --force                      # Force overwrite modified files"
-  echo "  $0 --skills=React,TailwindCSS   # Common + specified skills only"
-  echo "  $0 --tools=browse               # Include browse tool (requires Bun)"
-  echo "  $0 --uninstall                  # Remove installed files"
+  echo "  $0 init                          # Auto-detect and install (recommended)"
+  echo "  $0 init --yes                    # Auto-detect, no prompt"
+  echo "  $0 init --stack=react            # Install React stack"
+  echo "  $0 init --dry-run                # Preview detection results"
+  echo "  $0                               # Full install (FE + BE)"
+  echo "  $0 --fe                          # Common + FE only"
+  echo "  $0 --global --fe                 # Common + FE only (global)"
+  echo "  $0 --skills=React,TailwindCSS    # Common + specified skills only"
+  echo "  $0 --uninstall                   # Remove installed files"
   exit 0
 }
 
@@ -44,6 +53,10 @@ FORCE_OVERWRITE=false
 UNINSTALL=false
 CUSTOM_SKILLS=""
 INSTALL_TOOLS=""
+INIT_MODE=false
+INIT_YES=false
+INIT_DRY_RUN=false
+INIT_STACKS=""
 
 for arg in "$@"; do
   case "$arg" in
@@ -67,6 +80,18 @@ for arg in "$@"; do
       ;;
     --tools=*)
       INSTALL_TOOLS="${arg#*=}"
+      ;;
+    init)
+      INIT_MODE=true
+      ;;
+    --yes|-y)
+      INIT_YES=true
+      ;;
+    --dry-run)
+      INIT_DRY_RUN=true
+      ;;
+    --stack=*)
+      INIT_STACKS="${arg#*=}"
       ;;
     --help|-h)
       usage
@@ -348,6 +373,9 @@ copy_common_core() {
 
   copy_dir "scripts"
   chmod +x "$TARGET_DIR/scripts/"*.sh
+
+  # Manifests (스택 감지 메타데이터)
+  copy_dir "skills/manifests"
 }
 
 # Common full (for --fe/--be mode)
@@ -467,7 +495,163 @@ install_agents_for_skills() {
   fi
 }
 
-# === Execute ===
+# === Init mode (manifest-based auto-detection) ===
+
+run_init_mode() {
+  local manifests_dir="$SOURCE_DIR/skills/manifests"
+
+  if [ ! -d "$manifests_dir" ]; then
+    echo "Error: Manifests directory not found ($manifests_dir)"
+    exit 1
+  fi
+
+  # Source detect-stack.sh
+  source "$SOURCE_DIR/scripts/detect-stack.sh"
+
+  if [ -n "$INIT_STACKS" ]; then
+    # --stack=react,nestjs → skip detection
+    DETECTED_STACKS="$(echo "$INIT_STACKS" | tr ',' ' ')"
+    DETECTED_SKILLS=""
+    DETECTED_AGENTS=""
+    for s in $DETECTED_STACKS; do
+      local skills
+      skills="$(get_stack_skills "$s" "$manifests_dir")"
+      for sk in $skills; do
+        if ! echo "$DETECTED_SKILLS" | grep -qw "$sk"; then
+          DETECTED_SKILLS="$DETECTED_SKILLS $sk"
+        fi
+      done
+      local agents
+      agents="$(get_stack_agents "$s" "$manifests_dir")"
+      for a in $agents; do
+        if ! echo "$DETECTED_AGENTS" | grep -qw "$a"; then
+          DETECTED_AGENTS="$DETECTED_AGENTS $a"
+        fi
+      done
+    done
+    DETECTED_STACKS="$(echo "$DETECTED_STACKS" | xargs)"
+    DETECTED_SKILLS="$(echo "$DETECTED_SKILLS" | xargs)"
+    DETECTED_AGENTS="$(echo "$DETECTED_AGENTS" | xargs)"
+  else
+    # Auto-detect
+    detect_stacks "$(pwd)" "$manifests_dir"
+  fi
+
+  echo ""
+  if [ -n "$DETECTED_STACKS" ]; then
+    echo "  Detected stacks:"
+    for s in $DETECTED_STACKS; do
+      local display
+      display="$(_json_string "$manifests_dir/${s}.json" "displayName")"
+      echo "  ✅ ${display:-$s}"
+    done
+  else
+    echo "  No stacks detected."
+  fi
+  echo ""
+  echo "  Install plan:"
+  echo "  📦 Core (워크플로우 엔진, 에이전트, hooks)"
+  if [ -n "$DETECTED_STACKS" ]; then
+    for s in $DETECTED_STACKS; do
+      local display
+      display="$(_json_string "$manifests_dir/${s}.json" "displayName")"
+      local desc
+      desc="$(_json_string "$manifests_dir/${s}.json" "description")"
+      echo "  📦 ${display:-$s} ($desc)"
+    done
+  fi
+  echo ""
+
+  # Dry run stops here
+  if [ "$INIT_DRY_RUN" = true ]; then
+    echo "  (dry run — no files written)"
+    exit 0
+  fi
+
+  # Confirm
+  if [ "$INIT_YES" != true ]; then
+    printf "? Install? [Y/n] "
+    read -r answer
+    case "$answer" in
+      [nN]*) echo "Cancelled."; exit 0 ;;
+    esac
+  fi
+
+  echo ""
+  echo "Copying files..."
+  echo ""
+
+  # Core
+  copy_common_core
+
+  # Core skills from manifest
+  echo ""
+  echo "[Core skills]"
+  local core_skills
+  core_skills="$(get_core_skills "$manifests_dir")"
+  for sk in $core_skills; do
+    if [ -d "$SOURCE_DIR/skills/$sk" ]; then
+      copy_dir "skills/$sk"
+    fi
+  done
+
+  # Stack skills
+  if [ -n "$DETECTED_STACKS" ]; then
+    for s in $DETECTED_STACKS; do
+      local display
+      display="$(_json_string "$manifests_dir/${s}.json" "displayName")"
+      echo ""
+      echo "[${display:-$s}]"
+
+      # Stack agents
+      local agents
+      agents="$(get_stack_agents "$s" "$manifests_dir")"
+      for a in $agents; do
+        if [ -f "$SOURCE_DIR/agents/$a" ]; then
+          copy_file "agents/$a"
+        fi
+      done
+
+      # Stack skills
+      local skills
+      skills="$(get_stack_skills "$s" "$manifests_dir")"
+      for sk in $skills; do
+        if [ -d "$SOURCE_DIR/skills/$sk" ]; then
+          copy_dir "skills/$sk"
+        fi
+      done
+    done
+  fi
+
+  echo ""
+
+  # Tools (browse 등)
+  install_tools
+  echo ""
+
+  # Write manifest
+  printf '%s' "$NEW_MANIFEST" > "$MANIFEST_FILE"
+
+  local file_count
+  file_count=$(echo "$NEW_MANIFEST" | grep -c "." || true)
+
+  echo "=== Installation complete ($MODE_LABEL) ==="
+  echo ""
+  echo "Stack: Core${DETECTED_STACKS:+ + $DETECTED_STACKS}"
+  echo "Files: $file_count"
+  echo ""
+  echo "💡 Try these commands:"
+  echo "  claude \"/feature 로그인 페이지\"  ← Build a feature"
+  echo "  claude \"/review\"                 ← Code review"
+  echo "  claude \"/ship\"                   ← Create PR"
+}
+
+if [ "$INIT_MODE" = true ]; then
+  run_init_mode
+  exit 0
+fi
+
+# === Execute (legacy mode) ===
 
 echo "Copying files..."
 echo ""
