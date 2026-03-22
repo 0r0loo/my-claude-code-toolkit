@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # install.sh - Install my-claude-code-toolkit into .claude/
-# Usage: ./install.sh [--global] [--fe] [--be] [--force] [--uninstall] [--skills=LIST]
+# Usage: ./install.sh [--global] [--fe] [--be] [--force] [--uninstall] [--skills=LIST] [--tools=LIST]
 
 set -e
 
@@ -22,6 +22,7 @@ usage() {
   echo "  --force        Overwrite user-modified files"
   echo "  --uninstall    Remove installed files using manifest"
   echo "  --skills=LIST  Install only specified skills (e.g., React,TailwindCSS)"
+  echo "  --tools=LIST   Install optional tools (e.g., browse)"
   echo ""
   echo "Examples:"
   echo "  $0                              # Full install (local)"
@@ -30,6 +31,7 @@ usage() {
   echo "  $0 --global --fe                # Common + FE only (global)"
   echo "  $0 --force                      # Force overwrite modified files"
   echo "  $0 --skills=React,TailwindCSS   # Common + specified skills only"
+  echo "  $0 --tools=browse               # Include browse tool (requires Bun)"
   echo "  $0 --uninstall                  # Remove installed files"
   exit 0
 }
@@ -41,6 +43,7 @@ INSTALL_BE=false
 FORCE_OVERWRITE=false
 UNINSTALL=false
 CUSTOM_SKILLS=""
+INSTALL_TOOLS=""
 
 for arg in "$@"; do
   case "$arg" in
@@ -61,6 +64,9 @@ for arg in "$@"; do
       ;;
     --skills=*)
       CUSTOM_SKILLS="${arg#*=}"
+      ;;
+    --tools=*)
+      INSTALL_TOOLS="${arg#*=}"
       ;;
     --help|-h)
       usage
@@ -387,6 +393,55 @@ copy_be() {
 FE_SKILLS="React NextJS TailwindCSS TanStackQuery Zustand ReactHookForm SVGIcon"
 BE_SKILLS="NestJS TypeORM DDD"
 
+# === Tools installation ===
+install_tools() {
+  [ -z "$INSTALL_TOOLS" ] && return
+
+  echo "[Tools]"
+  IFS=',' read -ra TOOLS <<< "$INSTALL_TOOLS"
+  for tool in "${TOOLS[@]}"; do
+    tool=$(echo "$tool" | xargs)
+    case "$tool" in
+      browse)
+        if [ -n "$PACKAGE_ROOT" ]; then
+          local tool_source="$PACKAGE_ROOT/.claude/tools/browse"
+        else
+          local tool_source="$SOURCE_DIR/tools/browse"
+        fi
+
+        if [ ! -d "$tool_source/src" ]; then
+          echo "  Warning: browse tool source not found at $tool_source"
+          continue
+        fi
+
+        # 소스 복사
+        copy_dir "tools/browse/src"
+        copy_dir "tools/browse/scripts"
+        copy_file "tools/browse/package.json"
+        copy_file "tools/browse/setup.sh"
+        chmod +x "$TARGET_DIR/tools/browse/setup.sh"
+        chmod +x "$TARGET_DIR/tools/browse/scripts/"*.sh
+
+        # Bun으로 빌드
+        if command -v bun &>/dev/null; then
+          echo "  browse: 빌드 중..."
+          (cd "$TARGET_DIR/tools/browse" && bash setup.sh) 2>&1 | sed 's/^/  /'
+        else
+          echo ""
+          echo "  browse: Bun이 설치되지 않아 빌드를 건너뜁니다."
+          echo "  사용하려면:"
+          echo "    1. curl -fsSL https://bun.sh/install | bash"
+          echo "    2. bash $TARGET_DIR/tools/browse/setup.sh"
+          echo ""
+        fi
+        ;;
+      *)
+        echo "  Warning: Unknown tool '$tool'. Available: browse"
+        ;;
+    esac
+  done
+}
+
 install_agents_for_skills() {
   local skills="$1"
   local need_fe=false
@@ -452,6 +507,10 @@ else
   fi
 fi
 
+# Tools (browse 등)
+install_tools
+echo ""
+
 # === Clean up old files ===
 if [ -n "$OLD_MANIFEST_CONTENT" ]; then
   while IFS=' ' read -r old_hash old_path; do
@@ -485,6 +544,9 @@ echo "  $TARGET_DIR/agents/"
 echo "  $TARGET_DIR/skills/"
 echo "  $TARGET_DIR/hooks/"
 echo "  $TARGET_DIR/scripts/"
+if [ -n "$INSTALL_TOOLS" ]; then
+  echo "  $TARGET_DIR/tools/"
+fi
 echo ""
 if [ "$INSTALL_MODE" = "global" ]; then
   echo "Claude Code will now use these settings in any project."

@@ -10,3 +10,9 @@ node_modules/
 # generate-project-map.sh 생성물
 .claude/PROJECT_MAP.md
 .claude/.project-map-cache
+.gstack/
+
+# browse 빌드 산출물
+.claude/tools/browse/dist/
+.claude/tools/browse/node_modules/
+.claude/tools/browse/bun.lock

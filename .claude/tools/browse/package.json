@@ -1,0 +1,19 @@
+{
+  "name": "browse",
+  "version": "1.0.0",
+  "description": "Playwright 기반 헤드리스 브라우저 CLI (gstack browse 기반, MIT)",
+  "type": "module",
+  "scripts": {
+    "build": "bun build --compile src/cli.ts --outfile dist/browse && bash scripts/build-node-server.sh",
+    "dev": "bun run src/cli.ts",
+    "start": "bun run src/server.ts"
+  },
+  "dependencies": {
+    "playwright": "^1.58.2",
+    "diff": "^7.0.0"
+  },
+  "engines": {
+    "bun": ">=1.0.0"
+  },
+  "license": "MIT"
+}
