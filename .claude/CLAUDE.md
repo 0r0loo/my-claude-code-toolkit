@@ -207,6 +207,11 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/prompts/simplify.md` - /simplify -> 변경 코드 품질 점검 (재사용성, 품질, 효율성)
 - `.claude/prompts/document-release.md` - /document-release [범위] -> 배포 후 문서 자동 갱신 (README, CHANGELOG, CLAUDE.md)
 - `.claude/prompts/unfreeze.md` - /unfreeze -> /freeze 해제 (편집 제한 해제)
+- `.claude/prompts/qa-only.md` - /qa-only [URL] -> 리포트 전용 QA (수정 안 함)
+- `.claude/prompts/design-review.md` - /design-review [URL] -> 시각적 디자인 QA (간격, 계층, 색상, 반응형)
+- `.claude/prompts/refactor.md` - /refactor [대상] -> 동작 유지 리팩터링 (추출, 이동, 단순화, 중복 제거)
+- `.claude/prompts/explain.md` - /explain [대상] -> 코드 설명 (온보딩, 인수인계, 코드 이해)
+- `.claude/prompts/migrate.md` - /migrate [대상] -> 마이그레이션 (DB, 의존성, 프레임워크 전환)
 
 ### Tools (선택적)
 - `.claude/tools/browse/` - Playwright 기반 헤드리스 브라우저 CLI (gstack browse 기반, MIT)
@@ -241,6 +246,11 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 | 위험한 환경 (prod, DB) 작업 | `/careful` 또는 `/guard` | 파괴적 명령 방어 |
 | 주말 / 스프린트 끝 | `/retro` | 작업 회고 |
 | 라이브 사이트 QA | `/qa` | 브라우저 기반 테스트 |
+| 버그 리포트만 필요 | `/qa-only` | 수정 없이 보고만 |
+| UI 디자인 점검 | `/design-review` | 시각적 품질 검토 |
+| 코드 구조 개선 | `/refactor` | 동작 유지 리팩터링 |
+| 코드 이해 / 온보딩 | `/explain` | 코드베이스 설명 |
+| DB/의존성 전환 | `/migrate` | 안전한 마이그레이션 |
 
 **규칙:**
 - 작업 완료 응답의 **마지막 줄**에 한 줄로 추천 (본문에 섞지 않음)
