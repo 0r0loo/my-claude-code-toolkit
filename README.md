@@ -203,7 +203,9 @@ git pull
 │   ├── refactor.md              ← /refactor [대상] 리팩터링
 │   ├── explain.md               ← /explain [대상] 코드 설명
 │   ├── migrate.md               ← /migrate [대상] 마이그레이션
-│   └── help-me.md               ← /help-me [상황] 커맨드 추천 + 자동 실행
+│   ├── help-me.md               ← /help-me [상황] 커맨드 추천 + 자동 실행
+│   ├── plan-review.md           ← /plan-review 구현 전 계획 검증
+│   └── design-check.md          ← /design-check 구현 전 UI/UX 설계 검증
 ├── tools/
 │   └── browse/                  ← Playwright 헤드리스 브라우저 CLI (선택적, Bun 필요)
 │       ├── src/                 ← TypeScript 소스 (gstack browse 기반, MIT)

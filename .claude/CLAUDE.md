@@ -269,6 +269,8 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 - `.claude/prompts/explain.md` - /explain [대상] -> 코드 설명 (온보딩, 인수인계, 코드 이해)
 - `.claude/prompts/migrate.md` - /migrate [대상] -> 마이그레이션 (DB, 의존성, 프레임워크 전환)
 - `.claude/prompts/help-me.md` - /help-me [상황] -> 상황에 맞는 커맨드 추천 (뭘 써야 할지 모를 때)
+- `.claude/prompts/plan-review.md` - /plan-review -> 구현 전 계획 검증 (아키텍처, 데이터 흐름, 실패 시나리오, 테스트 전략)
+- `.claude/prompts/design-check.md` - /design-check -> 구현 전 UI/UX 설계 검증 (6차원 점수화)
 
 ### Tools (선택적)
 - `.claude/tools/browse/` - Playwright 기반 헤드리스 브라우저 CLI (gstack browse 기반, MIT)
@@ -294,9 +296,12 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 다음 흐름은 앞 단계가 끝나면 자동으로 다음을 실행한다:
 
 ```
-/feature → /simplify → /review → /ship → /canary → /document-release
+/office-hours → /plan-review → /design-check → /feature → /simplify → /review → /ship → /canary → /document-release
 /investigate → /fix → /simplify → /review → /ship
 ```
+
+- `/plan-review`: M/L 티어 작업에서 구현 전 자동 실행
+- `/design-check`: UI가 포함된 작업에서만 자동 실행 (백엔드만이면 건너뜀)
 
 자동 실행 시 한 줄로 알린다: "품질 점검 시작합니다 → `/simplify` 실행"
 
@@ -304,6 +309,8 @@ TDD/Review를 생략하고 핵심 단계만 수행한다.
 
 | 현재 상황 | 추천 | 행동 |
 |----------|------|------|
+| 아이디어 정리 완료 | `/plan-review` | 자동 실행 (M/L) |
+| 계획 검증 통과 + UI 있음 | `/design-check` | 자동 실행 |
 | 새 아이디어 논의 | `/office-hours` | 추천 |
 | 위험한 환경 작업 | `/careful` 또는 `/guard` | 추천 |
 | 주말 / 스프린트 끝 | `/retro` | 추천 |
